@@ -87,7 +87,20 @@
     Message.getInstance = function (msg) {
         if (!msg) {
             return null;
-        } else if (msg instanceof Message) {
+        }
+        if (msg.hasOwnProperty('content')) {
+            // this should be an instant message
+            return ns.InstantMessage.getInstance(msg);
+        }
+        if (msg.hasOwnProperty('signature')) {
+            // this should be a reliable message
+            return ns.ReliableMessage.getInstance(msg);
+        }
+        if (msg.hasOwnProperty('data')) {
+            // this should be a secure message
+            return ns.SecureMessage.getInstance(msg);
+        }
+        if (msg instanceof Message) {
             return msg;
         }
         return new Message(msg);

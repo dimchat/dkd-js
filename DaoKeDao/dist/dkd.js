@@ -1,5 +1,5 @@
 /**
- * DaoKeDao - Message Module v0.1.0
+ * DaoKeDao - Message Module (v0.1.0)
  *
  * @author    moKy <albert.moky at gmail.com>
  * @date      Jan. 28, 2020
@@ -257,10 +257,18 @@
     Message.getInstance = function(msg) {
         if (!msg) {
             return null
-        } else {
-            if (msg instanceof Message) {
-                return msg
-            }
+        }
+        if (msg.hasOwnProperty("content")) {
+            return ns.InstantMessage.getInstance(msg)
+        }
+        if (msg.hasOwnProperty("signature")) {
+            return ns.ReliableMessage.getInstance(msg)
+        }
+        if (msg.hasOwnProperty("data")) {
+            return ns.SecureMessage.getInstance(msg)
+        }
+        if (msg instanceof Message) {
+            return msg
         }
         return new Message(msg)
     };
@@ -478,4 +486,24 @@
         }
     };
     ns.ReliableMessage = ReliableMessage
+}(DIMP);
+! function(ns) {
+    var ContentType = ns.protocol.ContentType;
+    var Content = ns.Content;
+    var Message = ns.Message;
+    var ForwardContent = function(content) {
+        var forward;
+        if (content instanceof Message) {
+            Content.call(this, ContentType.Forward);
+            forward = content;
+            this.setValue("forward", forward)
+        } else {
+            Content.call(this, content);
+            forward = Message.getInstance(content["forward"])
+        }
+        this.forword = forward
+    };
+    ForwardContent.inherits(Content);
+    Content.register(ContentType.Forward, ForwardContent);
+    ns.ForwardContent = ForwardContent
 }(DIMP);
