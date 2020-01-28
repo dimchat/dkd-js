@@ -73,7 +73,7 @@
             // create new content with type
             info = {
                 'type': info,
-                'sn': randomPositiveInteger(),
+                'sn': randomPositiveInteger()
             };
         }
         Dictionary.call(this, info);
@@ -111,15 +111,15 @@
         var type = content['type'];
         var clazz = content_classes[type];
         if (typeof clazz === 'function') {
-            return this.createInstance(clazz, content);
+            return Content.createInstance(clazz, content);
         }
         // custom message content
         return new Content(content);
     };
 
     Content.createInstance = function (clazz, map) {
-        if (typeof clazz.createInstance === 'function') {
-            return clazz.createInstance(map);
+        if (typeof clazz.getInstance === 'function') {
+            return clazz.getInstance(map);
         } else {
             return new clazz(map);
         }

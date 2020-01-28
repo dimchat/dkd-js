@@ -53,7 +53,7 @@
         var forward;
         if (content instanceof Message) {
             // create forward content with reliable message
-            Content.call(this, ContentType.Forward);
+            Content.call(this, ContentType.FORWARD);
             forward = content;
             this.setValue('forward', forward);
         } else {
@@ -66,9 +66,9 @@
     ForwardContent.inherits(Content);
 
     //-------- register --------
-    Content.register(ContentType.Forward, ForwardContent);
+    Content.register(ContentType.FORWARD, ForwardContent);
 
     //-------- namespace --------
-    ns.ForwardContent = ForwardContent;
+    ns.protocol.ForwardContent = ForwardContent;
 
 }(DIMP);

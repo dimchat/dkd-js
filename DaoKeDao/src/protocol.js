@@ -81,41 +81,32 @@
      *
      *      (All above are just some advices to help choosing numbers :P)
      */
-    var ContentType = function (type) {
-        if (type instanceof ContentType) {
-            ns.type.Object.call(this, type.value);
-        } else {
-            ns.type.Object.call(this, type);
-        }
-    };
-    ContentType.inherits(ns.type.Object);
+    var ContentType = ns.type.Enum({
 
-    Object.assign(ContentType, {
+        UNKNOWN:    (0x00),
 
-        Unknown:    (0x00),
+        TEXT:       (0x01), // 0000 0001
 
-        Text:       (0x01), // 0000 0001
-
-        File:       (0x10), // 0001 0000
-        Image:      (0x12), // 0001 0010
-        Audio:      (0x14), // 0001 0100
-        Video:      (0x16), // 0001 0110
+        FILE:       (0x10), // 0001 0000
+        IMAGE:      (0x12), // 0001 0010
+        AUDIO:      (0x14), // 0001 0100
+        VIDEO:      (0x16), // 0001 0110
 
         // web page
-        Page:       (0x20), // 0010 0000
+        PAGE:       (0x20), // 0010 0000
 
         // quote a message before and reply it with text
-        Quote:      (0x37), // 0011 0111
+        QUOTE:      (0x37), // 0011 0111
 
-        Money:      (0x40), // 0100 0000
-        LuckyMoney: (0x41), // 0100 0001
-        Transfer:   (0x42), // 0100 0010
+        MONEY:      (0x40), // 0100 0000
+        // LUCKY:      (0x41), // 0100 0001
+        // TRANSFER:   (0x42), // 0100 0010
 
-        Command:    (0x88), // 1000 1000
-        History:    (0x89), // 1000 1001 (Entity history command)
+        COMMAND:    (0x88), // 1000 1000
+        HISTORY:    (0x89), // 1000 1001 (Entity history command)
 
         // top-secret message forward by proxy (Service Provider)
-        Forward:    (0xFF), // 1111 1111
+        FORWARD:    (0xFF), // 1111 1111
     });
 
     //-------- namespace --------

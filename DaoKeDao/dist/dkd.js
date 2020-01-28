@@ -7,29 +7,19 @@
  * @license   {@link https://mit-license.org | MIT License}
  */
 ! function(ns) {
-    var ContentType = function(type) {
-        if (type instanceof ContentType) {
-            ns.type.Object.call(this, type.value)
-        } else {
-            ns.type.Object.call(this, type)
-        }
-    };
-    ContentType.inherits(ns.type.Object);
-    Object.assign(ContentType, {
-        Unknown: (0),
-        Text: (1),
-        File: (16),
-        Image: (18),
-        Audio: (20),
-        Video: (22),
-        Page: (32),
-        Quote: (55),
-        Money: (64),
-        LuckyMoney: (65),
-        Transfer: (66),
-        Command: (136),
-        History: (137),
-        Forward: (255),
+    var ContentType = ns.type.Enum({
+        UNKNOWN: (0),
+        TEXT: (1),
+        FILE: (16),
+        IMAGE: (18),
+        AUDIO: (20),
+        VIDEO: (22),
+        PAGE: (32),
+        QUOTE: (55),
+        MONEY: (64),
+        COMMAND: (136),
+        HISTORY: (137),
+        FORWARD: (255),
     });
     if (typeof ns.protocol !== "object") {
         ns.protocol = {}
@@ -84,13 +74,13 @@
         var type = content["type"];
         var clazz = content_classes[type];
         if (typeof clazz === "function") {
-            return this.createInstance(clazz, content)
+            return Content.createInstance(clazz, content)
         }
         return new Content(content)
     };
     Content.createInstance = function(clazz, map) {
-        if (typeof clazz.createInstance === "function") {
-            return clazz.createInstance(map)
+        if (typeof clazz.getInstance === "function") {
+            return clazz.getInstance(map)
         } else {
             return new clazz(map)
         }
@@ -494,7 +484,7 @@
     var ForwardContent = function(content) {
         var forward;
         if (content instanceof Message) {
-            Content.call(this, ContentType.Forward);
+            Content.call(this, ContentType.FORWARD);
             forward = content;
             this.setValue("forward", forward)
         } else {
@@ -504,6 +494,6 @@
         this.forword = forward
     };
     ForwardContent.inherits(Content);
-    Content.register(ContentType.Forward, ForwardContent);
-    ns.ForwardContent = ForwardContent
+    Content.register(ContentType.FORWARD, ForwardContent);
+    ns.protocol.ForwardContent = ForwardContent
 }(DIMP);
