@@ -30,6 +30,24 @@
 // =============================================================================
 //
 
+/**
+ *  Message Content
+ *  ~~~~~~~~~~~~~~~
+ *  This class is for creating message content
+ *
+ *  data format: {
+ *      'type'    : 0x00,            // message type
+ *      'sn'      : 0,               // serial number
+ *
+ *      'group'   : 'Group ID',      // for group message
+ *
+ *      //-- message info
+ *      'text'    : 'text',          // for text message
+ *      'command' : 'Command Name',  // for system command
+ *      //...
+ *  }
+ */
+
 //! require <crypto.js>
 //! require 'protocol.js'
 
@@ -52,21 +70,10 @@
     };
 
     /**
-     *  Message Content
-     *  ~~~~~~~~~~~~~~~
-     *  This class is for creating message content
+     *  Create message content
      *
-     *  data format: {
-     *      'type'    : 0x00,            // message type
-     *      'sn'      : 0,               // serial number
-     *
-     *      'group'   : 'Group ID',      // for group message
-     *
-     *      //-- message info
-     *      'text'    : 'text',          // for text message
-     *      'command' : 'Command Name',  // for system command
-     *      //...
-     *  }
+     * @param info - content info; or content type
+     * @constructor
      */
     var Content = function (info) {
         if ((typeof info === 'number') || info instanceof ContentType) {

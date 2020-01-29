@@ -19,7 +19,7 @@
         MONEY: (64),
         COMMAND: (136),
         HISTORY: (137),
-        FORWARD: (255),
+        FORWARD: (255)
     });
     if (typeof ns.protocol !== "object") {
         ns.protocol = {}
@@ -45,7 +45,7 @@
         if ((typeof info === "number") || info instanceof ContentType) {
             info = {
                 "type": info,
-                "sn": randomPositiveInteger(),
+                "sn": randomPositiveInteger()
             }
         }
         Dictionary.call(this, info);
@@ -100,7 +100,7 @@
     Envelope.newEnvelope = function(sender, receiver, time) {
         var env = {
             "sender": sender,
-            "receiver": receiver,
+            "receiver": receiver
         };
         if (!time) {
             time = new Date();
@@ -293,7 +293,7 @@
         var msg = this.getMap(true);
         var data = this.delegate.encryptContent(this.content, password, this);
         msg["data"] = this.delegate.encodeData(data, this);
-        msg["content"] = null;
+        delete msg["content"];
         var key;
         if (members && members.length > 0) {
             var keys = {};
@@ -376,9 +376,9 @@
             throw Error("failed to decrypt message data: " + this)
         }
         var msg = this.getMap(true);
-        msg["key"] = null;
-        msg["keys"] = null;
-        msg["data"] = null;
+        delete msg["key"];
+        delete msg["keys"];
+        delete msg["data"];
         msg["content"] = content;
         return new ns.InstantMessage(msg)
     };
@@ -403,7 +403,7 @@
             msg["receiver"] = receiver;
             msg["group"] = group;
             if (keys) {
-                msg["keys"] = null;
+                delete msg["keys"];
                 msg["key"] = keys[receiver]
             }
             if (reliable) {
@@ -423,7 +423,7 @@
             if (base64) {
                 msg["key"] = base64
             }
-            msg["keys"] = null
+            delete msg["keys"]
         }
         var group = this.envelope.getGroup();
         if (!group) {
@@ -469,7 +469,7 @@
         var signature = this.getSignature();
         if (this.delegate.verifyDataSignature(data, signature, sender, this)) {
             var msg = this.getMap(true);
-            msg["signature"] = null;
+            delete msg["signature"];
             return new SecureMessage(msg)
         } else {
             return null
@@ -481,19 +481,39 @@
     var ContentType = ns.protocol.ContentType;
     var Content = ns.Content;
     var Message = ns.Message;
-    var ForwardContent = function(content) {
-        var forward;
-        if (content instanceof Message) {
-            Content.call(this, ContentType.FORWARD);
-            forward = content;
-            this.setValue("forward", forward)
+    var ForwardContent = function(info) {
+        var secret = null;
+        if (!info) {
+            info = ContentType.FORWARD
         } else {
-            Content.call(this, content);
-            forward = Message.getInstance(content["forward"])
+            if (info instanceof Message) {
+                secret = info;
+                info = ContentType.FORWARD
+            }
         }
-        this.forword = forward
+        Content.call(this, info);
+        if (secret) {
+            this.setMessage(secret)
+        } else {
+            if (info.hasOwnProperty("forward")) {
+                this.getMessage()
+            } else {
+                this.forward = null
+            }
+        }
     };
     ForwardContent.inherits(Content);
+    ForwardContent.prototype.getMessage = function() {
+        if (!this.forward) {
+            var forward = this.getValue("forward");
+            this.forward = Message.getInstance(forward)
+        }
+        return this.forward
+    };
+    ForwardContent.prototype.setMessage = function(secret) {
+        this.setValue("forward", secret);
+        this.forward = secret
+    };
     Content.register(ContentType.FORWARD, ForwardContent);
     ns.protocol.ForwardContent = ForwardContent
 }(DIMP);

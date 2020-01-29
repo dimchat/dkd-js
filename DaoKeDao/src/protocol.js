@@ -34,8 +34,8 @@
 
 !function (ns) {
 
-    /*
-     *  @enum DKDContentType
+    /**
+     *  @enum ContentType
      *
      *  @abstract A flag to indicate what kind of message content this is.
      *
@@ -106,7 +106,7 @@
         HISTORY:    (0x89), // 1000 1001 (Entity history command)
 
         // top-secret message forward by proxy (Service Provider)
-        FORWARD:    (0xFF), // 1111 1111
+        FORWARD:    (0xFF)  // 1111 1111
     });
 
     //-------- namespace --------

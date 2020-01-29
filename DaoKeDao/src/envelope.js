@@ -30,6 +30,19 @@
 // =============================================================================
 //
 
+/**
+ *  Envelope for message
+ *  ~~~~~~~~~~~~~~~~~~~~
+ *  This class is used to create a message envelope
+ *  which contains 'sender', 'receiver' and 'time'
+ *
+ *  data format: {
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123
+ *  }
+ */
+
 //! require <crypto.js>
 //! require 'protocol.js'
 
@@ -39,18 +52,6 @@
 
     var ContentType = ns.protocol.ContentType;
 
-    /**
-     *  Envelope for message
-     *  ~~~~~~~~~~~~~~~~~~~~
-     *  This class is used to create a message envelope
-     *  which contains 'sender', 'receiver' and 'time'
-     *
-     *  data format: {
-     *      sender   : "moki@xxx",
-     *      receiver : "hulk@yyy",
-     *      time     : 123
-     *  }
-     */
     var Envelope = function (env) {
         Dictionary.call(this, env);
         this.sender = env['sender'];
@@ -62,7 +63,7 @@
     Envelope.newEnvelope = function (sender, receiver, time) {
         var env = {
             'sender': sender,
-            'receiver': receiver,
+            'receiver': receiver
         };
         if (!time) {
             // get current time
@@ -97,7 +98,6 @@
     Envelope.prototype.getGroup = function () {
         return this.getValue('group');
     };
-
     Envelope.prototype.setGroup = function (identifier) {
         this.setValue('group', identifier);
     };
@@ -118,7 +118,6 @@
             return null;
         }
     };
-
     Envelope.prototype.setType = function (type) {
         this.setValue('type', type);
     };

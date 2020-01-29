@@ -30,6 +30,28 @@
 // =============================================================================
 //
 
+/**
+ *  Reliable Message signed by an asymmetric key
+ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ *  This class is used to sign the SecureMessage
+ *  It contains a 'signature' field which signed with sender's private key
+ *
+ *  data format: {
+ *      //-- envelope
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123,
+ *      //-- content data and key/keys
+ *      data     : "...",  // base64_encode(symmetric)
+ *      key      : "...",  // base64_encode(asymmetric)
+ *      keys     : {
+ *          "ID1": "key1", // base64_encode(asymmetric)
+ *      },
+ *      //-- signature
+ *      signature: "..."   // base64_encode()
+ *  }
+ */
+
 //! require 'secure.js'
 
 !function (ns) {
@@ -37,25 +59,10 @@
     var SecureMessage = ns.SecureMessage;
 
     /**
-     *  Reliable Message signed by an asymmetric key
-     *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     *  This class is used to sign the SecureMessage
-     *  It contains a 'signature' field which signed with sender's private key
+     *  Create reliable message
      *
-     *  data format: {
-     *      //-- envelope
-     *      sender   : "moki@xxx",
-     *      receiver : "hulk@yyy",
-     *      time     : 123,
-     *      //-- content data and key/keys
-     *      data     : "...",  // base64_encode(symmetric)
-     *      key      : "...",  // base64_encode(asymmetric)
-     *      keys     : {
-     *          "ID1": "key1", // base64_encode(asymmetric)
-     *      },
-     *      //-- signature
-     *      signature: "..."   // base64_encode()
-     *  }
+     * @param msg - message info with envelope, data, key/keys, signature
+     * @constructor
      */
     var ReliableMessage = function (msg) {
         SecureMessage.call(this, msg);
@@ -119,7 +126,7 @@
         if (this.delegate.verifyDataSignature(data, signature, sender, this)) {
             // 2. pack message
             var msg = this.getMap(true);
-            msg['signature'] = null;
+            delete msg['signature'];
             return new SecureMessage(msg);
         } else {
             // throw Error('message signature not match: ' + this);

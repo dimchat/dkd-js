@@ -30,6 +30,20 @@
 // =============================================================================
 //
 
+/**
+ *  Instant Message
+ *  ~~~~~~~~~~~~~~~
+ *
+ *  data format: {
+ *      //-- envelope
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123,
+ *      //-- content
+ *      content  : {...}
+ *  }
+ */
+
 //! require 'message.js'
 
 !function (ns) {
@@ -40,17 +54,10 @@
     var SecureMessage = ns.SecureMessage;
 
     /**
-     *  Instant Message
-     *  ~~~~~~~~~~~~~~~
+     *  Create instant message
      *
-     *  data format: {
-     *      //-- envelope
-     *      sender   : "moki@xxx",
-     *      receiver : "hulk@yyy",
-     *      time     : 123,
-     *      //-- content
-     *      content  : {...}
-     *  }
+     * @param msg - message info with envelope, content
+     * @constructor
      */
     var InstantMessage = function (msg) {
         Message.call(this, msg);
@@ -106,7 +113,7 @@
         // 1.2. encode encrypted data
         // 1.3. replace 'content' with encrypted 'data'
         msg['data'] = this.delegate.encodeData(data, this);
-        msg['content'] = null; // delete msg['content']
+        delete msg['content'];
         var key; // key data
         // 2. encrypt symmetric key(password) to 'key'/'keys'
         if (members && members.length > 0) {

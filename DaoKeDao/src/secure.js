@@ -30,6 +30,25 @@
 // =============================================================================
 //
 
+/**
+ *  Secure Message
+ *  ~~~~~~~~~~~~~~
+ *  Instant Message encrypted by a symmetric key
+ *
+ *  data format: {
+ *      //-- envelope
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123,
+ *      //-- content data and key/keys
+ *      data     : "...",  // base64_encode(symmetric)
+ *      key      : "...",  // base64_encode(asymmetric)
+ *      keys     : {
+ *          "ID1": "key1", // base64_encode(asymmetric)
+ *      }
+ *  }
+ */
+
 //! require 'message.js'
 //! require 'instant.js'
 
@@ -38,22 +57,10 @@
     var Message = ns.Message;
 
     /**
-     *  Secure Message
-     *  ~~~~~~~~~~~~~~
-     *  Instant Message encrypted by a symmetric key
+     *  Create secure message
      *
-     *  data format: {
-     *      //-- envelope
-     *      sender   : "moki@xxx",
-     *      receiver : "hulk@yyy",
-     *      time     : 123,
-     *      //-- content data and key/keys
-     *      data     : "...",  // base64_encode(symmetric)
-     *      key      : "...",  // base64_encode(asymmetric)
-     *      keys     : {
-     *          "ID1": "key1", // base64_encode(asymmetric)
-     *      }
-     *  }
+     * @param msg - message info with envelope, data, key/keys
+     * @constructor
      */
     var SecureMessage = function (msg) {
         Message.call(this, msg);
@@ -165,9 +172,9 @@
         }
         // 3. pack message
         var msg = this.getMap(true);
-        msg['key'] = null;
-        msg['keys'] = null;
-        msg['data'] = null;
+        delete msg['key'];
+        delete msg['keys'];
+        delete msg['data'];
         msg['content'] = content;
         return new ns.InstantMessage(msg);
     };
@@ -224,7 +231,7 @@
             msg['group'] = group;
             // 3. get encrypted key
             if (keys) {
-                msg['keys'] = null;
+                delete msg['keys'];
                 msg['key'] = keys[receiver];
             }
             // 4. repack message
@@ -253,7 +260,7 @@
             if (base64) {
                 msg['key'] = base64;
             }
-            msg['keys'] = null;
+            delete msg['keys'];
         }
         // check 'group'
         var group = this.envelope.getGroup();

@@ -30,6 +30,15 @@
 // =============================================================================
 //
 
+/**
+ *  Top-Secret message: {
+ *      type : 0xFF,
+ *      sn   : 456,
+ *
+ *      forward : {...}  // reliable (secure + certified) message
+ *  }
+ */
+
 //! require <crypto.js>
 //! require 'protocol.js'
 //! require 'content.js'
@@ -42,28 +51,44 @@
     var Message = ns.Message;
 
     /**
-     *  Top-Secret message: {
-     *      type : 0xFF,
-     *      sn   : 456,
+     *  Create top-secret message content
      *
-     *      forward : {...}  // reliable (secure + certified) message
-     *  }
+     * @param info - content info; or secret message
+     * @constructor
      */
-    var ForwardContent = function (content) {
-        var forward;
-        if (content instanceof Message) {
-            // create forward content with reliable message
-            Content.call(this, ContentType.FORWARD);
-            forward = content;
-            this.setValue('forward', forward);
-        } else {
-            // create forward content
-            Content.call(this, content);
-            forward = Message.getInstance(content['forward']);
+    var ForwardContent = function (info) {
+        var secret = null;
+        if (!info) {
+            // create empty forward content
+            info = ContentType.FORWARD;
+        } else if (info instanceof Message) {
+            // create new forward content with secret message
+            secret = info;
+            info = ContentType.FORWARD;
         }
-        this.forword = forward;
+        Content.call(this, info);
+        if (secret) {
+            this.setMessage(secret);
+        } else if (info.hasOwnProperty('forward')) {
+            // update this.forward
+            this.getMessage();
+        } else {
+            this.forward = null;
+        }
     };
     ForwardContent.inherits(Content);
+
+    ForwardContent.prototype.getMessage = function () {
+        if (!this.forward) {
+            var forward = this.getValue('forward');
+            this.forward = Message.getInstance(forward);
+        }
+        return this.forward;
+    };
+    ForwardContent.prototype.setMessage = function (secret) {
+        this.setValue('forward', secret);
+        this.forward = secret;
+    };
 
     //-------- register --------
     Content.register(ContentType.FORWARD, ForwardContent);

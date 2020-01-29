@@ -30,10 +30,6 @@
 // =============================================================================
 //
 
-//! require <crypto.js>
-//! require 'envelope.js'
-//! require 'content.js'
-
 /*
  *  Message Transforming
  *  ~~~~~~~~~~~~~~~~~~~~
@@ -53,6 +49,28 @@
  *         key       = receiver.public_key.encrypt(password)
  *         signature = sender.private_key.sign(data)
  */
+
+/**
+ *  Message with Envelope
+ *  ~~~~~~~~~~~~~~~~~~~~~
+ *  Base classes for messages
+ *  This class is used to create a message
+ *  with the envelope fields, such as 'sender', 'receiver', and 'time'
+ *
+ *  data format: {
+ *      //-- envelope
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123,
+ *      //-- body
+ *      ...
+ *  }
+ */
+
+//! require <crypto.js>
+//! require 'envelope.js'
+//! require 'content.js'
+
 !function (ns) {
 
     var Dictionary = ns.type.Dictionary;
@@ -60,20 +78,10 @@
     var Envelope = ns.Envelope;
 
     /**
-     *  Message with Envelope
-     *  ~~~~~~~~~~~~~~~~~~~~~
-     *  Base classes for messages
-     *  This class is used to create a message
-     *  with the envelope fields, such as 'sender', 'receiver', and 'time'
+     *  Create message
      *
-     *  data format: {
-     *      //-- envelope
-     *      sender   : "moki@xxx",
-     *      receiver : "hulk@yyy",
-     *      time     : 123,
-     *      //-- body
-     *      ...
-     *  }
+     * @param msg - message info; or envelope info
+     * @constructor
      */
     var Message = function (msg) {
         Dictionary.call(this, msg);
