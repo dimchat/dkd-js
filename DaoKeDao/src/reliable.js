@@ -118,7 +118,7 @@
      *
      * @returns {SecureMessage|null}
      */
-    SecureMessage.prototype.verify = function () {
+    ReliableMessage.prototype.verify = function () {
         var sender = this.envelope.sender;
         var data = this.getData();
         var signature = this.getSignature();
