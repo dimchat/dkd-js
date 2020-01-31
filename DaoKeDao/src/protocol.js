@@ -33,6 +33,7 @@
 //! require <crypto.js>
 
 !function (ns) {
+    'use strict';
 
     /**
      *  @enum ContentType

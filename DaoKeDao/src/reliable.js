@@ -55,6 +55,7 @@
 //! require 'secure.js'
 
 !function (ns) {
+    'use strict';
 
     var SecureMessage = ns.SecureMessage;
 

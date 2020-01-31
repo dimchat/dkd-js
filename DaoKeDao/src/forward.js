@@ -45,6 +45,7 @@
 //! require 'message.js'
 
 !function (ns) {
+    'use strict';
 
     var ContentType = ns.protocol.ContentType;
     var Content = ns.Content;

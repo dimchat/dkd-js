@@ -53,6 +53,7 @@
 //! require 'instant.js'
 
 !function (ns) {
+    'use strict';
 
     var Message = ns.Message;
 

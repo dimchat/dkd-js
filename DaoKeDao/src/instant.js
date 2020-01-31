@@ -47,6 +47,7 @@
 //! require 'message.js'
 
 !function (ns) {
+    'use strict';
 
     var Envelope = ns.Envelope;
     var Content = ns.Content;
@@ -65,9 +66,9 @@
     };
     InstantMessage.inherits(Message);
 
-    InstantMessage.newMessage = function (content, sender, receiver, time) {
-        var env = Envelope.newEnvelope(sender, receiver, time);
-        var msg = env.getMap(); // get inner dictionary
+    InstantMessage.newMessage = function (content, envelope) {
+        envelope = Envelope.getInstance(envelope);
+        var msg = envelope.getMap(); // get inner dictionary
         msg['content'] = content;
         return new InstantMessage(msg);
     };

@@ -72,6 +72,7 @@
 //! require 'content.js'
 
 !function (ns) {
+    'use strict';
 
     var Dictionary = ns.type.Dictionary;
 

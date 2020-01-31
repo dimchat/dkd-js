@@ -274,9 +274,9 @@
         this.content = Content.getInstance(msg["content"])
     };
     InstantMessage.inherits(Message);
-    InstantMessage.newMessage = function(content, sender, receiver, time) {
-        var env = Envelope.newEnvelope(sender, receiver, time);
-        var msg = env.getMap();
+    InstantMessage.newMessage = function(content, envelope) {
+        envelope = Envelope.getInstance(envelope);
+        var msg = envelope.getMap();
         msg["content"] = content;
         return new InstantMessage(msg)
     };
