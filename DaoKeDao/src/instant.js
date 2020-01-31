@@ -68,7 +68,7 @@
 
     InstantMessage.newMessage = function (content, envelope) {
         envelope = Envelope.getInstance(envelope);
-        var msg = envelope.getMap(); // get inner dictionary
+        var msg = envelope.getMap(true); // get inner dictionary
         msg['content'] = content;
         return new InstantMessage(msg);
     };
