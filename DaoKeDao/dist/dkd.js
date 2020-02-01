@@ -61,6 +61,9 @@
     };
     var content_classes = {};
     Content.register = function(type, clazz) {
+        if (type instanceof ContentType) {
+            type = type.value
+        }
         content_classes[type] = clazz
     };
     Content.getInstance = function(content) {
@@ -72,6 +75,9 @@
             }
         }
         var type = content["type"];
+        if (type instanceof ContentType) {
+            type = type.value
+        }
         var clazz = content_classes[type];
         if (typeof clazz === "function") {
             return Content.createInstance(clazz, content)
