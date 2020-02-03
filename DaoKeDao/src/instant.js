@@ -52,7 +52,6 @@
     var Envelope = ns.Envelope;
     var Content = ns.Content;
     var Message = ns.Message;
-    var SecureMessage = ns.SecureMessage;
 
     /**
      *  Create instant message
@@ -153,7 +152,7 @@
         }
 
         // 3. pack message
-        return new SecureMessage(msg);
+        return new ns.SecureMessage(msg);
     };
 
     //-------- namespace --------

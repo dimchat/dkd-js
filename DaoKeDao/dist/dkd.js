@@ -274,7 +274,6 @@
     var Envelope = ns.Envelope;
     var Content = ns.Content;
     var Message = ns.Message;
-    var SecureMessage = ns.SecureMessage;
     var InstantMessage = function(msg) {
         Message.call(this, msg);
         this.content = Content.getInstance(msg["content"])
@@ -322,7 +321,7 @@
                 msg["key"] = this.delegate.encodeKey(key, this)
             }
         }
-        return new SecureMessage(msg)
+        return new ns.SecureMessage(msg)
     };
     ns.InstantMessage = InstantMessage
 }(DIMP);
