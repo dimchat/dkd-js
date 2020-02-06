@@ -30,7 +30,7 @@
 // =============================================================================
 //
 
-//! require <crypto.js>
+//! require 'namespace.js'
 
 !function (ns) {
     'use strict';
@@ -111,9 +111,8 @@
     });
 
     //-------- namespace --------
-    if (typeof ns.protocol !== 'object') {
-        ns.protocol = {}
-    }
     ns.protocol.ContentType = ContentType;
 
-}(DIMP);
+    ns.protocol.register('ContentType');
+
+}(DaoKeDao);

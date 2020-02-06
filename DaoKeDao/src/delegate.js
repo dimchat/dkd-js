@@ -30,7 +30,7 @@
 // =============================================================================
 //
 
-//! require <crypto.js>
+//! require 'namespace.js'
 
 !function (ns) {
     'use strict';
@@ -233,4 +233,8 @@
     ns.SecureMessageDelegate = SecureMessageDelegate;
     ns.ReliableMessageDelegate = ReliableMessageDelegate;
 
-}(DIMP);
+    ns.register('InstantMessageDelegate');
+    ns.register('SecureMessageDelegate');
+    ns.register('ReliableMessageDelegate');
+
+}(DaoKeDao);

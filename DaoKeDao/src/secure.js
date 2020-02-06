@@ -283,4 +283,6 @@
     //-------- namespace --------
     ns.SecureMessage = SecureMessage;
 
-}(DIMP);
+    ns.register('SecureMessage');
+
+}(DaoKeDao);

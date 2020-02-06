@@ -138,4 +138,6 @@
     //-------- namespace --------
     ns.ReliableMessage = ReliableMessage;
 
-}(DIMP);
+    ns.register('ReliableMessage');
+
+}(DaoKeDao);

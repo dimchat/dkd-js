@@ -48,7 +48,7 @@
  *  }
  */
 
-//! require <crypto.js>
+//! require 'namespace.js'
 //! require 'protocol.js'
 
 !function (ns) {
@@ -142,4 +142,6 @@
     //-------- namespace --------
     ns.Content = Content;
 
-}(DIMP);
+    ns.register('Content');
+
+}(DaoKeDao);

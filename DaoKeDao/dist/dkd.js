@@ -6,6 +6,16 @@
  * @copyright (c) 2020 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */
+if (typeof DaoKeDao !== "object") {
+    DaoKeDao = {}
+}! function(ns) {
+    DIMP.exports(ns);
+    if (typeof ns.protocol !== "object") {
+        ns.protocol = {}
+    }
+    DIMP.namespace(ns.protocol);
+    ns.register("protocol")
+}(DaoKeDao);
 ! function(ns) {
     var ContentType = ns.type.Enum({
         UNKNOWN: (0),
@@ -21,11 +31,9 @@
         HISTORY: (137),
         FORWARD: (255)
     });
-    if (typeof ns.protocol !== "object") {
-        ns.protocol = {}
-    }
-    ns.protocol.ContentType = ContentType
-}(DIMP);
+    ns.protocol.ContentType = ContentType;
+    ns.protocol.register("ContentType")
+}(DaoKeDao);
 ! function(ns) {
     var Dictionary = ns.type.Dictionary;
     var ContentType = ns.protocol.ContentType;
@@ -91,8 +99,9 @@
             return new clazz(map)
         }
     };
-    ns.Content = Content
-}(DIMP);
+    ns.Content = Content;
+    ns.register("Content")
+}(DaoKeDao);
 ! function(ns) {
     var Dictionary = ns.type.Dictionary;
     var ContentType = ns.protocol.ContentType;
@@ -147,8 +156,9 @@
     Envelope.prototype.setType = function(type) {
         this.setValue("type", type)
     };
-    ns.Envelope = Envelope
-}(DIMP);
+    ns.Envelope = Envelope;
+    ns.register("Envelope")
+}(DaoKeDao);
 ! function(ns) {
     var MessageDelegate = function() {};
     var InstantMessageDelegate = function() {};
@@ -239,8 +249,11 @@
     };
     ns.InstantMessageDelegate = InstantMessageDelegate;
     ns.SecureMessageDelegate = SecureMessageDelegate;
-    ns.ReliableMessageDelegate = ReliableMessageDelegate
-}(DIMP);
+    ns.ReliableMessageDelegate = ReliableMessageDelegate;
+    ns.register("InstantMessageDelegate");
+    ns.register("SecureMessageDelegate");
+    ns.register("ReliableMessageDelegate")
+}(DaoKeDao);
 ! function(ns) {
     var Dictionary = ns.type.Dictionary;
     var Envelope = ns.Envelope;
@@ -268,8 +281,9 @@
         }
         return new Message(msg)
     };
-    ns.Message = Message
-}(DIMP);
+    ns.Message = Message;
+    ns.register("Message")
+}(DaoKeDao);
 ! function(ns) {
     var Envelope = ns.Envelope;
     var Content = ns.Content;
@@ -323,8 +337,9 @@
         }
         return new ns.SecureMessage(msg)
     };
-    ns.InstantMessage = InstantMessage
-}(DIMP);
+    ns.InstantMessage = InstantMessage;
+    ns.register("InstantMessage")
+}(DaoKeDao);
 ! function(ns) {
     var Message = ns.Message;
     var SecureMessage = function(msg) {
@@ -441,8 +456,9 @@
             return new SecureMessage(msg)
         }
     };
-    ns.SecureMessage = SecureMessage
-}(DIMP);
+    ns.SecureMessage = SecureMessage;
+    ns.register("SecureMessage")
+}(DaoKeDao);
 ! function(ns) {
     var SecureMessage = ns.SecureMessage;
     var ReliableMessage = function(msg) {
@@ -480,8 +496,9 @@
             return null
         }
     };
-    ns.ReliableMessage = ReliableMessage
-}(DIMP);
+    ns.ReliableMessage = ReliableMessage;
+    ns.register("ReliableMessage")
+}(DaoKeDao);
 ! function(ns) {
     var ContentType = ns.protocol.ContentType;
     var Content = ns.Content;
@@ -520,5 +537,6 @@
         this.forward = secret
     };
     Content.register(ContentType.FORWARD, ForwardContent);
-    ns.protocol.ForwardContent = ForwardContent
-}(DIMP);
+    ns.protocol.ForwardContent = ForwardContent;
+    ns.protocol.register("ForwardContent")
+}(DaoKeDao);

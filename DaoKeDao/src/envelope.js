@@ -43,7 +43,7 @@
  *  }
  */
 
-//! require <crypto.js>
+//! require 'namespace.js'
 //! require 'protocol.js'
 
 !function (ns) {
@@ -126,4 +126,6 @@
     //-------- namespace --------
     ns.Envelope = Envelope;
 
-}(DIMP);
+    ns.register('Envelope');
+
+}(DaoKeDao);

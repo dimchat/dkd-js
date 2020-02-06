@@ -158,4 +158,6 @@
     //-------- namespace --------
     ns.InstantMessage = InstantMessage;
 
-}(DIMP);
+    ns.register('InstantMessage');
+
+}(DaoKeDao);

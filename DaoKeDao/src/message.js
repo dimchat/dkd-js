@@ -67,7 +67,7 @@
  *  }
  */
 
-//! require <crypto.js>
+//! require 'namespace.js'
 //! require 'envelope.js'
 //! require 'content.js'
 
@@ -118,4 +118,6 @@
     //-------- namespace --------
     ns.Message = Message;
 
-}(DIMP);
+    ns.register('Message');
+
+}(DaoKeDao);

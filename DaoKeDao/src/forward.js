@@ -39,7 +39,7 @@
  *  }
  */
 
-//! require <crypto.js>
+//! require 'namespace.js'
 //! require 'protocol.js'
 //! require 'content.js'
 //! require 'message.js'
@@ -97,4 +97,6 @@
     //-------- namespace --------
     ns.protocol.ForwardContent = ForwardContent;
 
-}(DIMP);
+    ns.protocol.register('ForwardContent');
+
+}(DaoKeDao);
