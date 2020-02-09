@@ -60,7 +60,7 @@ if (typeof DaoKeDao !== "object") {
         this.type = new ContentType(info["type"]);
         this.sn = info["sn"]
     };
-    Content.inherits(Dictionary);
+    ns.type.Class(Content, Dictionary);
     Content.prototype.getGroup = function() {
         return this.getValue("group")
     };
@@ -111,7 +111,7 @@ if (typeof DaoKeDao !== "object") {
         this.receiver = env["receiver"];
         this.time = env["time"]
     };
-    Envelope.inherits(Dictionary);
+    ns.type.Class(Envelope, Dictionary);
     Envelope.newEnvelope = function(sender, receiver, time) {
         var env = {
             "sender": sender,
@@ -161,8 +161,9 @@ if (typeof DaoKeDao !== "object") {
 }(DaoKeDao);
 ! function(ns) {
     var MessageDelegate = function() {};
+    ns.type.Interface(MessageDelegate);
     var InstantMessageDelegate = function() {};
-    InstantMessageDelegate.inherits(MessageDelegate);
+    ns.type.Interface(InstantMessageDelegate, MessageDelegate);
     InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
         console.assert(content !== null, "content empty");
         console.assert(pwd !== null, "key empty");
@@ -190,7 +191,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var SecureMessageDelegate = function() {};
-    SecureMessageDelegate.inherits(MessageDelegate);
+    ns.type.Interface(SecureMessageDelegate, MessageDelegate);
     SecureMessageDelegate.prototype.decodeKey = function(key, msg) {
         console.assert(key !== null, "key string empty");
         console.assert(msg !== null, "secure message empty");
@@ -232,7 +233,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var ReliableMessageDelegate = function() {};
-    ReliableMessageDelegate.inherits(SecureMessageDelegate);
+    ns.type.Interface(ReliableMessageDelegate, SecureMessageDelegate);
     ReliableMessageDelegate.prototype.decodeSignature = function(signature, msg) {
         console.assert(msg !== null, "msg empty");
         console.assert(msg !== null, "msg empty");
@@ -262,7 +263,7 @@ if (typeof DaoKeDao !== "object") {
         this.envelope = Envelope.getInstance(msg);
         this.delegate = null
     };
-    Message.inherits(Dictionary);
+    ns.type.Class(Message, Dictionary);
     Message.getInstance = function(msg) {
         if (!msg) {
             return null
@@ -292,7 +293,7 @@ if (typeof DaoKeDao !== "object") {
         Message.call(this, msg);
         this.content = Content.getInstance(msg["content"])
     };
-    InstantMessage.inherits(Message);
+    ns.type.Class(InstantMessage, Message);
     InstantMessage.newMessage = function(content, envelope) {
         envelope = Envelope.getInstance(envelope);
         var msg = envelope.getMap(true);
@@ -345,7 +346,7 @@ if (typeof DaoKeDao !== "object") {
     var SecureMessage = function(msg) {
         Message.call(this, msg)
     };
-    SecureMessage.inherits(Message);
+    ns.type.Class(SecureMessage, Message);
     SecureMessage.prototype.getData = function() {
         var base64 = this.getValue("data");
         return this.delegate.decodeData(base64, this)
@@ -464,7 +465,7 @@ if (typeof DaoKeDao !== "object") {
     var ReliableMessage = function(msg) {
         SecureMessage.call(this, msg)
     };
-    ReliableMessage.inherits(SecureMessage);
+    ns.type.Class(ReliableMessage, SecureMessage);
     ReliableMessage.prototype.getSignature = function() {
         var base64 = this.getValue("signature");
         return this.delegate.decodeSignature(base64, this)
@@ -524,7 +525,7 @@ if (typeof DaoKeDao !== "object") {
             }
         }
     };
-    ForwardContent.inherits(Content);
+    ns.type.Class(ForwardContent, Content);
     ForwardContent.prototype.getMessage = function() {
         if (!this.forward) {
             var forward = this.getValue("forward");

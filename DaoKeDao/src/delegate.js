@@ -37,12 +37,13 @@
 
     var MessageDelegate = function () {
     };
+    ns.type.Interface(MessageDelegate);
 
     //-------- instant message delegate
 
     var InstantMessageDelegate = function () {
     };
-    InstantMessageDelegate.inherits(MessageDelegate);
+    ns.type.Interface(InstantMessageDelegate, MessageDelegate);
     /**
      *  Encrypt 'message.content' to 'message.data' with symmetric key
      *
@@ -104,7 +105,7 @@
 
     var SecureMessageDelegate = function () {
     };
-    SecureMessageDelegate.inherits(MessageDelegate);
+    ns.type.Interface(SecureMessageDelegate, MessageDelegate);
     /**
      *  Decode 'message.key' to encrypted symmetric key data
      *
@@ -196,7 +197,7 @@
 
     var ReliableMessageDelegate = function () {
     };
-    ReliableMessageDelegate.inherits(SecureMessageDelegate);
+    ns.type.Interface(ReliableMessageDelegate, SecureMessageDelegate);
     /**
      *  Decode 'message.signature' from String(Base64)
      *

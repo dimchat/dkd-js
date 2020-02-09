@@ -66,7 +66,7 @@
     var SecureMessage = function (msg) {
         Message.call(this, msg);
     };
-    SecureMessage.inherits(Message);
+    ns.type.Class(SecureMessage, Message);
 
     /**
      *  Get encrypted message content data

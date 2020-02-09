@@ -63,7 +63,7 @@
         Message.call(this, msg);
         this.content = Content.getInstance(msg['content']);
     };
-    InstantMessage.inherits(Message);
+    ns.type.Class(InstantMessage, Message);
 
     InstantMessage.newMessage = function (content, envelope) {
         envelope = Envelope.getInstance(envelope);

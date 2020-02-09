@@ -59,7 +59,7 @@
         this.receiver = env['receiver'];
         this.time = env['time'];
     };
-    Envelope.inherits(Dictionary);
+    ns.type.Class(Envelope, Dictionary);
 
     Envelope.newEnvelope = function (sender, receiver, time) {
         var env = {

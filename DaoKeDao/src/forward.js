@@ -77,7 +77,7 @@
             this.forward = null;
         }
     };
-    ForwardContent.inherits(Content);
+    ns.type.Class(ForwardContent, Content);
 
     ForwardContent.prototype.getMessage = function () {
         if (!this.forward) {

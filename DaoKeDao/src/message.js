@@ -91,7 +91,7 @@
         // delegate to transform messages
         this.delegate = null;
     };
-    Message.inherits(Dictionary);
+    ns.type.Class(Message, Dictionary);
 
     Message.getInstance = function (msg) {
         if (!msg) {

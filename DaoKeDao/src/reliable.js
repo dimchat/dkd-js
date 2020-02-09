@@ -68,7 +68,7 @@
     var ReliableMessage = function (msg) {
         SecureMessage.call(this, msg);
     };
-    ReliableMessage.inherits(SecureMessage);
+    ns.type.Class(ReliableMessage, SecureMessage);
 
     ReliableMessage.prototype.getSignature = function () {
         var base64 = this.getValue('signature');

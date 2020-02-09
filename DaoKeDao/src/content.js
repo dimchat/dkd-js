@@ -90,7 +90,7 @@
         // serial number: random number to identify message content
         this.sn = info['sn'];
     };
-    Content.inherits(Dictionary);
+    ns.type.Class(Content, Dictionary);
 
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message
