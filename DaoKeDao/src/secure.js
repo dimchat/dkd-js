@@ -71,7 +71,7 @@
     /**
      *  Get encrypted message content data
      *
-     * @returns {*[]}
+     * @returns {Uint8Array}
      */
     SecureMessage.prototype.getData = function () {
         var base64 = this.getValue('data');
@@ -81,7 +81,7 @@
     /**
      *  Get encrypted key data for receiver
      *
-     * @returns {null|*[]}
+     * @returns {Uint8Array|null}
      */
     SecureMessage.prototype.getKey = function () {
         var base64 = this.getValue('key');
