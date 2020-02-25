@@ -73,7 +73,7 @@
     /**
      *  Create message content
      *
-     * @param info - content info; or content type
+     * @param info {{}|ContentType} - content info; or content type
      * @constructor
      */
     var Content = function (info) {
@@ -90,7 +90,7 @@
         // serial number: random number to identify message content
         this.sn = info['sn'];
     };
-    ns.type.Class(Content, Dictionary);
+    ns.Class(Content, Dictionary);
 
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message

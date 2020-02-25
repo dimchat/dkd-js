@@ -37,19 +37,19 @@
 
     var MessageDelegate = function () {
     };
-    ns.type.Interface(MessageDelegate);
+    ns.Interface(MessageDelegate);
 
     //-------- instant message delegate
 
     var InstantMessageDelegate = function () {
     };
-    ns.type.Interface(InstantMessageDelegate, MessageDelegate);
+    ns.Interface(InstantMessageDelegate, MessageDelegate);
     /**
      *  Encrypt 'message.content' to 'message.data' with symmetric key
      *
-     * @param content - message content
-     * @param pwd - symmetric key
-     * @param msg - instant message object
+     * @param content {Content}
+     * @param pwd {SymmetricKey}
+     * @param msg {InstantMessage}
      * @returns {Uint8Array}
      */
     InstantMessageDelegate.prototype.encryptContent = function (content, pwd, msg) {
@@ -62,8 +62,8 @@
     /**
      *  Encode 'message.data' to String(Base64)
      *
-     * @param data - encrypted content data (Uint8Array)
-     * @param msg - instant message object
+     * @param data {Uint8Array} - encrypted content data
+     * @param msg {InstantMessage}
      * @returns {string|null}
      */
     InstantMessageDelegate.prototype.encodeData = function (data, msg) {
@@ -75,9 +75,9 @@
     /**
      *  Encrypt 'message.key' with receiver's public key
      *
-     * @param pwd - symmetric key to be encrypted
-     * @param receiver - receiver ID/string
-     * @param msg - instant message object
+     * @param pwd {SymmetricKey} - symmetric key to be encrypted
+     * @param receiver {String} - receiver ID/string
+     * @param msg {InstantMessage}
      * @returns {Uint8Array}
      */
     InstantMessageDelegate.prototype.encryptKey = function (pwd, receiver, msg) {
@@ -90,8 +90,8 @@
     /**
      *  Encode 'message.key' to String(Base64)
      *
-     * @param key - encrypted key data (Uint8Array)
-     * @param msg - instant message object
+     * @param key {Uint8Array} - encrypted key data
+     * @param msg {InstantMessage}
      * @returns {string|null}
      */
     InstantMessageDelegate.prototype.encodeKey = function (key, msg) {
@@ -105,12 +105,12 @@
 
     var SecureMessageDelegate = function () {
     };
-    ns.type.Interface(SecureMessageDelegate, MessageDelegate);
+    ns.Interface(SecureMessageDelegate, MessageDelegate);
     /**
      *  Decode 'message.key' to encrypted symmetric key data
      *
-     * @param key - base64 string
-     * @param msg - secure message object
+     * @param key {String} - base64 string
+     * @param msg {SecureMessage}
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.decodeKey = function (key, msg) {
@@ -122,11 +122,11 @@
     /**
      *  Decrypt 'message.key' with receiver's private key
      *
-     * @param key - encrypted symmetric key data (Uint8Array)
-     * @param sender - sender/member ID string
-     * @param receiver - receiver/group ID string
-     * @param msg - secure message object
-     * @returns {SymmetricKey|null}
+     * @param key {Uint8Array} - encrypted symmetric key data
+     * @param sender {String} - sender/member ID string
+     * @param receiver {String} - receiver/group ID string
+     * @param msg {SecureMessage}
+     * @returns {SymmetricKey}
      */
     SecureMessageDelegate.prototype.decryptKey = function (key, sender, receiver, msg) {
         console.assert(key !== null, 'key data empty');
@@ -139,8 +139,8 @@
     /**
      *  Decode 'message.data' to encrypted content data
      *
-     * @param data - base64 string
-     * @param msg - secure message object
+     * @param data {String} - base64 string
+     * @param msg {SecureMessage}
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.decodeData = function (data, msg) {
@@ -152,10 +152,10 @@
     /**
      *  Decrypt 'message.data' with symmetric key
      *
-     * @param data - encrypt content data (Uint8Array)
-     * @param pwd - symmetric key
-     * @param msg - secure message object
-     * @returns {Content|null}
+     * @param data {Uint8Array} - encrypt content data
+     * @param pwd {SymmetricKey}
+     * @param msg {SecureMessage}
+     * @returns {Content}
      */
     SecureMessageDelegate.prototype.decryptContent = function (data, pwd, msg) {
         console.assert(data !== null, 'msg data empty');
@@ -167,9 +167,9 @@
     /**
      *  Sign 'message.data' with sender's private key
      *
-     * @param data - encrypted message data (Uint8Array)
-     * @param sender - sender ID
-     * @param msg - secure message object
+     * @param data {Uint8Array} - encrypted message data
+     * @param sender {String} - sender ID
+     * @param msg {SecureMessage}
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.signData = function (data, sender, msg) {
@@ -182,9 +182,9 @@
     /**
      *  Encode 'message.signature' to String(Base64)
      *
-     * @param signature - signature of message.data (Uint8Array)
-     * @param msg - secure message object
-     * @returns {string|null}
+     * @param signature {Uint8Array} - signature of message.data
+     * @param msg {SecureMessage}
+     * @returns {String}
      */
     SecureMessageDelegate.prototype.encodeSignature = function (signature, msg) {
         console.assert(signature !== null, 'msg signature empty');
@@ -197,12 +197,12 @@
 
     var ReliableMessageDelegate = function () {
     };
-    ns.type.Interface(ReliableMessageDelegate, SecureMessageDelegate);
+    ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
     /**
      *  Decode 'message.signature' from String(Base64)
      *
-     * @param signature - base64 string
-     * @param msg - reliable message
+     * @param signature {String} - base64 string
+     * @param msg {ReliableMessage}
      * @returns {Uint8Array}
      */
     ReliableMessageDelegate.prototype.decodeSignature = function (signature, msg) {
@@ -214,10 +214,10 @@
     /**
      *  Verify the message data and signature with sender's public key
      *
-     * @param data - message content(encrypted) data (Uint8Array)
-     * @param signature - signature for message content(encrypted) data (Uint8Array)
-     * @param sender - sender ID/string
-     * @param msg - reliable message object
+     * @param data {Uint8Array} - message content(encrypted) data
+     * @param signature {Uint8Array} - signature for message content(encrypted) data
+     * @param sender {String} - sender ID/string
+     * @param msg {ReliableMessage}
      * @returns {boolean}
      */
     ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, msg) {

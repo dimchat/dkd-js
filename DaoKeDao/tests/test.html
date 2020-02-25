@@ -15,7 +15,6 @@
     <script>
         !function (ns) {
             var sources = [
-
                 'src/namespace.js',
 
                 'src/protocol.js',
@@ -28,12 +27,17 @@
                 'src/instant.js',
                 'src/secure.js',
                 'src/reliable.js',
-                'src/forward.js'
+                'src/forward.js',
+                null
             ];
 
             var dist = 'dist/dkd.js';
 
-            var tests = ['../Crypto/tests/crypto_tests.js', 'tests/dkd_tests.js'];
+            var tests = [
+                '../Crypto/tests/crypto_tests.js',
+                'tests/dkd_tests.js',
+                null
+            ];
 
             var base = window.location.href;
             base = base.substring(0, base.indexOf('tests/test.html'));
@@ -63,26 +67,31 @@
 </head>
 <body>
 
-<h2>Crypto Tests</h2>
-<div id="crypto_tests">Testing ...</div>
-<div>&nbsp;</div>
+    <h2>Crypto Tests</h2>
+    <div id="crypto_tests">Testing ...</div>
+    <div>&nbsp;</div>
 
-<h2>DaoKeDao Tests</h2>
-<div id="dkd_tests">Testing ...</div>
-<div>&nbsp;</div>
+    <h2>DaoKeDao Tests</h2>
+    <div id="dkd_tests">Testing ...</div>
+    <div>&nbsp;</div>
 
-<h2>Makefile</h2>
-<p class="console">
-    <script>
-        !(function () {
-            var text = 'cat';
-            for (var i = 0; i < sources.length; ++i) {
-                text += ' ' + sources[i];
-            }
-            text += ' >> ' + dist;
-            document.writeln(text);
-        }());
-    </script>
-</p>
+    <h2>Makefile</h2>
+    <p class="console">
+        <script>
+            !(function () {
+                var text = 'cat';
+                var file;
+                for (var i = 0; i < sources.length; ++i) {
+                    file = sources[i];
+                    if (!file) {
+                        continue;
+                    }
+                    text += ' ' + file;
+                }
+                text += ' >> ' + dist;
+                document.writeln(text);
+            }());
+        </script>
+    </p>
 </body>
 </html>

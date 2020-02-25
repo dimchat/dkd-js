@@ -54,7 +54,7 @@
     /**
      *  Create top-secret message content
      *
-     * @param info - content info; or secret message
+     * @param info {{}|ReliableMessage} - content info; or secret message
      * @constructor
      */
     var ForwardContent = function (info) {
@@ -77,7 +77,7 @@
             this.forward = null;
         }
     };
-    ns.type.Class(ForwardContent, Content);
+    ns.Class(ForwardContent, Content);
 
     ForwardContent.prototype.getMessage = function () {
         if (!this.forward) {

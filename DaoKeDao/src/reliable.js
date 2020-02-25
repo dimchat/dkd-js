@@ -62,13 +62,13 @@
     /**
      *  Create reliable message
      *
-     * @param msg - message info with envelope, data, key/keys, signature
+     * @param msg {{}} - message info with envelope, data, key/keys, signature
      * @constructor
      */
     var ReliableMessage = function (msg) {
         SecureMessage.call(this, msg);
     };
-    ns.type.Class(ReliableMessage, SecureMessage);
+    ns.Class(ReliableMessage, SecureMessage);
 
     ReliableMessage.prototype.getSignature = function () {
         var base64 = this.getValue('signature');
@@ -80,7 +80,7 @@
      *  ~~~~~~~~~~~~~
      *  Extends for the first message package of 'Handshake' protocol.
      *
-     * @param meta - Meta object or dictionary
+     * @param meta {{}} - Meta object or dictionary
      */
     ReliableMessage.prototype.setMeta = function (meta) {
         this.setValue('meta', meta);
@@ -117,7 +117,7 @@
     /**
      *  Verify 'data' and 'signature' field with sender's public key
      *
-     * @returns {SecureMessage|null}
+     * @returns {SecureMessage}
      */
     ReliableMessage.prototype.verify = function () {
         var sender = this.envelope.sender;

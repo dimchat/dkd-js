@@ -56,14 +56,14 @@
     /**
      *  Create instant message
      *
-     * @param msg - message info with envelope, content
+     * @param msg {{}} - message info with envelope, content
      * @constructor
      */
     var InstantMessage = function (msg) {
         Message.call(this, msg);
         this.content = Content.getInstance(msg['content']);
     };
-    ns.type.Class(InstantMessage, Message);
+    ns.Class(InstantMessage, Message);
 
     InstantMessage.newMessage = function (content, envelope) {
         envelope = Envelope.getInstance(envelope);
@@ -98,8 +98,8 @@
     /**
      *  Encrypt group message, replace 'content' field with encrypted 'data'
      *
-     * @param password - symmetric key
-     * @param members - group members
+     * @param password {SymmetricKey}
+     * @param members {String[]} - group members ID/string list
      * @returns {SecureMessage}
      */
     InstantMessage.prototype.encrypt = function (password, members) {

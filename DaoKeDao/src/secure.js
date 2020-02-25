@@ -60,13 +60,13 @@
     /**
      *  Create secure message
      *
-     * @param msg - message info with envelope, data, key/keys
+     * @param msg {{}} - message info with envelope, data, key/keys
      * @constructor
      */
     var SecureMessage = function (msg) {
         Message.call(this, msg);
     };
-    ns.type.Class(SecureMessage, Message);
+    ns.Class(SecureMessage, Message);
 
     /**
      *  Get encrypted message content data
@@ -81,7 +81,7 @@
     /**
      *  Get encrypted key data for receiver
      *
-     * @returns {Uint8Array|null}
+     * @returns {Uint8Array}
      */
     SecureMessage.prototype.getKey = function () {
         var base64 = this.getValue('key');
@@ -102,7 +102,7 @@
     /**
      *  Get encrypted keys for group members
      *
-     * @returns {map}
+     * @returns {{}}
      */
     SecureMessage.prototype.getKeys = function () {
         return this.getValue('keys');
@@ -205,7 +205,7 @@
     /**
      *  Split the group message to single person messages
      *
-     * @param members - group members
+     * @param members {String[]} - group members ID/string list
      * @returns {SecureMessage[]}
      */
     SecureMessage.prototype.split = function (members) {
@@ -248,7 +248,7 @@
     /**
      *  Trim the group message for a member
      *
-     * @param member - group member ID/string
+     * @param member {String} - group member ID/string
      * @returns {ReliableMessage|SecureMessage}
      */
     SecureMessage.prototype.trim = function (member) {

@@ -13,7 +13,7 @@ if (typeof DaoKeDao !== "object") {
     if (typeof ns.protocol !== "object") {
         ns.protocol = {}
     }
-    DIMP.namespace(ns.protocol);
+    DIMP.Namespace(ns.protocol);
     ns.register("protocol")
 }(DaoKeDao);
 ! function(ns) {
@@ -60,7 +60,7 @@ if (typeof DaoKeDao !== "object") {
         this.type = new ContentType(info["type"]);
         this.sn = info["sn"]
     };
-    ns.type.Class(Content, Dictionary);
+    ns.Class(Content, Dictionary);
     Content.prototype.getGroup = function() {
         return this.getValue("group")
     };
@@ -111,7 +111,7 @@ if (typeof DaoKeDao !== "object") {
         this.receiver = env["receiver"];
         this.time = env["time"]
     };
-    ns.type.Class(Envelope, Dictionary);
+    ns.Class(Envelope, Dictionary);
     Envelope.newEnvelope = function(sender, receiver, time) {
         var env = {
             "sender": sender,
@@ -161,9 +161,9 @@ if (typeof DaoKeDao !== "object") {
 }(DaoKeDao);
 ! function(ns) {
     var MessageDelegate = function() {};
-    ns.type.Interface(MessageDelegate);
+    ns.Interface(MessageDelegate);
     var InstantMessageDelegate = function() {};
-    ns.type.Interface(InstantMessageDelegate, MessageDelegate);
+    ns.Interface(InstantMessageDelegate, MessageDelegate);
     InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
         console.assert(content !== null, "content empty");
         console.assert(pwd !== null, "key empty");
@@ -191,7 +191,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var SecureMessageDelegate = function() {};
-    ns.type.Interface(SecureMessageDelegate, MessageDelegate);
+    ns.Interface(SecureMessageDelegate, MessageDelegate);
     SecureMessageDelegate.prototype.decodeKey = function(key, msg) {
         console.assert(key !== null, "key string empty");
         console.assert(msg !== null, "secure message empty");
@@ -233,7 +233,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var ReliableMessageDelegate = function() {};
-    ns.type.Interface(ReliableMessageDelegate, SecureMessageDelegate);
+    ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
     ReliableMessageDelegate.prototype.decodeSignature = function(signature, msg) {
         console.assert(msg !== null, "msg empty");
         console.assert(msg !== null, "msg empty");
@@ -263,7 +263,7 @@ if (typeof DaoKeDao !== "object") {
         this.envelope = Envelope.getInstance(msg);
         this.delegate = null
     };
-    ns.type.Class(Message, Dictionary);
+    ns.Class(Message, Dictionary);
     Message.getInstance = function(msg) {
         if (!msg) {
             return null
@@ -293,7 +293,7 @@ if (typeof DaoKeDao !== "object") {
         Message.call(this, msg);
         this.content = Content.getInstance(msg["content"])
     };
-    ns.type.Class(InstantMessage, Message);
+    ns.Class(InstantMessage, Message);
     InstantMessage.newMessage = function(content, envelope) {
         envelope = Envelope.getInstance(envelope);
         var msg = envelope.getMap(true);
@@ -346,7 +346,7 @@ if (typeof DaoKeDao !== "object") {
     var SecureMessage = function(msg) {
         Message.call(this, msg)
     };
-    ns.type.Class(SecureMessage, Message);
+    ns.Class(SecureMessage, Message);
     SecureMessage.prototype.getData = function() {
         var base64 = this.getValue("data");
         return this.delegate.decodeData(base64, this)
@@ -465,7 +465,7 @@ if (typeof DaoKeDao !== "object") {
     var ReliableMessage = function(msg) {
         SecureMessage.call(this, msg)
     };
-    ns.type.Class(ReliableMessage, SecureMessage);
+    ns.Class(ReliableMessage, SecureMessage);
     ReliableMessage.prototype.getSignature = function() {
         var base64 = this.getValue("signature");
         return this.delegate.decodeSignature(base64, this)
@@ -525,7 +525,7 @@ if (typeof DaoKeDao !== "object") {
             }
         }
     };
-    ns.type.Class(ForwardContent, Content);
+    ns.Class(ForwardContent, Content);
     ForwardContent.prototype.getMessage = function() {
         if (!this.forward) {
             var forward = this.getValue("forward");

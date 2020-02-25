@@ -47,7 +47,7 @@ if (typeof DaoKeDao !== 'object') {
         ns.protocol = {};
     }
 
-    DIMP.namespace(ns.protocol);
+    DIMP.Namespace(ns.protocol);
 
     ns.register('protocol');
 

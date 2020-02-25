@@ -81,7 +81,7 @@
     /**
      *  Create message
      *
-     * @param msg - message info; or envelope info
+     * @param msg {{}} - message info; or envelope info
      * @constructor
      */
     var Message = function (msg) {
@@ -91,7 +91,7 @@
         // delegate to transform messages
         this.delegate = null;
     };
-    ns.type.Class(Message, Dictionary);
+    ns.Class(Message, Dictionary);
 
     Message.getInstance = function (msg) {
         if (!msg) {
