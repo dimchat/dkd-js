@@ -66,7 +66,7 @@
     var SecureMessage = function (msg) {
         Message.call(this, msg);
     };
-    ns.Class(SecureMessage, Message);
+    ns.Class(SecureMessage, Message, null);
 
     /**
      *  Get encrypted message content data
@@ -108,6 +108,12 @@
         return this.getValue('keys');
     };
 
+    /**
+     *  Create secure message
+     *
+     * @param msg {{}|Message}
+     * @returns {SecureMessage|ReliableMessage}
+     */
     SecureMessage.getInstance = function (msg) {
         if (!msg) {
             return null;

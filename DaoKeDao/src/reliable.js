@@ -68,8 +68,13 @@
     var ReliableMessage = function (msg) {
         SecureMessage.call(this, msg);
     };
-    ns.Class(ReliableMessage, SecureMessage);
+    ns.Class(ReliableMessage, SecureMessage, null);
 
+    /**
+     *  Get signature for message data
+     *
+     * @returns {Uint8Array}
+     */
     ReliableMessage.prototype.getSignature = function () {
         var base64 = this.getValue('signature');
         return this.delegate.decodeSignature(base64, this);
@@ -90,6 +95,12 @@
         return this.getValue('meta');
     };
 
+    /**
+     *  Create reliable message
+     *
+     * @param msg {{}|Message}
+     * @returns {ReliableMessage}
+     */
     ReliableMessage.getInstance = function (msg) {
         if (!msg) {
             return null;

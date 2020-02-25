@@ -37,7 +37,7 @@
 
     var MessageDelegate = function () {
     };
-    ns.Interface(MessageDelegate);
+    ns.Interface(MessageDelegate, null);
 
     //-------- instant message delegate
 

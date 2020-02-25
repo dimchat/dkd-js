@@ -90,7 +90,7 @@
         // serial number: random number to identify message content
         this.sn = info['sn'];
     };
-    ns.Class(Content, Dictionary);
+    ns.Class(Content, Dictionary, null);
 
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message
@@ -105,13 +105,28 @@
     //-------- Runtime --------
     var content_classes = {};
 
+    /**
+     *  Register content class with content type
+     *
+     * @param type {ContentType}
+     * @param clazz {Class}
+     */
     Content.register = function (type, clazz) {
+        var value;
         if (type instanceof ContentType) {
-            type = type.value;
+            value = type.valueOf();
+        } else {
+            value = type;
         }
-        content_classes[type] = clazz;
+        content_classes[value] = clazz;
     };
 
+    /**
+     *  Create content
+     *
+     * @param content {{}|Content}
+     * @returns {Content}
+     */
     Content.getInstance = function (content) {
         if (!content) {
             return null;
@@ -121,7 +136,7 @@
         // create instance by subclass (with content type)
         var type = content['type'];
         if (type instanceof ContentType) {
-            type = type.value;
+            type = type.valueOf();
         }
         var clazz = content_classes[type];
         if (typeof clazz === 'function') {
@@ -131,6 +146,13 @@
         return new Content(content);
     };
 
+    /**
+     *  Create content with specified class
+     *
+     * @param clazz - content Class
+     * @param map {{}} - content info
+     * @returns {Content}
+     */
     Content.createInstance = function (clazz, map) {
         if (typeof clazz.getInstance === 'function') {
             return clazz.getInstance(map);

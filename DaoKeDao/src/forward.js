@@ -77,8 +77,13 @@
             this.forward = null;
         }
     };
-    ns.Class(ForwardContent, Content);
+    ns.Class(ForwardContent, Content, null);
 
+    /**
+     *  Get secret message
+     *
+     * @returns {ReliableMessage}
+     */
     ForwardContent.prototype.getMessage = function () {
         if (!this.forward) {
             var forward = this.getValue('forward');
@@ -86,6 +91,11 @@
         }
         return this.forward;
     };
+    /**
+     *  Set secret message
+     *
+     * @param secret {ReliableMessage}
+     */
     ForwardContent.prototype.setMessage = function (secret) {
         this.setValue('forward', secret);
         this.forward = secret;

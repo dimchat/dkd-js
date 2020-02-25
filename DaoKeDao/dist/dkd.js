@@ -60,7 +60,7 @@ if (typeof DaoKeDao !== "object") {
         this.type = new ContentType(info["type"]);
         this.sn = info["sn"]
     };
-    ns.Class(Content, Dictionary);
+    ns.Class(Content, Dictionary, null);
     Content.prototype.getGroup = function() {
         return this.getValue("group")
     };
@@ -69,10 +69,13 @@ if (typeof DaoKeDao !== "object") {
     };
     var content_classes = {};
     Content.register = function(type, clazz) {
+        var value;
         if (type instanceof ContentType) {
-            type = type.value
+            value = type.valueOf()
+        } else {
+            value = type
         }
-        content_classes[type] = clazz
+        content_classes[value] = clazz
     };
     Content.getInstance = function(content) {
         if (!content) {
@@ -84,7 +87,7 @@ if (typeof DaoKeDao !== "object") {
         }
         var type = content["type"];
         if (type instanceof ContentType) {
-            type = type.value
+            type = type.valueOf()
         }
         var clazz = content_classes[type];
         if (typeof clazz === "function") {
@@ -111,7 +114,7 @@ if (typeof DaoKeDao !== "object") {
         this.receiver = env["receiver"];
         this.time = env["time"]
     };
-    ns.Class(Envelope, Dictionary);
+    ns.Class(Envelope, Dictionary, null);
     Envelope.newEnvelope = function(sender, receiver, time) {
         var env = {
             "sender": sender,
@@ -161,7 +164,7 @@ if (typeof DaoKeDao !== "object") {
 }(DaoKeDao);
 ! function(ns) {
     var MessageDelegate = function() {};
-    ns.Interface(MessageDelegate);
+    ns.Interface(MessageDelegate, null);
     var InstantMessageDelegate = function() {};
     ns.Interface(InstantMessageDelegate, MessageDelegate);
     InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
@@ -263,7 +266,7 @@ if (typeof DaoKeDao !== "object") {
         this.envelope = Envelope.getInstance(msg);
         this.delegate = null
     };
-    ns.Class(Message, Dictionary);
+    ns.Class(Message, Dictionary, null);
     Message.getInstance = function(msg) {
         if (!msg) {
             return null
@@ -293,10 +296,27 @@ if (typeof DaoKeDao !== "object") {
         Message.call(this, msg);
         this.content = Content.getInstance(msg["content"])
     };
-    ns.Class(InstantMessage, Message);
-    InstantMessage.newMessage = function(content, envelope) {
-        envelope = Envelope.getInstance(envelope);
-        var msg = envelope.getMap(true);
+    ns.Class(InstantMessage, Message, null);
+    InstantMessage.newMessage = function(content, heads) {
+        var msg;
+        var count = arguments.length;
+        if (count === 2) {
+            var env = Envelope.getInstance(heads);
+            msg = env.getMap(true)
+        } else {
+            if (count === 3 || count === 4) {
+                var sender = arguments[1];
+                var receiver = arguments[2];
+                var time = (count === 4) ? arguments[3] : 0;
+                msg = {
+                    "sender": sender,
+                    "receiver": receiver,
+                    "time": time
+                }
+            } else {
+                throw Error("instant message arguments error: " + arguments)
+            }
+        }
         msg["content"] = content;
         return new InstantMessage(msg)
     };
@@ -346,7 +366,7 @@ if (typeof DaoKeDao !== "object") {
     var SecureMessage = function(msg) {
         Message.call(this, msg)
     };
-    ns.Class(SecureMessage, Message);
+    ns.Class(SecureMessage, Message, null);
     SecureMessage.prototype.getData = function() {
         var base64 = this.getValue("data");
         return this.delegate.decodeData(base64, this)
@@ -465,7 +485,7 @@ if (typeof DaoKeDao !== "object") {
     var ReliableMessage = function(msg) {
         SecureMessage.call(this, msg)
     };
-    ns.Class(ReliableMessage, SecureMessage);
+    ns.Class(ReliableMessage, SecureMessage, null);
     ReliableMessage.prototype.getSignature = function() {
         var base64 = this.getValue("signature");
         return this.delegate.decodeSignature(base64, this)
@@ -525,7 +545,7 @@ if (typeof DaoKeDao !== "object") {
             }
         }
     };
-    ns.Class(ForwardContent, Content);
+    ns.Class(ForwardContent, Content, null);
     ForwardContent.prototype.getMessage = function() {
         if (!this.forward) {
             var forward = this.getValue("forward");

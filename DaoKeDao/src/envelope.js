@@ -59,8 +59,16 @@
         this.receiver = env['receiver'];
         this.time = env['time'];
     };
-    ns.Class(Envelope, Dictionary);
+    ns.Class(Envelope, Dictionary, null);
 
+    /**
+     *  Generate envelope
+     *
+     * @param sender {String}
+     * @param receiver {String}
+     * @param time {Date|Number}
+     * @returns {Envelope}
+     */
     Envelope.newEnvelope = function (sender, receiver, time) {
         var env = {
             'sender': sender,
@@ -80,6 +88,12 @@
         return new Envelope(env);
     };
 
+    /**
+     *  Create envelope
+     *
+     * @param env {{}|Envelope}
+     * @returns {Envelope}
+     */
     Envelope.getInstance = function (env) {
         if (!env) {
             return null;

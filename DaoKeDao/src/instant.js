@@ -63,15 +63,43 @@
         Message.call(this, msg);
         this.content = Content.getInstance(msg['content']);
     };
-    ns.Class(InstantMessage, Message);
+    ns.Class(InstantMessage, Message, null);
 
-    InstantMessage.newMessage = function (content, envelope) {
-        envelope = Envelope.getInstance(envelope);
-        var msg = envelope.getMap(true); // get inner dictionary
+    /**
+     *  Generate instant message
+     *
+     * @param content {Content}
+     * @param heads {Envelope|String}
+     * @returns {InstantMessage}
+     */
+    InstantMessage.newMessage = function (content, heads) {
+        var msg;
+        var count = arguments.length;
+        if (count === 2) {
+            var env = Envelope.getInstance(heads);
+            msg = env.getMap(true); // copy inner dictionary
+        } else if (count === 3 || count === 4) {
+            var sender = arguments[1];
+            var receiver = arguments[2];
+            var time = (count === 4) ? arguments[3] : 0;
+            msg = {
+                'sender': sender,
+                'receiver': receiver,
+                'time': time
+            }
+        } else {
+            throw Error('instant message arguments error: ' + arguments);
+        }
         msg['content'] = content;
         return new InstantMessage(msg);
     };
 
+    /**
+     *  Create instant message
+     *
+     * @param msg {{}|Message}
+     * @returns {InstantMessage}
+     */
     InstantMessage.getInstance = function (msg) {
         if (!msg) {
             return null;
