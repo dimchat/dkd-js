@@ -127,14 +127,18 @@
      */
     Envelope.prototype.getType = function () {
         var type = this.getValue('type');
-        if (type) {
-            return new ContentType(type);
+        if (type instanceof ContentType) {
+            return type.valueOf();
         } else {
-            return null;
+            return type;
         }
     };
     Envelope.prototype.setType = function (type) {
-        this.setValue('type', type);
+        if (type instanceof ContentType) {
+            this.setValue('type', type.valueOf());
+        } else {
+            this.setValue('type', type);
+        }
     };
 
     //-------- namespace --------

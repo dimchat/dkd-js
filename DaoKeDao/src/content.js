@@ -86,7 +86,11 @@
         }
         Dictionary.call(this, info);
         // message type: text, image, ...
-        this.type = new ContentType(info['type']);
+        var type = info['type'];
+        if (type instanceof ContentType) {
+            type = type.valueOf();
+        }
+        this.type = type;
         // serial number: random number to identify message content
         this.sn = info['sn'];
     };
@@ -103,7 +107,7 @@
     };
 
     //-------- Runtime --------
-    var content_classes = {};
+    var content_classes = {}; // int -> Class
 
     /**
      *  Register content class with content type
