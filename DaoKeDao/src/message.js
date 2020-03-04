@@ -81,7 +81,7 @@
     /**
      *  Create message
      *
-     * @param msg {{}|Envelope} - message info; or envelope info
+     * @param {{}|Envelope} msg - message info; or envelope info
      * @constructor
      */
     var Message = function (msg) {
@@ -96,7 +96,7 @@
     /**
      *  Create message
      *
-     * @param msg {{}|Message}
+     * @param {{}|Message} msg
      * @returns {*|Message}
      */
     Message.getInstance = function (msg) {

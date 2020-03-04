@@ -44,6 +44,7 @@
     var InstantMessageDelegate = function () {
     };
     ns.Interface(InstantMessageDelegate, MessageDelegate);
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Encrypt 'message.content' to 'message.data' with symmetric key
      *
@@ -53,12 +54,10 @@
      * @returns {Uint8Array}
      */
     InstantMessageDelegate.prototype.encryptContent = function (content, pwd, msg) {
-        console.assert(content !== null, 'content empty');
-        console.assert(pwd !== null, 'key empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Encode 'message.data' to String(Base64)
      *
@@ -67,11 +66,10 @@
      * @returns {string|null}
      */
     InstantMessageDelegate.prototype.encodeData = function (data, msg) {
-        console.assert(data !== null, 'msg data empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Encrypt 'message.key' with receiver's public key
      *
@@ -81,12 +79,10 @@
      * @returns {Uint8Array}
      */
     InstantMessageDelegate.prototype.encryptKey = function (pwd, receiver, msg) {
-        console.assert(pwd !== null, 'key empty');
-        console.assert(receiver !== null, 'receiver empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Encode 'message.key' to String(Base64)
      *
@@ -95,8 +91,6 @@
      * @returns {string|null}
      */
     InstantMessageDelegate.prototype.encodeKey = function (key, msg) {
-        console.assert(key !== null, 'key data empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
@@ -106,6 +100,7 @@
     var SecureMessageDelegate = function () {
     };
     ns.Interface(SecureMessageDelegate, MessageDelegate);
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Decode 'message.key' to encrypted symmetric key data
      *
@@ -114,11 +109,10 @@
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.decodeKey = function (key, msg) {
-        console.assert(key !== null, 'key string empty');
-        console.assert(msg !== null, 'secure message empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Decrypt 'message.key' with receiver's private key
      *
@@ -129,13 +123,10 @@
      * @returns {SymmetricKey}
      */
     SecureMessageDelegate.prototype.decryptKey = function (key, sender, receiver, msg) {
-        console.assert(key !== null, 'key data empty');
-        console.assert(sender !== null, 'sender empty');
-        console.assert(receiver !== null, 'receiver empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Decode 'message.data' to encrypted content data
      *
@@ -144,11 +135,10 @@
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.decodeData = function (data, msg) {
-        console.assert(data !== null, 'msg data empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Decrypt 'message.data' with symmetric key
      *
@@ -158,12 +148,10 @@
      * @returns {Content}
      */
     SecureMessageDelegate.prototype.decryptContent = function (data, pwd, msg) {
-        console.assert(data !== null, 'msg data empty');
-        console.assert(pwd !== null, 'key empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Sign 'message.data' with sender's private key
      *
@@ -173,12 +161,10 @@
      * @returns {Uint8Array}
      */
     SecureMessageDelegate.prototype.signData = function (data, sender, msg) {
-        console.assert(data !== null, 'msg data empty');
-        console.assert(sender !== null, 'sender empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Encode 'message.signature' to String(Base64)
      *
@@ -187,8 +173,6 @@
      * @returns {String}
      */
     SecureMessageDelegate.prototype.encodeSignature = function (signature, msg) {
-        console.assert(signature !== null, 'msg signature empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
@@ -198,6 +182,7 @@
     var ReliableMessageDelegate = function () {
     };
     ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Decode 'message.signature' from String(Base64)
      *
@@ -206,11 +191,10 @@
      * @returns {Uint8Array}
      */
     ReliableMessageDelegate.prototype.decodeSignature = function (signature, msg) {
-        console.assert(msg !== null, 'msg empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return null;
     };
+    // noinspection JSUnusedLocalSymbols
     /**
      *  Verify the message data and signature with sender's public key
      *
@@ -221,10 +205,6 @@
      * @returns {boolean}
      */
     ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, msg) {
-        console.assert(msg !== null, 'msg empty');
-        console.assert(msg !== null, 'msg empty');
-        console.assert(msg !== null, 'msg empty');
-        console.assert(msg !== null, 'msg empty');
         console.assert(false, 'implement me!');
         return false;
     };

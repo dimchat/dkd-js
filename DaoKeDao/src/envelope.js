@@ -64,9 +64,9 @@
     /**
      *  Generate envelope
      *
-     * @param sender {String}
-     * @param receiver {String}
-     * @param time {Date|Number}
+     * @param {String} sender - user ID string
+     * @param {String} receiver - user/group ID string
+     * @param {Date|Number} time - message time
      * @returns {Envelope}
      */
     Envelope.newEnvelope = function (sender, receiver, time) {
@@ -91,7 +91,7 @@
     /**
      *  Create envelope
      *
-     * @param env {{}|Envelope}
+     * @param {{}|Envelope} env - envelope info
      * @returns {Envelope}
      */
     Envelope.getInstance = function (env) {

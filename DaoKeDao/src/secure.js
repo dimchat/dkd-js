@@ -60,7 +60,7 @@
     /**
      *  Create secure message
      *
-     * @param msg {{}} - message info with envelope, data, key/keys
+     * @param {{}} msg - message info with envelope, data, key/keys
      * @constructor
      */
     var SecureMessage = function (msg) {
@@ -111,7 +111,7 @@
     /**
      *  Create secure message
      *
-     * @param msg {{}|Message}
+     * @param {{}|Message} msg
      * @returns {SecureMessage|ReliableMessage}
      */
     SecureMessage.getInstance = function (msg) {
@@ -211,7 +211,7 @@
     /**
      *  Split the group message to single person messages
      *
-     * @param members {String[]} - group members ID/string list
+     * @param {String[]} members - group member ID/string list
      * @returns {SecureMessage[]}
      */
     SecureMessage.prototype.split = function (members) {
@@ -254,7 +254,7 @@
     /**
      *  Trim the group message for a member
      *
-     * @param member {String} - group member ID/string
+     * @param {String} member - group member ID/string
      * @returns {ReliableMessage|SecureMessage}
      */
     SecureMessage.prototype.trim = function (member) {

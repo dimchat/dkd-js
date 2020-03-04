@@ -180,86 +180,54 @@ if (typeof DaoKeDao !== "object") {
     var InstantMessageDelegate = function() {};
     ns.Interface(InstantMessageDelegate, MessageDelegate);
     InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
-        console.assert(content !== null, "content empty");
-        console.assert(pwd !== null, "key empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     InstantMessageDelegate.prototype.encodeData = function(data, msg) {
-        console.assert(data !== null, "msg data empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     InstantMessageDelegate.prototype.encryptKey = function(pwd, receiver, msg) {
-        console.assert(pwd !== null, "key empty");
-        console.assert(receiver !== null, "receiver empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     InstantMessageDelegate.prototype.encodeKey = function(key, msg) {
-        console.assert(key !== null, "key data empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     var SecureMessageDelegate = function() {};
     ns.Interface(SecureMessageDelegate, MessageDelegate);
     SecureMessageDelegate.prototype.decodeKey = function(key, msg) {
-        console.assert(key !== null, "key string empty");
-        console.assert(msg !== null, "secure message empty");
         console.assert(false, "implement me!");
         return null
     };
     SecureMessageDelegate.prototype.decryptKey = function(key, sender, receiver, msg) {
-        console.assert(key !== null, "key data empty");
-        console.assert(sender !== null, "sender empty");
-        console.assert(receiver !== null, "receiver empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     SecureMessageDelegate.prototype.decodeData = function(data, msg) {
-        console.assert(data !== null, "msg data empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     SecureMessageDelegate.prototype.decryptContent = function(data, pwd, msg) {
-        console.assert(data !== null, "msg data empty");
-        console.assert(pwd !== null, "key empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     SecureMessageDelegate.prototype.signData = function(data, sender, msg) {
-        console.assert(data !== null, "msg data empty");
-        console.assert(sender !== null, "sender empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     SecureMessageDelegate.prototype.encodeSignature = function(signature, msg) {
-        console.assert(signature !== null, "msg signature empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     var ReliableMessageDelegate = function() {};
     ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
     ReliableMessageDelegate.prototype.decodeSignature = function(signature, msg) {
-        console.assert(msg !== null, "msg empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return null
     };
     ReliableMessageDelegate.prototype.verifyDataSignature = function(data, signature, sender, msg) {
-        console.assert(msg !== null, "msg empty");
-        console.assert(msg !== null, "msg empty");
-        console.assert(msg !== null, "msg empty");
-        console.assert(msg !== null, "msg empty");
         console.assert(false, "implement me!");
         return false
     };

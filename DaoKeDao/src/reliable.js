@@ -62,7 +62,7 @@
     /**
      *  Create reliable message
      *
-     * @param msg {{}} - message info with envelope, data, key/keys, signature
+     * @param {{}} msg - message info with envelope, data, key/keys, signature
      * @constructor
      */
     var ReliableMessage = function (msg) {
@@ -85,7 +85,7 @@
      *  ~~~~~~~~~~~~~
      *  Extends for the first message package of 'Handshake' protocol.
      *
-     * @param meta {{}} - Meta object or dictionary
+     * @param {{}} meta - Meta object or dictionary
      */
     ReliableMessage.prototype.setMeta = function (meta) {
         this.setValue('meta', meta);
@@ -98,7 +98,7 @@
     /**
      *  Create reliable message
      *
-     * @param msg {{}|Message}
+     * @param {{}|Message} msg
      * @returns {ReliableMessage}
      */
     ReliableMessage.getInstance = function (msg) {

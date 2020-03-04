@@ -56,7 +56,7 @@
     /**
      *  Create instant message
      *
-     * @param msg {{}} - message info with envelope, content
+     * @param {{}} msg - message info with envelope, content
      * @constructor
      */
     var InstantMessage = function (msg) {
@@ -68,8 +68,8 @@
     /**
      *  Generate instant message
      *
-     * @param content {Content}
-     * @param heads {Envelope|String}
+     * @param {Content} content - message content info
+     * @param {Envelope|String} heads - message envelope info
      * @returns {InstantMessage}
      */
     InstantMessage.newMessage = function (content, heads) {
@@ -97,7 +97,7 @@
     /**
      *  Create instant message
      *
-     * @param msg {{}|Message}
+     * @param {{}|Message} msg
      * @returns {InstantMessage}
      */
     InstantMessage.getInstance = function (msg) {
@@ -126,8 +126,8 @@
     /**
      *  Encrypt group message, replace 'content' field with encrypted 'data'
      *
-     * @param password {SymmetricKey}
-     * @param members {String[]} - group members ID/string list
+     * @param {SymmetricKey} password
+     * @param {String[]} members - group members ID/string list
      * @returns {SecureMessage}
      */
     InstantMessage.prototype.encrypt = function (password, members) {

@@ -54,7 +54,7 @@
     /**
      *  Create top-secret message content
      *
-     * @param info {{}|ReliableMessage} - content info; or secret message
+     * @param {{}|ReliableMessage} info - content info; or secret message
      * @constructor
      */
     var ForwardContent = function (info) {
@@ -94,7 +94,7 @@
     /**
      *  Set secret message
      *
-     * @param secret {ReliableMessage}
+     * @param {ReliableMessage} secret - message to be forwarded
      */
     ForwardContent.prototype.setMessage = function (secret) {
         this.setValue('forward', secret);

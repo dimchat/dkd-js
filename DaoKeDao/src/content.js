@@ -73,7 +73,7 @@
     /**
      *  Create message content
      *
-     * @param info {{}|ContentType} - content info; or content type
+     * @param {{}|ContentType} info - content info; or content type
      * @constructor
      */
     var Content = function (info) {
@@ -112,8 +112,8 @@
     /**
      *  Register content class with content type
      *
-     * @param type {ContentType}
-     * @param clazz {Class}
+     * @param {ContentType} type
+     * @param {Class} clazz
      */
     Content.register = function (type, clazz) {
         var value;
@@ -128,7 +128,7 @@
     /**
      *  Create content
      *
-     * @param content {{}|Content}
+     * @param {{}|Content} content - content info
      * @returns {Content}
      */
     Content.getInstance = function (content) {
@@ -154,7 +154,7 @@
      *  Create content with specified class
      *
      * @param clazz - content Class
-     * @param map {{}} - content info
+     * @param {{}} map - content info
      * @returns {Content}
      */
     Content.createInstance = function (clazz, map) {
