@@ -43,7 +43,7 @@
 
     var InstantMessageDelegate = function () {
     };
-    ns.Interface(InstantMessageDelegate, MessageDelegate);
+    ns.Interface(InstantMessageDelegate, [MessageDelegate]);
     // noinspection JSUnusedLocalSymbols
     /**
      *  Encrypt 'message.content' to 'message.data' with symmetric key
@@ -99,7 +99,7 @@
 
     var SecureMessageDelegate = function () {
     };
-    ns.Interface(SecureMessageDelegate, MessageDelegate);
+    ns.Interface(SecureMessageDelegate, [MessageDelegate]);
     // noinspection JSUnusedLocalSymbols
     /**
      *  Decode 'message.key' to encrypted symmetric key data
@@ -181,7 +181,7 @@
 
     var ReliableMessageDelegate = function () {
     };
-    ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
+    ns.Interface(ReliableMessageDelegate, [SecureMessageDelegate]);
     // noinspection JSUnusedLocalSymbols
     /**
      *  Decode 'message.signature' from String(Base64)

@@ -2,7 +2,7 @@
  * DaoKeDao - Message Module (v0.1.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Jan. 28, 2020
+ * @date      Mar. 10, 2020
  * @copyright (c) 2020 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */
@@ -17,7 +17,7 @@ if (typeof DaoKeDao !== "object") {
     ns.register("protocol")
 }(DaoKeDao);
 ! function(ns) {
-    var ContentType = ns.type.Enum({
+    var ContentType = ns.type.Enum(null, {
         UNKNOWN: (0),
         TEXT: (1),
         FILE: (16),
@@ -178,7 +178,7 @@ if (typeof DaoKeDao !== "object") {
     var MessageDelegate = function() {};
     ns.Interface(MessageDelegate, null);
     var InstantMessageDelegate = function() {};
-    ns.Interface(InstantMessageDelegate, MessageDelegate);
+    ns.Interface(InstantMessageDelegate, [MessageDelegate]);
     InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
         console.assert(false, "implement me!");
         return null
@@ -196,7 +196,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var SecureMessageDelegate = function() {};
-    ns.Interface(SecureMessageDelegate, MessageDelegate);
+    ns.Interface(SecureMessageDelegate, [MessageDelegate]);
     SecureMessageDelegate.prototype.decodeKey = function(key, msg) {
         console.assert(false, "implement me!");
         return null
@@ -222,7 +222,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     var ReliableMessageDelegate = function() {};
-    ns.Interface(ReliableMessageDelegate, SecureMessageDelegate);
+    ns.Interface(ReliableMessageDelegate, [SecureMessageDelegate]);
     ReliableMessageDelegate.prototype.decodeSignature = function(signature, msg) {
         console.assert(false, "implement me!");
         return null
