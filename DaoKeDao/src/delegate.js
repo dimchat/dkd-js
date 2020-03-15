@@ -50,10 +50,10 @@
      *
      * @param content {Content}
      * @param pwd {SymmetricKey}
-     * @param msg {InstantMessage}
+     * @param iMsg {InstantMessage}
      * @returns {Uint8Array}
      */
-    InstantMessageDelegate.prototype.encryptContent = function (content, pwd, msg) {
+    InstantMessageDelegate.prototype.encryptContent = function (content, pwd, iMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -62,10 +62,10 @@
      *  Encode 'message.data' to String(Base64)
      *
      * @param data {Uint8Array} - encrypted content data
-     * @param msg {InstantMessage}
+     * @param iMsg {InstantMessage}
      * @returns {string|null}
      */
-    InstantMessageDelegate.prototype.encodeData = function (data, msg) {
+    InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -75,10 +75,10 @@
      *
      * @param pwd {SymmetricKey} - symmetric key to be encrypted
      * @param receiver {String} - receiver ID/string
-     * @param msg {InstantMessage}
+     * @param iMsg {InstantMessage}
      * @returns {Uint8Array}
      */
-    InstantMessageDelegate.prototype.encryptKey = function (pwd, receiver, msg) {
+    InstantMessageDelegate.prototype.encryptKey = function (pwd, receiver, iMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -87,10 +87,10 @@
      *  Encode 'message.key' to String(Base64)
      *
      * @param key {Uint8Array} - encrypted key data
-     * @param msg {InstantMessage}
+     * @param iMsg {InstantMessage}
      * @returns {string|null}
      */
-    InstantMessageDelegate.prototype.encodeKey = function (key, msg) {
+    InstantMessageDelegate.prototype.encodeKey = function (key, iMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -105,10 +105,10 @@
      *  Decode 'message.key' to encrypted symmetric key data
      *
      * @param key {String} - base64 string
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {Uint8Array}
      */
-    SecureMessageDelegate.prototype.decodeKey = function (key, msg) {
+    SecureMessageDelegate.prototype.decodeKey = function (key, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -119,10 +119,10 @@
      * @param key {Uint8Array} - encrypted symmetric key data
      * @param sender {String} - sender/member ID string
      * @param receiver {String} - receiver/group ID string
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {SymmetricKey}
      */
-    SecureMessageDelegate.prototype.decryptKey = function (key, sender, receiver, msg) {
+    SecureMessageDelegate.prototype.decryptKey = function (key, sender, receiver, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -131,10 +131,10 @@
      *  Decode 'message.data' to encrypted content data
      *
      * @param data {String} - base64 string
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {Uint8Array}
      */
-    SecureMessageDelegate.prototype.decodeData = function (data, msg) {
+    SecureMessageDelegate.prototype.decodeData = function (data, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -144,10 +144,10 @@
      *
      * @param data {Uint8Array} - encrypt content data
      * @param pwd {SymmetricKey}
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {Content}
      */
-    SecureMessageDelegate.prototype.decryptContent = function (data, pwd, msg) {
+    SecureMessageDelegate.prototype.decryptContent = function (data, pwd, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -157,10 +157,10 @@
      *
      * @param data {Uint8Array} - encrypted message data
      * @param sender {String} - sender ID
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {Uint8Array}
      */
-    SecureMessageDelegate.prototype.signData = function (data, sender, msg) {
+    SecureMessageDelegate.prototype.signData = function (data, sender, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -169,10 +169,10 @@
      *  Encode 'message.signature' to String(Base64)
      *
      * @param signature {Uint8Array} - signature of message.data
-     * @param msg {SecureMessage}
+     * @param sMsg {SecureMessage}
      * @returns {String}
      */
-    SecureMessageDelegate.prototype.encodeSignature = function (signature, msg) {
+    SecureMessageDelegate.prototype.encodeSignature = function (signature, sMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -187,10 +187,10 @@
      *  Decode 'message.signature' from String(Base64)
      *
      * @param signature {String} - base64 string
-     * @param msg {ReliableMessage}
+     * @param rMsg {ReliableMessage}
      * @returns {Uint8Array}
      */
-    ReliableMessageDelegate.prototype.decodeSignature = function (signature, msg) {
+    ReliableMessageDelegate.prototype.decodeSignature = function (signature, rMsg) {
         console.assert(false, 'implement me!');
         return null;
     };
@@ -201,10 +201,10 @@
      * @param data {Uint8Array} - message content(encrypted) data
      * @param signature {Uint8Array} - signature for message content(encrypted) data
      * @param sender {String} - sender ID/string
-     * @param msg {ReliableMessage}
+     * @param rMsg {ReliableMessage}
      * @returns {boolean}
      */
-    ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, msg) {
+    ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, rMsg) {
         console.assert(false, 'implement me!');
         return false;
     };

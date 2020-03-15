@@ -179,55 +179,55 @@ if (typeof DaoKeDao !== "object") {
     ns.Interface(MessageDelegate, null);
     var InstantMessageDelegate = function() {};
     ns.Interface(InstantMessageDelegate, [MessageDelegate]);
-    InstantMessageDelegate.prototype.encryptContent = function(content, pwd, msg) {
+    InstantMessageDelegate.prototype.encryptContent = function(content, pwd, iMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    InstantMessageDelegate.prototype.encodeData = function(data, msg) {
+    InstantMessageDelegate.prototype.encodeData = function(data, iMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    InstantMessageDelegate.prototype.encryptKey = function(pwd, receiver, msg) {
+    InstantMessageDelegate.prototype.encryptKey = function(pwd, receiver, iMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    InstantMessageDelegate.prototype.encodeKey = function(key, msg) {
+    InstantMessageDelegate.prototype.encodeKey = function(key, iMsg) {
         console.assert(false, "implement me!");
         return null
     };
     var SecureMessageDelegate = function() {};
     ns.Interface(SecureMessageDelegate, [MessageDelegate]);
-    SecureMessageDelegate.prototype.decodeKey = function(key, msg) {
+    SecureMessageDelegate.prototype.decodeKey = function(key, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    SecureMessageDelegate.prototype.decryptKey = function(key, sender, receiver, msg) {
+    SecureMessageDelegate.prototype.decryptKey = function(key, sender, receiver, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    SecureMessageDelegate.prototype.decodeData = function(data, msg) {
+    SecureMessageDelegate.prototype.decodeData = function(data, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    SecureMessageDelegate.prototype.decryptContent = function(data, pwd, msg) {
+    SecureMessageDelegate.prototype.decryptContent = function(data, pwd, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    SecureMessageDelegate.prototype.signData = function(data, sender, msg) {
+    SecureMessageDelegate.prototype.signData = function(data, sender, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    SecureMessageDelegate.prototype.encodeSignature = function(signature, msg) {
+    SecureMessageDelegate.prototype.encodeSignature = function(signature, sMsg) {
         console.assert(false, "implement me!");
         return null
     };
     var ReliableMessageDelegate = function() {};
     ns.Interface(ReliableMessageDelegate, [SecureMessageDelegate]);
-    ReliableMessageDelegate.prototype.decodeSignature = function(signature, msg) {
+    ReliableMessageDelegate.prototype.decodeSignature = function(signature, rMsg) {
         console.assert(false, "implement me!");
         return null
     };
-    ReliableMessageDelegate.prototype.verifyDataSignature = function(data, signature, sender, msg) {
+    ReliableMessageDelegate.prototype.verifyDataSignature = function(data, signature, sender, rMsg) {
         console.assert(false, "implement me!");
         return false
     };
