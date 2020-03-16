@@ -147,6 +147,7 @@
         if (members && members.length > 0) {
             // group message
             var keys = {};
+            var keys_length = 0;
             var member;
             for (var i = 0; i < members.length; ++i) {
                 member = members[i];
@@ -156,9 +157,10 @@
                     // 2.2. encode encrypted key data to Base64
                     // 2.3. insert to 'message.keys' with member ID
                     keys[member] = this.delegate.encodeKey(key, this);
+                    keys_length += 1;
                 }
             }
-            if (keys.length > 0) {
+            if (keys_length > 0) {
                 msg['keys'] = keys;
             }
             // Group ID
