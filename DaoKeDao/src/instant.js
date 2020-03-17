@@ -163,12 +163,6 @@
             if (keys_length > 0) {
                 msg['keys'] = keys;
             }
-            // Group ID
-            // NOTICE: this help the receiver knows the group ID
-            //         when the group message separated to multi-messages,
-            //         if don't want the others know you are the group members,
-            //         remove it.
-            msg['group'] = this.content.getGroup();
         } else {
             // personal message
             var receiver = this.envelope.receiver;
