@@ -61,6 +61,15 @@
     };
     ns.Class(Envelope, Dictionary, null);
 
+    Envelope.prototype.getTime = function () {
+        var time = this.time;
+        if (time) {
+            return new Date(time * 1000)
+        } else {
+            return null
+        }
+    };
+
     /**
      *  Generate envelope
      *
