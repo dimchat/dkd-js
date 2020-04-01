@@ -133,50 +133,82 @@
     InstantMessage.prototype.encrypt = function (password, members) {
         // 0. check attachment for File/Image/Audio/Video message content
         //    (do it in 'core' module)
-        var msg = this.getMap(true);
+        var msg;
 
-        // 1. encrypt 'message.content' to 'message.data'
-        // 1.1. encrypt message content with password
-        var data = this.delegate.encryptContent(this.content, password, this);
-        // 1.2. encode encrypted data
-        // 1.3. replace 'content' with encrypted 'data'
-        msg['data'] = this.delegate.encodeData(data, this);
-        delete msg['content'];
-        var key; // key data
-        // 2. encrypt symmetric key(password) to 'key'/'keys'
+        // 1., 2.
         if (members && members.length > 0) {
             // group message
+            msg = encrypt_keys.call(this, password, members);
+        } else {
+            // personal message
+            msg = encrypt_key.call(this, password);
+        }
+
+        // 3. pack message
+        return new ns.SecureMessage(msg);
+    };
+
+    var encrypt_key = function (password) {
+        // 1. encrypt 'message.content' to 'message.data'
+        var msg = prepare_data.call(this, password);
+        // 2. encrypt symmetric key(password) to 'message.key'
+        // 2.1. serialize symmetric key
+        var key = this.delegate.serializeKey(password, this);
+        if (key) {
+            // 2.2. encrypt symmetric key
+            var receiver = this.envelope.receiver;
+            var data = this.delegate.encryptKey(key, receiver, this);
+            if (data) {
+                // 2.3. encode encrypted key data to Base64
+                // 2.4. insert as 'key'
+                msg['key'] = this.delegate.encodeKey(data, this);
+            }
+        }
+        return msg;
+    };
+
+    var encrypt_keys = function (password, members) {
+        // 1. encrypt 'message.content' to 'message.data'
+        var msg = prepare_data.call(this, password);
+        // 2. encrypt symmetric key(password) to 'message.key'
+        // 2.1. serialize symmetric key
+        var key = this.delegate.serializeKey(password, this);
+        if (key) {
+            // encrypt key data to 'message.keys'
             var keys = {};
             var keys_length = 0;
             var member;
+            var data;
             for (var i = 0; i < members.length; ++i) {
                 member = members[i];
-                // 2.1. serialize & encrypt symmetric key
-                key = this.delegate.encryptKey(password, member, this);
-                if (key) {
-                    // 2.2. encode encrypted key data to Base64
-                    // 2.3. insert to 'message.keys' with member ID
-                    keys[member] = this.delegate.encodeKey(key, this);
+                // 2.2. encrypt symmetric key data
+                data = this.delegate.encryptKey(key, member, this);
+                if (data) {
+                    // 2.3. encode encrypted key data
+                    // 2.4. insert to 'message.keys' with member ID
+                    keys[member] = this.delegate.encodeKey(data, this);
                     keys_length += 1;
                 }
             }
             if (keys_length > 0) {
                 msg['keys'] = keys;
             }
-        } else {
-            // personal message
-            var receiver = this.envelope.receiver;
-            // 2.1. serialize & encrypt symmetric key
-            key = this.delegate.encryptKey(password, receiver, this);
-            if (key) {
-                // 2.2. encode encrypted key data
-                // 2.3. insert as 'key'
-                msg['key'] = this.delegate.encodeKey(key, this);
-            }
         }
+        return msg;
+    };
 
-        // 3. pack message
-        return new ns.SecureMessage(msg);
+    var prepare_data = function (password) {
+        // 1. serialize message content
+        var data = this.delegate.serializeContent(this.content, password, this);
+        // 2. encrypt content data with password
+        data = this.delegate.encryptContent(data, password, this);
+        // 3. encode encrypted data
+        var base64 = this.delegate.encodeData(data, this);
+        // 4. replace 'content' with encrypted 'data'
+        var msg = this.getMap(true);
+        delete msg['content'];
+        msg['data'] = base64;
+        return msg;
     };
 
     //-------- namespace --------

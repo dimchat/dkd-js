@@ -158,16 +158,18 @@
         var password;
         if (group) {
             // group message
-            password = this.delegate.decryptKey(key, sender, group, this);
+            key = this.delegate.decryptKey(key, sender, group, this);
+            password = this.delegate.deserializeKey(key, sender, group, this);
         } else {
             // personal message
-            password = this.delegate.decryptKey(key, sender, receiver, this);
+            key = this.delegate.decryptKey(key, sender, receiver, this);
+            password = this.delegate.deserializeKey(key, sender, receiver, this);
         }
         // 2. decrypt 'message.data' to 'message.content'
-        // 2.1. decode encrypted content data
-        var data = this.getData();
-        // 2.2. decrypt & deserialize content data
-        var content = this.delegate.decryptContent(data, password, this);
+        // 2.1. decrypt content data
+        var data = this.delegate.decryptContent(this.getData(), password, this);
+        // 2.2. deserialize content
+        var content = this.delegate.deserializeContent(data, password, this);
         // 2.3. check attachment for File/Image/Audio/Video message content
         //      if file data not download yet,
         //          decrypt file data with password;
