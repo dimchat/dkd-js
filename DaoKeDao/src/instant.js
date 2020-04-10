@@ -133,68 +133,78 @@
     InstantMessage.prototype.encrypt = function (password, members) {
         // 0. check attachment for File/Image/Audio/Video message content
         //    (do it in 'core' module)
-        var msg;
 
-        // 1., 2.
+        // 1., 2., 3.
         if (members && members.length > 0) {
             // group message
-            msg = encrypt_keys.call(this, password, members);
+            return encrypt_group_message.call(this, password, members);
         } else {
             // personal message
-            msg = encrypt_key.call(this, password);
+            return encrypt_message.call(this, password);
         }
+    };
 
+    var encrypt_message = function (password) {
+        // 1. encrypt 'message.content' to 'message.data'
+        var msg = prepare_data.call(this, password);
+        // 2. encrypt symmetric key(password) to 'message.key'
+        // 2.1. serialize symmetric key
+        var key = this.delegate.serializeKey(password, this);
+        if (!key) {
+            // A) broadcast message has no key
+            // B) reused key
+            return new ns.SecureMessage(msg);
+        }
+        // 2.2. encrypt symmetric key
+        var receiver = this.envelope.receiver;
+        var data = this.delegate.encryptKey(key, receiver, this);
+        if (!data) {
+            // public key for encryption not found
+            // TODO: suspend this message for waiting receiver's meta
+            return null;
+        }
+        // 2.3. encode encrypted key data to Base64
+        // 2.4. insert as 'key'
+        msg['key'] = this.delegate.encodeKey(data, this);
         // 3. pack message
         return new ns.SecureMessage(msg);
     };
 
-    var encrypt_key = function (password) {
+    var encrypt_group_message = function (password, members) {
         // 1. encrypt 'message.content' to 'message.data'
         var msg = prepare_data.call(this, password);
         // 2. encrypt symmetric key(password) to 'message.key'
         // 2.1. serialize symmetric key
         var key = this.delegate.serializeKey(password, this);
-        if (key) {
-            // 2.2. encrypt symmetric key
-            var receiver = this.envelope.receiver;
-            var data = this.delegate.encryptKey(key, receiver, this);
-            if (data) {
-                // 2.3. encode encrypted key data to Base64
-                // 2.4. insert as 'key'
-                msg['key'] = this.delegate.encodeKey(data, this);
-            }
+        if (!key) {
+            // A) broadcast message has no key
+            // B) reused key
+            return new ns.SecureMessage(msg);
         }
-        return msg;
-    };
-
-    var encrypt_keys = function (password, members) {
-        // 1. encrypt 'message.content' to 'message.data'
-        var msg = prepare_data.call(this, password);
-        // 2. encrypt symmetric key(password) to 'message.key'
-        // 2.1. serialize symmetric key
-        var key = this.delegate.serializeKey(password, this);
-        if (key) {
-            // encrypt key data to 'message.keys'
-            var keys = {};
-            var keys_length = 0;
-            var member;
-            var data;
-            for (var i = 0; i < members.length; ++i) {
-                member = members[i];
-                // 2.2. encrypt symmetric key data
-                data = this.delegate.encryptKey(key, member, this);
-                if (data) {
-                    // 2.3. encode encrypted key data
-                    // 2.4. insert to 'message.keys' with member ID
-                    keys[member] = this.delegate.encodeKey(data, this);
-                    keys_length += 1;
-                }
+        // encrypt key data to 'message.keys'
+        var keys = {};
+        var count = 0;
+        var member;
+        var data;
+        for (var i = 0; i < members.length; ++i) {
+            member = members[i];
+            // 2.2. encrypt symmetric key data
+            data = this.delegate.encryptKey(key, member, this);
+            if (!data) {
+                // public key for encryption not found
+                // TODO: suspend this message for waiting receiver's meta
+                continue;
             }
-            if (keys_length > 0) {
-                msg['keys'] = keys;
-            }
+            // 2.3. encode encrypted key data
+            // 2.4. insert to 'message.keys' with member ID
+            keys[member] = this.delegate.encodeKey(data, this);
+            ++count;
         }
-        return msg;
+        if (count > 0) {
+            msg['keys'] = keys;
+        }
+        // 3. pack message
+        return new ns.SecureMessage(msg);
     };
 
     var prepare_data = function (password) {

@@ -2,7 +2,7 @@
  * DaoKeDao - Message Module (v0.1.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Apr. 1, 2020
+ * @date      Apr. 10, 2020
  * @copyright (c) 2020 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */
@@ -334,47 +334,49 @@ if (typeof DaoKeDao !== "object") {
         return new InstantMessage(msg)
     };
     InstantMessage.prototype.encrypt = function(password, members) {
-        var msg;
         if (members && members.length > 0) {
-            msg = encrypt_keys.call(this, password, members)
+            return encrypt_group_message.call(this, password, members)
         } else {
-            msg = encrypt_key.call(this, password)
+            return encrypt_message.call(this, password)
         }
+    };
+    var encrypt_message = function(password) {
+        var msg = prepare_data.call(this, password);
+        var key = this.delegate.serializeKey(password, this);
+        if (!key) {
+            return new ns.SecureMessage(msg)
+        }
+        var receiver = this.envelope.receiver;
+        var data = this.delegate.encryptKey(key, receiver, this);
+        if (!data) {
+            return null
+        }
+        msg["key"] = this.delegate.encodeKey(data, this);
         return new ns.SecureMessage(msg)
     };
-    var encrypt_key = function(password) {
+    var encrypt_group_message = function(password, members) {
         var msg = prepare_data.call(this, password);
         var key = this.delegate.serializeKey(password, this);
-        if (key) {
-            var receiver = this.envelope.receiver;
-            var data = this.delegate.encryptKey(key, receiver, this);
-            if (data) {
-                msg["key"] = this.delegate.encodeKey(data, this)
-            }
+        if (!key) {
+            return new ns.SecureMessage(msg)
         }
-        return msg
-    };
-    var encrypt_keys = function(password, members) {
-        var msg = prepare_data.call(this, password);
-        var key = this.delegate.serializeKey(password, this);
-        if (key) {
-            var keys = {};
-            var keys_length = 0;
-            var member;
-            var data;
-            for (var i = 0; i < members.length; ++i) {
-                member = members[i];
-                data = this.delegate.encryptKey(key, member, this);
-                if (data) {
-                    keys[member] = this.delegate.encodeKey(data, this);
-                    keys_length += 1
-                }
+        var keys = {};
+        var count = 0;
+        var member;
+        var data;
+        for (var i = 0; i < members.length; ++i) {
+            member = members[i];
+            data = this.delegate.encryptKey(key, member, this);
+            if (!data) {
+                continue
             }
-            if (keys_length > 0) {
-                msg["keys"] = keys
-            }
+            keys[member] = this.delegate.encodeKey(data, this);
+            ++count
         }
-        return msg
+        if (count > 0) {
+            msg["keys"] = keys
+        }
+        return new ns.SecureMessage(msg)
     };
     var prepare_data = function(password) {
         var data = this.delegate.serializeContent(this.content, password, this);
@@ -429,21 +431,35 @@ if (typeof DaoKeDao !== "object") {
     };
     SecureMessage.prototype.decrypt = function() {
         var sender = this.envelope.sender;
-        var receiver = this.envelope.receiver;
+        var receiver;
         var group = this.envelope.getGroup();
-        var key = this.getKey();
-        var password;
         if (group) {
-            key = this.delegate.decryptKey(key, sender, group, this);
-            password = this.delegate.deserializeKey(key, sender, group, this)
+            receiver = group
         } else {
-            key = this.delegate.decryptKey(key, sender, receiver, this);
-            password = this.delegate.deserializeKey(key, sender, receiver, this)
+            receiver = this.envelope.receiver
         }
-        var data = this.delegate.decryptContent(this.getData(), password, this);
+        var key = this.getKey();
+        if (key) {
+            key = this.delegate.decryptKey(key, sender, receiver, this);
+            if (!key) {
+                throw Error("failed to decrypt key in msg: " + this)
+            }
+        }
+        var password = this.delegate.deserializeKey(key, sender, receiver, this);
+        if (!password) {
+            throw Error("failed to get msg key: " + sender + " -> " + receiver + ", " + key)
+        }
+        var data = this.getData();
+        if (!data) {
+            throw Error("failed to decode content data: " + this)
+        }
+        data = this.delegate.decryptContent(data, password, this);
+        if (!data) {
+            throw Error("failed to decrypt data with key: " + password)
+        }
         var content = this.delegate.deserializeContent(data, password, this);
         if (!content) {
-            throw Error("failed to decrypt message data: " + this)
+            throw Error("failed to deserialize content: " + data)
         }
         var msg = this.getMap(true);
         delete msg["key"];
@@ -537,7 +553,13 @@ if (typeof DaoKeDao !== "object") {
     ReliableMessage.prototype.verify = function() {
         var sender = this.envelope.sender;
         var data = this.getData();
+        if (!data) {
+            throw Error("failed to decode content data: " + this)
+        }
         var signature = this.getSignature();
+        if (!signature) {
+            throw Error("failed to decode message signature: " + this)
+        }
         if (this.delegate.verifyDataSignature(data, signature, sender, this)) {
             var msg = this.getMap(true);
             delete msg["signature"];

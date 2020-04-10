@@ -133,7 +133,13 @@
     ReliableMessage.prototype.verify = function () {
         var sender = this.envelope.sender;
         var data = this.getData();
+        if (!data) {
+            throw Error('failed to decode content data: ' + this);
+        }
         var signature = this.getSignature();
+        if (!signature) {
+            throw Error('failed to decode message signature: ' + this);
+        }
         // 1. verify data signature with sender's public key
         if (this.delegate.verifyDataSignature(data, signature, sender, this)) {
             // 2. pack message

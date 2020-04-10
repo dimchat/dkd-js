@@ -148,37 +148,57 @@
      */
     SecureMessage.prototype.decrypt = function () {
         var sender = this.envelope.sender;
-        var receiver = this.envelope.receiver;
+        var receiver;
         var group = this.envelope.getGroup();
+        if (group) {
+            // group message
+            receiver = group;
+        } else {
+            // personal message
+            // not split group message
+            receiver = this.envelope.receiver;
+        }
+
         // 1. decrypt 'message.key' to symmetric key
         // 1.1. decode encrypted key data
         var key = this.getKey();
         // 1.2. decrypt key data
-        //      if key is empty, means it should be reused, get it from key cache
-        var password;
-        if (group) {
-            // group message
-            key = this.delegate.decryptKey(key, sender, group, this);
-            password = this.delegate.deserializeKey(key, sender, group, this);
-        } else {
-            // personal message
+        if (key) {
             key = this.delegate.decryptKey(key, sender, receiver, this);
-            password = this.delegate.deserializeKey(key, sender, receiver, this);
+            if (!key) {
+                throw Error('failed to decrypt key in msg: ' + this);
+            }
         }
+        // 1.3. deserialize key
+        //      if key is empty, means it should be reused, get it from key cache
+        var password = this.delegate.deserializeKey(key, sender, receiver, this);
+        if (!password) {
+            throw Error('failed to get msg key: ' + sender + ' -> ' + receiver + ', ' + key);
+        }
+
         // 2. decrypt 'message.data' to 'message.content'
-        // 2.1. decrypt content data
-        var data = this.delegate.decryptContent(this.getData(), password, this);
-        // 2.2. deserialize content
+        // 2.1. decode encrypted content data
+        var data = this.getData();
+        if (!data) {
+            throw Error('failed to decode content data: ' + this);
+        }
+        // 2.2. decrypt content data
+        data = this.delegate.decryptContent(data, password, this);
+        if (!data) {
+            throw Error('failed to decrypt data with key: ' + password);
+        }
+        // 2.3. deserialize content
         var content = this.delegate.deserializeContent(data, password, this);
-        // 2.3. check attachment for File/Image/Audio/Video message content
+        if (!content) {
+            throw Error('failed to deserialize content: ' + data);
+        }
+        // 2.4. check attachment for File/Image/Audio/Video message content
         //      if file data not download yet,
         //          decrypt file data with password;
         //      else,
         //          save password to 'message.content.password'.
         //      (do it in 'core' module)
-        if (!content) {
-            throw Error('failed to decrypt message data: ' + this);
-        }
+
         // 3. pack message
         var msg = this.getMap(true);
         delete msg['key'];
@@ -197,8 +217,9 @@
         var sender = this.envelope.sender;
         // 1. sign with sender's private key
         var signature = this.delegate.signData(this.getData(), sender, this);
+        // 2. encode signature
         var base64 = this.delegate.encodeSignature(signature, this);
-        // 2. pack message
+        // 3. pack message
         var msg = this.getMap(true);
         msg['signature'] = base64;
         return new ns.ReliableMessage(msg);
