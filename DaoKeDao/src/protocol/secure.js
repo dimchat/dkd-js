@@ -30,115 +30,155 @@
 // =============================================================================
 //
 
-//! require 'namespace.js'
+/**
+ *  Secure Message
+ *  ~~~~~~~~~~~~~~
+ *  Instant Message encrypted by a symmetric key
+ *
+ *  data format: {
+ *      //-- envelope
+ *      sender   : "moki@xxx",
+ *      receiver : "hulk@yyy",
+ *      time     : 123,
+ *      //-- content data and key/keys
+ *      data     : "...",  // base64_encode(symmetric)
+ *      key      : "...",  // base64_encode(asymmetric)
+ *      keys     : {
+ *          "ID1": "key1", // base64_encode(asymmetric)
+ *      }
+ *  }
+ */
 
-!function (ns) {
+//! require 'message.js'
+
+(function (ns) {
     'use strict';
 
-    var MessageDelegate = function () {
+    var Message = ns.protocol.Message;
+
+    var SecureMessage = function () {
     };
-    ns.Interface(MessageDelegate, null);
+    ns.Interface(SecureMessage, [Message]);
 
-    //-------- instant message delegate
-
-    var InstantMessageDelegate = function () {
-    };
-    ns.Interface(InstantMessageDelegate, [MessageDelegate]);
-
-    //
-    //  Encrypt Content
-    //
-
-    // noinspection JSUnusedLocalSymbols
     /**
-     *  1. Serialize 'message.content' to data (JsON / ProtoBuf / ...)
+     *  Get encrypted content data
      *
-     * @param {Content} content - message.content
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} serialized content data
+     * @return {Uint8Array}
      */
-    InstantMessageDelegate.prototype.serializeContent = function (content, pwd, iMsg) {
+    SecureMessage.prototype.getData = function () {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
-     *  2. Encrypt content data to 'message.data' with symmetric key
+     *  Get encrypted symmetric key
      *
-     * @param {Uint8Array} data - serialized data of message.content
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} encrypted message content data
+     * @return {Uint8Array}
      */
-    InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
+    SecureMessage.prototype.getEncryptedKey = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    SecureMessage.prototype.getEncryptedKeys = function () {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
-    /**
-     *  3. Encode 'message.data' to String (Base64)
+    /*
+     *  Decrypt the Secure Message to Instant Message
      *
-     * @param {Uint8Array} data - encrypted content data
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {String} Base64 string
+     *    +----------+      +----------+
+     *    | sender   |      | sender   |
+     *    | receiver |      | receiver |
+     *    | time     |  ->  | time     |
+     *    |          |      |          |  1. PW      = decrypt(key, receiver.SK)
+     *    | data     |      | content  |  2. content = decrypt(data, PW)
+     *    | key/keys |      +----------+
+     *    +----------+
      */
-    InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
+
+    /**
+     *  Decrypt message, replace encrypted 'data' with 'content' field
+     *
+     * @return {InstantMessage}
+     */
+    SecureMessage.prototype.decrypt = function () {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    //
-    //  Encrypt Key
-    //
-
-    // noinspection JSUnusedLocalSymbols
-    /**
-     *  4. Serialize message key to data (JsON / ProtoBuf / ...)
+    /*
+     *  Sign the Secure Message to Reliable Message
      *
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} serialized key data
+     *    +----------+      +----------+
+     *    | sender   |      | sender   |
+     *    | receiver |      | receiver |
+     *    | time     |  ->  | time     |
+     *    |          |      |          |
+     *    | data     |      | data     |
+     *    | key/keys |      | key/keys |
+     *    +----------+      | signature|  1. signature = sign(data, sender.SK)
+     *                      +----------+
      */
-    InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
+
+    /**
+     *  Sign message.data, add 'signature' field
+     *
+     * @return {ReliableMessage}
+     */
+    SecureMessage.prototype.sign = function () {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
-    /**
-     *  5. Encrypt key data to 'message.key' with receiver's public key
+    /*
+     *  Split/Trim group message
      *
-     * @param {Uint8Array} data - symmetric key to be encrypted
-     * @param {String} receiver - receiver ID/string
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {Uint8Array} encrypted symmetric key data
+     *  for each members, get key from 'keys' and replace 'receiver' to member ID
      */
-    InstantMessageDelegate.prototype.encryptKey = function (data, receiver, iMsg) {
+
+    /**
+     *  Split the group message to single person messages
+     *
+     *  @param {ID[]} members - group members
+     *  @return {SecureMessage[]}secure/reliable message(s)
+     */
+    SecureMessage.prototype.split = function (members) {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
-     *  6. Encode 'message.key' to String (Base64)
+     *  Trim the group message for a member
      *
-     * @param {Uint8Array} data - encrypted key data
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {String} Base64 string
+     * @param {ID} member - group member ID
+     * @return {SecureMessage}
      */
-    InstantMessageDelegate.prototype.encodeKey = function (data, iMsg) {
+    SecureMessage.prototype.trim = function (member) {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    //-------- secure message delegate
+    //-------- namespace --------
+    ns.protocol.SecureMessage = SecureMessage;
 
+    ns.protocol.register('SecureMessage');
+
+})(DaoKeDao);
+
+(function (ns) {
+    'use strict';
+
+    var Message = ns.protocol.Message;
+    var SecureMessage = ns.protocol.SecureMessage;
+
+    /**
+     *  Message Delegate
+     *  ~~~~~~~~~~~~~~~~
+     */
     var SecureMessageDelegate = function () {
     };
-    ns.Interface(SecureMessageDelegate, [MessageDelegate]);
+    ns.Interface(SecureMessageDelegate, [Message.Delegate])
 
     //
     //  Decrypt Key
@@ -148,7 +188,7 @@
     /**
      *  1. Decode 'message.key' to encrypted symmetric key data
      *
-     * @param {String} key - Base64 string
+     * @param {String} key         - Base64 string
      * @param {SecureMessage} sMsg - secure message object
      * @returns {Uint8Array} encrypted symmetric key data
      */
@@ -263,47 +303,56 @@
         return null;
     };
 
-    //-------- reliable message delegate
+    SecureMessage.Delegate = SecureMessageDelegate;
 
-    var ReliableMessageDelegate = function () {
+})(DaoKeDao);
+
+(function (ns) {
+    'use strict';
+
+    var map = ns.type.Map;
+    var SecureMessage = ns.protocol.SecureMessage;
+
+    /**
+     *  Message Factory
+     *  ~~~~~~~~~~~~~~~
+     */
+    var SecureMessageFactory = function () {
     };
-    ns.Interface(ReliableMessageDelegate, [SecureMessageDelegate]);
+    ns.Interface(SecureMessageFactory, null)
 
     // noinspection JSUnusedLocalSymbols
-    /**
-     *  1. Decode 'message.signature' from String (Base64)
-     *
-     * @param {String} signature - Base64 string
-     * @param {ReliableMessage} rMsg - reliable message
-     * @returns {Uint8Array} signature
-     */
-    ReliableMessageDelegate.prototype.decodeSignature = function (signature, rMsg) {
+    SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
         console.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
-    /**
-     *  2. Verify the message data and signature with sender's public key
-     *
-     * @param {Uint8Array} data - message content(encrypted) data
-     * @param {Uint8Array} signature - signature for message content(encrypted) data
-     * @param {String} sender - sender ID/string
-     * @param {ReliableMessage} rMsg - reliable message
-     * @returns {boolean} true on signature matched
-     */
-    ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, rMsg) {
-        console.assert(false, 'implement me!');
-        return false;
+    SecureMessage.Factory = SecureMessageFactory;
+
+    var s_factory = null;
+
+    SecureMessage.getFactory = function () {
+        return s_factory;
+    };
+    SecureMessage.setFactory = function (factory) {
+        s_factory = factory;
     };
 
-    //-------- namespace --------
-    ns.InstantMessageDelegate = InstantMessageDelegate;
-    ns.SecureMessageDelegate = SecureMessageDelegate;
-    ns.ReliableMessageDelegate = ReliableMessageDelegate;
+    /**
+     *  Parse map object to message
+     *
+     * @param {{String:Object}} msg - message info
+     * @return {SecureMessage}
+     */
+    SecureMessage.parse = function (msg) {
+        if (!msg) {
+            return null;
+        } else if (msg instanceof SecureMessage) {
+            return msg;
+        } else if (msg instanceof map) {
+            msg = msg.getMap();
+        }
+        return SecureMessage.getFactory().parseSecureMessage(msg);
+    };
 
-    ns.register('InstantMessageDelegate');
-    ns.register('SecureMessageDelegate');
-    ns.register('ReliableMessageDelegate');
-
-}(DaoKeDao);
+})(DaoKeDao);

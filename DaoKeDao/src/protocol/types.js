@@ -32,7 +32,7 @@
 
 //! require 'namespace.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
     /**
@@ -117,4 +117,4 @@
 
     ns.protocol.register('ContentType');
 
-}(DaoKeDao);
+})(DaoKeDao);

@@ -54,10 +54,12 @@
 
 //! require 'secure.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
-    var SecureMessage = ns.SecureMessage;
+    var SecureMessage = ns.protocol.SecureMessage;
+    var ReliableMessage = ns.protocol.ReliableMessage;
+    var EncryptedMessage = ns.EncryptedMessage;
 
     /**
      *  Create reliable message
@@ -65,19 +67,21 @@
      * @param {{}} msg - message info with envelope, data, key/keys, signature
      * @constructor
      */
-    var ReliableMessage = function (msg) {
-        SecureMessage.call(this, msg);
+    var NetworkMessage = function (msg) {
+        EncryptedMessage.call(this, msg);
+        // lazy load
+        this.signature = null;
+        this.meta = null;
+        this.visa = null;
     };
-    ns.Class(ReliableMessage, SecureMessage, null);
+    ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage]);
 
-    /**
-     *  Get signature for message data
-     *
-     * @returns {Uint8Array}
-     */
-    ReliableMessage.prototype.getSignature = function () {
-        var base64 = this.getValue('signature');
-        return this.delegate.decodeSignature(base64, this);
+    NetworkMessage.prototype.getSignature = function () {
+        if (!this.signature) {
+            var base64 = this.getValue('signature');
+            this.signature = this.getDelegate().decodeSignature(base64, this);
+        }
+        return this.signature;
     };
 
     /**
@@ -85,30 +89,35 @@
      *  ~~~~~~~~~~~~~
      *  Extends for the first message package of 'Handshake' protocol.
      *
-     * @param {{}} meta - Meta object or dictionary
+     * @param {Meta} meta
      */
-    ReliableMessage.prototype.setMeta = function (meta) {
-        this.setValue('meta', meta);
+    NetworkMessage.prototype.setMeta = function (meta) {
+        ReliableMessage.setMeta(meta, this.getMap());
+        this.meta = meta;
     };
-
-    ReliableMessage.prototype.getMeta = function () {
-        return this.getValue('meta');
+    NetworkMessage.prototype.getMeta = function () {
+        if (!this.meta) {
+            this.meta = ReliableMessage.getMeta(this.getMap());
+        }
+        return this.meta;
     };
 
     /**
-     *  Create reliable message
+     *  Sender's Visa
+     *  ~~~~~~~~~~~~~
+     *  Extends for the first message package of 'Handshake' protocol.
      *
-     * @param {{}|Message} msg
-     * @returns {ReliableMessage}
+     * @param {Visa} visa
      */
-    ReliableMessage.getInstance = function (msg) {
-        if (!msg) {
-            return null;
+    NetworkMessage.prototype.setVisa = function (visa) {
+        ReliableMessage.setVisa(visa, this.getMap());
+        this.visa = visa;
+    };
+    NetworkMessage.prototype.getVisa = function () {
+        if (!this.visa) {
+            this.visa = ReliableMessage.getVisa(this.getMap());
         }
-        if (msg instanceof ReliableMessage) {
-            return msg;
-        }
-        return new ReliableMessage(msg);
+        return this.visa;
     };
 
     /*
@@ -130,8 +139,7 @@
      *
      * @returns {SecureMessage}
      */
-    ReliableMessage.prototype.verify = function () {
-        var sender = this.envelope.sender;
+    NetworkMessage.prototype.verify = function () {
         var data = this.getData();
         if (!data) {
             throw Error('failed to decode content data: ' + this);
@@ -141,11 +149,11 @@
             throw Error('failed to decode message signature: ' + this);
         }
         // 1. verify data signature with sender's public key
-        if (this.delegate.verifyDataSignature(data, signature, sender, this)) {
+        if (this.getDelegate().verifyDataSignature(data, signature, this.getSender(), this)) {
             // 2. pack message
-            var msg = this.getMap(true);
+            var msg = this.copyMap();
             delete msg['signature'];
-            return new SecureMessage(msg);
+            return SecureMessage.parse(msg);
         } else {
             // throw Error('message signature not match: ' + this);
             return null;
@@ -153,8 +161,8 @@
     };
 
     //-------- namespace --------
-    ns.ReliableMessage = ReliableMessage;
+    ns.NetworkMessage = NetworkMessage;
 
-    ns.register('ReliableMessage');
+    ns.register('NetworkMessage');
 
-}(DaoKeDao);
+})(DaoKeDao);

@@ -43,73 +43,65 @@
  *  }
  */
 
-//! require 'namespace.js'
-//! require 'protocol.js'
+//! require 'protocol/envelope.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
     var Dictionary = ns.type.Dictionary;
 
-    var ContentType = ns.protocol.ContentType;
+    var Envelope = ns.protocol.Envelope;
 
-    var Envelope = function (env) {
+    var MessageEnvelope = function () {
+        var from, to, when;
+        var env;
+        if (arguments.length === 1) {
+            // new MessageEnvelope(map);
+            env = arguments[0];
+            from = Envelope.getSender(env);
+            to = Envelope.getReceiver(env);
+            when = Envelope.getTime(env);
+        } else if (arguments.length === 2) {
+            from = arguments[0];
+            to = arguments[1];
+            when = new Date();
+            env = {
+                'sender': from.toString(),
+                'receiver': to.toString(),
+                'time': Math.ceil(when.getTime() / 1000)
+            }
+        } else if (arguments.length === 3) {
+            // new MessageEnvelope(sender, receiver, time);
+            from = arguments[0];
+            to = arguments[1];
+            if (arguments[2] instanceof Date) {
+                when = arguments[2];
+            } else {
+                when = new Date(arguments[2] * 1000);
+            }
+            env = {
+                'sender': from.toString(),
+                'receiver': to.toString(),
+                'time': Math.ceil(when.getTime() / 1000)
+            }
+        } else {
+            throw SyntaxError('envelope arguments error: ' + arguments);
+        }
         Dictionary.call(this, env);
-        this.sender = env['sender'];
-        this.receiver = env['receiver'];
-        this.time = env['time'];
+        this.sender = from;
+        this.receiver = to;
+        this.time = when;
     };
-    ns.Class(Envelope, Dictionary, null);
+    ns.Class(MessageEnvelope, Dictionary, [Envelope]);
 
-    Envelope.prototype.getTime = function () {
-        var time = this.time;
-        if (time) {
-            return new Date(time * 1000)
-        } else {
-            return null
-        }
+    MessageEnvelope.prototype.getSender = function () {
+        return this.sender;
     };
-
-    /**
-     *  Generate envelope
-     *
-     * @param {String} sender - user ID string
-     * @param {String} receiver - user/group ID string
-     * @param {Date|Number} time - message time
-     * @returns {Envelope}
-     */
-    Envelope.newEnvelope = function (sender, receiver, time) {
-        var env = {
-            'sender': sender,
-            'receiver': receiver
-        };
-        if (!time) {
-            // get current time
-            time = new Date();
-            env['time'] = Math.ceil(time.getTime() / 1000);
-        } else if (time instanceof Date) {
-            /** getTime(): Gets the time value in milliseconds. */
-            env['time'] = Math.ceil(time.getTime() / 1000);
-        } else {
-            // time in seconds since midnight, January 1, 1970 UTC.
-            env['time'] = time;
-        }
-        return new Envelope(env);
+    MessageEnvelope.prototype.getReceiver = function () {
+        return this.receiver;
     };
-
-    /**
-     *  Create envelope
-     *
-     * @param {{}|Envelope} env - envelope info
-     * @returns {Envelope}
-     */
-    Envelope.getInstance = function (env) {
-        if (!env) {
-            return null;
-        } else if (env instanceof Envelope) {
-            return env;
-        }
-        return new Envelope(env);
+    MessageEnvelope.prototype.getTime = function () {
+        return  this.time;
     };
 
     /*
@@ -119,11 +111,11 @@
      *  the 'receiver' will be changed to a member ID, and
      *  the group ID will be saved as 'group'.
      */
-    Envelope.prototype.getGroup = function () {
-        return this.getValue('group');
+    MessageEnvelope.prototype.getGroup = function () {
+        return Envelope.getGroup(this.getMap());
     };
-    Envelope.prototype.setGroup = function (identifier) {
-        this.setValue('group', identifier);
+    MessageEnvelope.prototype.setGroup = function (identifier) {
+        Envelope.setGroup(identifier, this.getMap());
     };
 
     /*
@@ -134,25 +126,16 @@
      *  we pick out the content type and set it in envelope
      *  to let the station do its job.
      */
-    Envelope.prototype.getType = function () {
-        var type = this.getValue('type');
-        if (type instanceof ContentType) {
-            return type.valueOf();
-        } else {
-            return type;
-        }
+    MessageEnvelope.prototype.getType = function () {
+        return Envelope.getType(this.getMap());
     };
-    Envelope.prototype.setType = function (type) {
-        if (type instanceof ContentType) {
-            this.setValue('type', type.valueOf());
-        } else {
-            this.setValue('type', type);
-        }
+    MessageEnvelope.prototype.setType = function (type) {
+        Envelope.setType(type, this.getMap());
     };
 
     //-------- namespace --------
-    ns.Envelope = Envelope;
+    ns.MessageEnvelope = MessageEnvelope;
 
-    ns.register('Envelope');
+    ns.register('MessageEnvelope');
 
-}(DaoKeDao);
+})(DaoKeDao);

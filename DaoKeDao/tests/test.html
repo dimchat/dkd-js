@@ -11,23 +11,28 @@
     <script src="/Crypto/libs/utils.js"></script>
 
     <script src="/Crypto/dist/crypto.js"></script>
+    <script src="/MingKeMing/dist/mkm.js"></script>
 
     <script>
         !function (ns) {
             var sources = [
                 'src/namespace.js',
 
-                'src/protocol.js',
-                'src/content.js',
-                'src/envelope.js',
-                'src/delegate.js',
+                'src/protocol/types.js',
+                'src/protocol/content.js',
+                'src/protocol/envelope.js',
+                'src/protocol/message.js',
+                'src/protocol/instant.js',
+                'src/protocol/secure.js',
+                'src/protocol/reliable.js',
 
-                'src/message.js',
-
-                'src/instant.js',
-                'src/secure.js',
-                'src/reliable.js',
-                'src/forward.js',
+                'src/dkd/content.js',
+                'src/dkd/envelope.js',
+                'src/dkd/message.js',
+                'src/dkd/instant.js',
+                'src/dkd/secure.js',
+                'src/dkd/reliable.js',
+                'src/dkd/factories.js',
                 null
             ];
 

@@ -52,10 +52,14 @@
 //! require 'message.js'
 //! require 'instant.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
-    var Message = ns.Message;
+    var map = ns.type.Map;
+    var InstantMessage = ns.protocol.InstantMessage;
+    var SecureMessage = ns.protocol.SecureMessage;
+    var ReliableMessage = ns.protocol.ReliableMessage;
+    var BaseMessage = ns.BaseMessage;
 
     /**
      *  Create secure message
@@ -63,69 +67,46 @@
      * @param {{}} msg - message info with envelope, data, key/keys
      * @constructor
      */
-    var SecureMessage = function (msg) {
-        Message.call(this, msg);
+    var EncryptedMessage = function (msg) {
+        BaseMessage.call(this, msg);
+        // lazy load
+        this.data = null;
+        this.encryptedKey = null;
+        this.encryptedKeys = null;
     };
-    ns.Class(SecureMessage, Message, null);
+    ns.Class(EncryptedMessage, BaseMessage, [SecureMessage]);
 
-    /**
-     *  Get encrypted message content data
-     *
-     * @returns {Uint8Array}
-     */
-    SecureMessage.prototype.getData = function () {
-        var base64 = this.getValue('data');
-        return this.delegate.decodeData(base64, this);
+    EncryptedMessage.prototype.getData = function () {
+        if (!this.data) {
+            var base64 = this.getValue('data');
+            this.data = this.getDelegate().decodeData(base64, this);
+        }
+        return this.data;
     };
 
-    /**
-     *  Get encrypted key data for receiver
-     *
-     * @returns {Uint8Array}
-     */
-    SecureMessage.prototype.getKey = function () {
-        var base64 = this.getValue('key');
-        if (!base64) {
-            // check 'keys'
-            var keys = this.getKeys();
-            if (keys) {
-                base64 = keys[this.envelope.receiver];
+    EncryptedMessage.prototype.getEncryptedKey = function () {
+        if (!this.encryptedKey) {
+            var base64 = this.getValue('key');
+            if (!base64) {
+                // check 'keys'
+                var keys = this.getEncryptedKeys();
+                if (keys) {
+                    var receiver = this.getReceiver();
+                    base64 = keys[receiver.toString()];
+                }
+            }
+            if (base64) {
+                this.encryptedKey = this.getDelegate().decodeKey(base64, this);
             }
         }
-        if (base64) {
-            return this.delegate.decodeKey(base64, this);
-        } else {
-            return null;
-        }
+        return this.encryptedKey;
     };
 
-    /**
-     *  Get encrypted keys for group members
-     *
-     * @returns {{}}
-     */
-    SecureMessage.prototype.getKeys = function () {
-        return this.getValue('keys');
-    };
-
-    /**
-     *  Create secure message
-     *
-     * @param {{}|Message} msg
-     * @returns {SecureMessage|ReliableMessage}
-     */
-    SecureMessage.getInstance = function (msg) {
-        if (!msg) {
-            return null;
+    EncryptedMessage.prototype.getEncryptedKeys = function () {
+        if (!this.encryptedKeys) {
+            this.encryptedKeys = this.getValue('keys');
         }
-        if (msg.hasOwnProperty('signature')) {
-            // this should be a reliable message
-            return ns.ReliableMessage.getInstance(msg);
-        }
-        if (msg instanceof SecureMessage) {
-            return msg;
-        }
-        return new SecureMessage(msg);
+        return this.encryptedKeys;
     };
 
     /*
@@ -146,32 +127,33 @@
      *
      * @returns {InstantMessage}
      */
-    SecureMessage.prototype.decrypt = function () {
-        var sender = this.envelope.sender;
+    EncryptedMessage.prototype.decrypt = function () {
+        var sender = this.getSender();
         var receiver;
-        var group = this.envelope.getGroup();
+        var group = this.getGroup();
         if (group) {
             // group message
             receiver = group;
         } else {
             // personal message
             // not split group message
-            receiver = this.envelope.receiver;
+            receiver = this.getReceiver();
         }
 
         // 1. decrypt 'message.key' to symmetric key
+        var delegate = this.getDelegate();
         // 1.1. decode encrypted key data
-        var key = this.getKey();
+        var key = this.getEncryptedKey();
         // 1.2. decrypt key data
         if (key) {
-            key = this.delegate.decryptKey(key, sender, receiver, this);
+            key = delegate.decryptKey(key, sender, receiver, this);
             if (!key) {
                 throw Error('failed to decrypt key in msg: ' + this);
             }
         }
         // 1.3. deserialize key
         //      if key is empty, means it should be reused, get it from key cache
-        var password = this.delegate.deserializeKey(key, sender, receiver, this);
+        var password = delegate.deserializeKey(key, sender, receiver, this);
         if (!password) {
             throw Error('failed to get msg key: ' + sender + ' -> ' + receiver + ', ' + key);
         }
@@ -183,12 +165,12 @@
             throw Error('failed to decode content data: ' + this);
         }
         // 2.2. decrypt content data
-        data = this.delegate.decryptContent(data, password, this);
+        data = delegate.decryptContent(data, password, this);
         if (!data) {
             throw Error('failed to decrypt data with key: ' + password);
         }
         // 2.3. deserialize content
-        var content = this.delegate.deserializeContent(data, password, this);
+        var content = delegate.deserializeContent(data, password, this);
         if (!content) {
             throw Error('failed to deserialize content: ' + data);
         }
@@ -200,12 +182,12 @@
         //      (do it in 'core' module)
 
         // 3. pack message
-        var msg = this.getMap(true);
+        var msg = this.copyMap();
         delete msg['key'];
         delete msg['keys'];
         delete msg['data'];
-        msg['content'] = content;
-        return new ns.InstantMessage(msg);
+        msg['content'] = content.getMap();
+        return InstantMessage.parse(msg);
     };
 
     /**
@@ -213,16 +195,16 @@
      *
      * @returns {ReliableMessage}
      */
-    SecureMessage.prototype.sign = function () {
-        var sender = this.envelope.sender;
+    EncryptedMessage.prototype.sign = function () {
+        var delegate = this.getDelegate();
         // 1. sign with sender's private key
-        var signature = this.delegate.signData(this.getData(), sender, this);
+        var signature = delegate.signData(this.getData(), this.getSender(), this);
         // 2. encode signature
-        var base64 = this.delegate.encodeSignature(signature, this);
+        var base64 = delegate.encodeSignature(signature, this);
         // 3. pack message
-        var msg = this.getMap(true);
+        var msg = this.copyMap();
         msg['signature'] = base64;
-        return new ns.ReliableMessage(msg);
+        return ReliableMessage.parse(msg);
     };
 
     /*
@@ -234,41 +216,43 @@
     /**
      *  Split the group message to single person messages
      *
-     * @param {String[]} members - group member ID/string list
+     * @param {ID[]} members - group member ID/string list
      * @returns {SecureMessage[]}
      */
-    SecureMessage.prototype.split = function (members) {
-        // check reliable
-        var reliable = this instanceof ns.ReliableMessage;
-        // get 'keys' for members
-        var keys = this.getKeys();
+    EncryptedMessage.prototype.split = function (members) {
+        var msg = this.copyMap();
+        // check 'keys'
+        var keys = this.getEncryptedKeys();
+        if (keys) {
+            delete msg['keys'];
+        } else {
+            keys = {};
+        }
 
         // 1. move the receiver(group ID) to 'group'
         //    this will help the receiver knows the group ID
         //    when the group message separated to multi-messages;
         //    if don't want the others know your membership,
         //    DON'T do this.
-        var group = this.envelope.receiver;
+        msg['group'] = this.getReceiver().toString();
 
         var messages = [];
-        var msg;
-        var receiver;
-        for (var i = 0; i < members.length; ++i) {
-            receiver = members[i];
-            msg = this.getMap(true); // copy inner dictionary
+        var base64;
+        var item;
+        for (var member in members) {
             // 2. change 'receiver' for each group member
-            msg['receiver'] = receiver;
-            msg['group'] = group;
+            msg['receiver'] = member.toString();
             // 3. get encrypted key
-            if (keys) {
-                delete msg['keys'];
-                msg['key'] = keys[receiver];
+            base64 = keys[member.toString()];
+            if (base64) {
+                msg['key'] = base64;
+            } else {
+                delete msg['key'];
             }
             // 4. repack message
-            if (reliable) {
-                messages.push(new ns.ReliableMessage(msg));
-            } else {
-                messages.push(new SecureMessage(msg));
+            item = SecureMessage.parse(map.copyMap(msg))
+            if (item) {
+                messages.push(item);
             }
         }
         return messages;
@@ -277,41 +261,37 @@
     /**
      *  Trim the group message for a member
      *
-     * @param {String} member - group member ID/string
+     * @param {ID} member - group member ID
      * @returns {ReliableMessage|SecureMessage}
      */
-    SecureMessage.prototype.trim = function (member) {
-        var msg = this.getMap(true);
-        msg['receiver'] = member;
+    EncryptedMessage.prototype.trim = function (member) {
+        var msg = this.copyMap();
         // check 'keys'
-        var keys = this.getKeys();
+        var keys = this.getEncryptedKeys();
         if (keys) {
-            var base64 = keys[member];
+            // move key data from 'keys' to 'key'
+            var base64 = keys[member.toString()];
             if (base64) {
                 msg['key'] = base64;
             }
             delete msg['keys'];
         }
         // check 'group'
-        var group = this.envelope.getGroup();
+        var group = this.getGroup();
         if (!group) {
             // if 'group' not exists, the 'receiver' must be a group ID here, and
             // it will not be equal to the member of course,
             // so move 'receiver' to 'group'
-            msg['group'] = this.envelope.receiver;
+            msg['group'] = this.getReceiver().toString();
         }
+        msg['receiver'] = member.toString();
         // repack
-        var reliable = this instanceof ns.ReliableMessage;
-        if (reliable) {
-            return new ns.ReliableMessage(msg);
-        } else {
-            return new SecureMessage(msg);
-        }
+        return SecureMessage.parse(msg);
     };
 
     //-------- namespace --------
-    ns.SecureMessage = SecureMessage;
+    ns.EncryptedMessage = EncryptedMessage;
 
-    ns.register('SecureMessage');
+    ns.register('EncryptedMessage');
 
-}(DaoKeDao);
+})(DaoKeDao);

@@ -46,68 +46,56 @@
 
 //! require 'message.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
-    var Envelope = ns.Envelope;
-    var Content = ns.Content;
-    var Message = ns.Message;
+    var Message = ns.protocol.Message;
+    var InstantMessage = ns.protocol.InstantMessage;
+    var SecureMessage = ns.protocol.SecureMessage;
+    var BaseMessage = ns.BaseMessage;
 
     /**
      *  Create instant message
-     *
-     * @param {{}} msg - message info with envelope, content
-     * @constructor
      */
-    var InstantMessage = function (msg) {
-        Message.call(this, msg);
-        this.content = Content.getInstance(msg['content']);
-    };
-    ns.Class(InstantMessage, Message, null);
-
-    /**
-     *  Generate instant message
-     *
-     * @param {Content} content - message content info
-     * @param {Envelope|String} heads - message envelope info
-     * @returns {InstantMessage}
-     */
-    InstantMessage.newMessage = function (content, heads) {
-        var msg;
-        var count = arguments.length;
-        if (count === 2) {
-            var env = Envelope.getInstance(heads);
-            msg = env.getMap(true); // copy inner dictionary
-        } else if (count === 3 || count === 4) {
-            var sender = arguments[1];
-            var receiver = arguments[2];
-            var time = (count === 4) ? arguments[3] : 0;
-            msg = {
-                'sender': sender,
-                'receiver': receiver,
-                'time': time
-            }
+    var PlainMessage = function () {
+        var msg, head, body;
+        if (arguments.length === 1) {
+            // new PlainMessage(map);
+            msg = arguments[0];
+            head = Message.getEnvelope(msg);
+            body = InstantMessage.getContent(msg);
+        } else if (arguments.length === 2) {
+            // new PlainMessage(envelope, content);
+            head = arguments[0];
+            body = arguments[1];
+            msg = head.getMap();
+            msg['content'] = body.getMap();
         } else {
-            throw Error('instant message arguments error: ' + arguments);
+            throw SyntaxError('message arguments error: ' + arguments);
         }
-        msg['content'] = content;
-        return new InstantMessage(msg);
+        BaseMessage.call(this, msg);
+        this.envelope = head;
+        this.content = body;
+    };
+    ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
+
+    PlainMessage.prototype.getContent = function () {
+        return this.content;
     };
 
-    /**
-     *  Create instant message
-     *
-     * @param {{}|Message} msg
-     * @returns {InstantMessage}
-     */
-    InstantMessage.getInstance = function (msg) {
-        if (!msg) {
-            return null;
+    PlainMessage.prototype.getTime = function () {
+        var time = this.getContent().getTime();
+        if (!time) {
+            time = this.getEnvelope().getTime();
         }
-        if (msg instanceof InstantMessage) {
-            return msg;
-        }
-        return new InstantMessage(msg);
+        return time;
+    };
+
+    PlainMessage.prototype.getGroup = function () {
+        return this.getContent().getGroup();
+    };
+    PlainMessage.prototype.getType = function () {
+        return this.getContent().getType();
     };
 
     /*
@@ -130,7 +118,7 @@
      * @param {String[]} members - group members ID/string list
      * @returns {SecureMessage}
      */
-    InstantMessage.prototype.encrypt = function (password, members) {
+    PlainMessage.prototype.encrypt = function (password, members) {
         // 0. check attachment for File/Image/Audio/Video message content
         //    (do it in 'core' module)
 
@@ -153,11 +141,10 @@
         if (!key) {
             // A) broadcast message has no key
             // B) reused key
-            return new ns.SecureMessage(msg);
+            return SecureMessage.parse(msg);
         }
         // 2.2. encrypt symmetric key
-        var receiver = this.envelope.receiver;
-        var data = this.delegate.encryptKey(key, receiver, this);
+        var data = this.delegate.encryptKey(key, this.getReceiver(), this);
         if (!data) {
             // public key for encryption not found
             // TODO: suspend this message for waiting receiver's meta
@@ -167,7 +154,7 @@
         // 2.4. insert as 'key'
         msg['key'] = this.delegate.encodeKey(data, this);
         // 3. pack message
-        return new ns.SecureMessage(msg);
+        return SecureMessage.parse(msg);
     };
 
     var encrypt_group_message = function (password, members) {
@@ -179,7 +166,7 @@
         if (!key) {
             // A) broadcast message has no key
             // B) reused key
-            return new ns.SecureMessage(msg);
+            return SecureMessage.parse(msg);
         }
         // encrypt key data to 'message.keys'
         var keys = {};
@@ -204,7 +191,7 @@
             msg['keys'] = keys;
         }
         // 3. pack message
-        return new ns.SecureMessage(msg);
+        return SecureMessage.parse(msg);
     };
 
     var prepare_data = function (password) {
@@ -215,15 +202,15 @@
         // 3. encode encrypted data
         var base64 = this.delegate.encodeData(data, this);
         // 4. replace 'content' with encrypted 'data'
-        var msg = this.getMap(true);
+        var msg = this.copyMap();
         delete msg['content'];
         msg['data'] = base64;
         return msg;
     };
 
     //-------- namespace --------
-    ns.InstantMessage = InstantMessage;
+    ns.PlainMessage = PlainMessage;
 
-    ns.register('InstantMessage');
+    ns.register('PlainMessage');
 
-}(DaoKeDao);
+})(DaoKeDao);

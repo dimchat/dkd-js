@@ -67,63 +67,76 @@
  *  }
  */
 
-//! require 'namespace.js'
 //! require 'envelope.js'
-//! require 'content.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
-    var Dictionary = ns.type.Dictionary;
+    var map = ns.type.Map;
+    var Envelope = ns.protocol.Envelope;
 
-    var Envelope = ns.Envelope;
-
-    /**
-     *  Create message
-     *
-     * @param {{}|Envelope} msg - message info; or envelope info
-     * @constructor
-     */
-    var Message = function (msg) {
-        Dictionary.call(this, msg);
-        // envelope, which shared the same dictionary with the message
-        this.envelope = Envelope.getInstance(msg);
-        // delegate to transform messages
-        this.delegate = null;
+    var Message = function () {
     };
-    ns.Class(Message, Dictionary, null);
+    ns.Interface(Message, [map]);
 
-    /**
-     *  Create message
-     *
-     * @param {{}|Message} msg
-     * @returns {*|Message}
-     */
-    Message.getInstance = function (msg) {
-        if (!msg) {
-            return null;
-        }
-        if (msg.hasOwnProperty('content')) {
-            // this should be an instant message
-            return ns.InstantMessage.getInstance(msg);
-        }
-        if (msg.hasOwnProperty('signature')) {
-            // this should be a reliable message
-            return ns.ReliableMessage.getInstance(msg);
-        }
-        if (msg.hasOwnProperty('data')) {
-            // this should be a secure message
-            return ns.SecureMessage.getInstance(msg);
-        }
-        if (msg instanceof Message) {
-            return msg;
-        }
-        return new Message(msg);
+    // message delegate
+    Message.prototype.getDelegate = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    Message.prototype.setDelegate = function (delegate) {
+        console.assert(false, 'implement me!');
+    };
+
+    // message envelope
+    Message.prototype.getEnvelope = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    Message.getEnvelope = function (msg) {
+        return Envelope.parse(msg);
+    };
+
+    //--------
+
+    Message.prototype.getSender = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    Message.prototype.getReceiver = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    Message.prototype.getTime = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+
+    Message.prototype.getGroup = function () {
+        console.assert(false, 'implement me!');
+        return null;
+    };
+    Message.prototype.getType = function () {
+        console.assert(false, 'implement me!');
+        return null;
     };
 
     //-------- namespace --------
-    ns.Message = Message;
+    ns.protocol.Message = Message;
 
-    ns.register('Message');
+    ns.protocol.register('Message');
 
-}(DaoKeDao);
+})(DaoKeDao);
+
+(function (ns) {
+    'use strict';
+
+    var Message = ns.protocol.Message;
+
+    var MessageDelegate = function () {
+    };
+    ns.Interface(MessageDelegate, null);
+
+    Message.Delegate = MessageDelegate;
+
+})(DaoKeDao);

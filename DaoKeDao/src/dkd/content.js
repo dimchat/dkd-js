@@ -48,15 +48,14 @@
  *  }
  */
 
-//! require 'namespace.js'
-//! require 'protocol.js'
+//! require 'protocol/content.js'
 
-!function (ns) {
+(function (ns) {
     'use strict';
 
     var Dictionary = ns.type.Dictionary;
-
     var ContentType = ns.protocol.ContentType;
+    var Content = ns.protocol.Content;
 
     var MAX_LONG = 0xFFFFFFFF;
     var randomPositiveInteger = function () {
@@ -73,101 +72,68 @@
     /**
      *  Create message content
      *
-     * @param {{}|ContentType} info - content info; or content type
+     * @param {{String:Object}|ContentType} info - content info; or content type
      * @constructor
      */
-    var Content = function (info) {
-        if ((typeof info === 'number') || info instanceof ContentType) {
-            // create new content with type
-            info = {
-                'type': info,
-                'sn': randomPositiveInteger()
+    var BaseContent = function (info) {
+        var content, type, sn, time;
+        if (typeof info === 'number') {
+            type = info;
+            sn = randomPositiveInteger();
+            time = new Date();
+            content = {
+                'type': type,
+                'sn': sn,
+                'time': time.getTime() / 1000
             };
+        } else if (info instanceof ContentType) {
+            type = info.valueOf();
+            sn = randomPositiveInteger();
+            time = new Date();
+            content = {
+                'type': type,
+                'sn': sn,
+                'time': time.getTime() / 1000
+            };
+        } else {
+            content = info;
+            type = Content.getType(content);
+            sn = Content.getSerialNumber(content);
+            time = Content.getTime(content);
         }
-        Dictionary.call(this, info);
+        Dictionary.call(this, content);
         // message type: text, image, ...
-        var type = info['type'];
-        if (type instanceof ContentType) {
-            type = type.valueOf();
-        }
         this.type = type;
         // serial number: random number to identify message content
-        this.sn = info['sn'];
+        this.sn = sn;
+        // message time
+        this.time = time;
     };
-    ns.Class(Content, Dictionary, null);
+    ns.Class(BaseContent, Dictionary, [Content]);
+
+    BaseContent.prototype.getType = function () {
+        return this.type;
+    };
+    BaseContent.prototype.getSerialNumber = function () {
+        return this.sn;
+    };
+    BaseContent.prototype.getTime = function () {
+        return this.time;
+    };
 
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message
-    Content.prototype.getGroup = function () {
-        return this.getValue('group');
+    BaseContent.prototype.getGroup = function () {
+        return Content.getGroup(this.getMap());
     };
 
-    Content.prototype.setGroup = function (identifier) {
-        this.setValue('group', identifier);
-    };
-
-    //-------- Runtime --------
-    var content_classes = {}; // int -> Class
-
-    /**
-     *  Register content class with content type
-     *
-     * @param {ContentType} type
-     * @param {Class} clazz
-     */
-    Content.register = function (type, clazz) {
-        var value;
-        if (type instanceof ContentType) {
-            value = type.valueOf();
-        } else {
-            value = type;
-        }
-        content_classes[value] = clazz;
-    };
-
-    /**
-     *  Create content
-     *
-     * @param {{}|Content} content - content info
-     * @returns {Content}
-     */
-    Content.getInstance = function (content) {
-        if (!content) {
-            return null;
-        } else if (content instanceof Content) {
-            return content;
-        }
-        // create instance by subclass (with content type)
-        var type = content['type'];
-        if (type instanceof ContentType) {
-            type = type.valueOf();
-        }
-        var clazz = content_classes[type];
-        if (typeof clazz === 'function') {
-            return Content.createInstance(clazz, content);
-        }
-        // custom message content
-        return new Content(content);
-    };
-
-    /**
-     *  Create content with specified class
-     *
-     * @param clazz - content Class
-     * @param {{}} map - content info
-     * @returns {Content}
-     */
-    Content.createInstance = function (clazz, map) {
-        if (typeof clazz.getInstance === 'function') {
-            return clazz.getInstance(map);
-        } else {
-            return new clazz(map);
-        }
+    BaseContent.prototype.setGroup = function (identifier) {
+        Content.setGroup(identifier, this.getMap());
     };
 
     //-------- namespace --------
-    ns.Content = Content;
+    ns.BaseContent = BaseContent;
 
-    ns.register('Content');
+    ns.register('BaseContent');
 
-}(DaoKeDao);
+})(DaoKeDao);
