@@ -135,6 +135,7 @@
 (function (ns) {
     'use strict';
 
+    var map = ns.type.Map;
     var ContentType = ns.protocol.ContentType;
     var Content = ns.protocol.Content;
 

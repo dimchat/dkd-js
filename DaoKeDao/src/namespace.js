@@ -36,12 +36,10 @@ if (typeof DaoKeDao !== 'object') {
     DaoKeDao = {};
 }
 
-(function (ns, mkm, base) {
+(function (ns, base) {
     'use strict';
 
     // exports namespace from MingKeMing
-    mkm.exports(ns);
-    // exports namespace from Crypto
     base.exports(ns);
 
     //-------- namespace --------
@@ -53,4 +51,4 @@ if (typeof DaoKeDao !== 'object') {
 
     ns.register('protocol');
 
-})(DaoKeDao, MingKeMing, DIMP);
+})(DaoKeDao, MingKeMing);

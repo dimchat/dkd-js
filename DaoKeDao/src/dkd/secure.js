@@ -239,11 +239,13 @@
         var messages = [];
         var base64;
         var item;
-        for (var member in members) {
+        var receiver;
+        for (var i = 0; i < members.length; ++i) {
+            receiver = members[i].toString();
             // 2. change 'receiver' for each group member
-            msg['receiver'] = member.toString();
+            msg['receiver'] = receiver;
             // 3. get encrypted key
-            base64 = keys[member.toString()];
+            base64 = keys[receiver];
             if (base64) {
                 msg['key'] = base64;
             } else {

@@ -77,29 +77,38 @@
      */
     var BaseContent = function (info) {
         var content, type, sn, time;
-        if (typeof info === 'number') {
-            type = info;
-            sn = randomPositiveInteger();
-            time = new Date();
-            content = {
-                'type': type,
-                'sn': sn,
-                'time': time.getTime() / 1000
-            };
-        } else if (info instanceof ContentType) {
+        if (info instanceof ContentType) {
+            // new BaseContent(type);
             type = info.valueOf();
-            sn = randomPositiveInteger();
-            time = new Date();
+            sn = null;
+            time = null;
             content = {
-                'type': type,
-                'sn': sn,
-                'time': time.getTime() / 1000
+                'type': type
+            };
+        } else if (typeof info === 'number') {
+            // new BaseContent(type);
+            type = info;
+            sn = null;
+            time = null;
+            content = {
+                'type': type
             };
         } else {
+            // new BaseContent(map);
             content = info;
             type = Content.getType(content);
             sn = Content.getSerialNumber(content);
             time = Content.getTime(content);
+        }
+        // check serial number
+        if (!sn) {
+            sn = randomPositiveInteger();
+            content['sn'] = sn;
+        }
+        // check message time
+        if (!time) {
+            time = new Date();
+            content['time'] = time.getTime() / 1000;
         }
         Dictionary.call(this, content);
         // message type: text, image, ...

@@ -9,15 +9,14 @@
 if (typeof DaoKeDao !== "object") {
     DaoKeDao = {}
 }
-(function(ns, mkm, base) {
-    mkm.exports(ns);
+(function(ns, base) {
     base.exports(ns);
     if (typeof ns.protocol !== "object") {
         ns.protocol = {}
     }
     base.Namespace(ns.protocol);
     ns.register("protocol")
-})(DaoKeDao, MingKeMing, DIMP);
+})(DaoKeDao, MingKeMing);
 (function(ns) {
     var ContentType = ns.type.Enum(null, {
         UNKNOWN: (0),
@@ -92,6 +91,7 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.register("Content")
 })(DaoKeDao);
 (function(ns) {
+    var map = ns.type.Map;
     var ContentType = ns.protocol.ContentType;
     var Content = ns.protocol.Content;
     var ContentFactory = function() {};
@@ -299,7 +299,6 @@ if (typeof DaoKeDao !== "object") {
     Message.Delegate = MessageDelegate
 })(DaoKeDao);
 (function(ns) {
-    var map = ns.type.Map;
     var Content = ns.protocol.Content;
     var Message = ns.protocol.Message;
     var InstantMessage = function() {};
@@ -309,9 +308,6 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     InstantMessage.getContent = function(msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap()
-        }
         return Content.parse(msg["content"])
     };
     InstantMessage.prototype.encrypt = function(password, members) {
@@ -633,24 +629,20 @@ if (typeof DaoKeDao !== "object") {
     };
     var BaseContent = function(info) {
         var content, type, sn, time;
-        if (typeof info === "number") {
-            type = info;
-            sn = randomPositiveInteger();
-            time = new Date();
+        if (info instanceof ContentType) {
+            type = info.valueOf();
+            sn = null;
+            time = null;
             content = {
-                "type": type,
-                "sn": sn,
-                "time": time.getTime() / 1000
+                "type": type
             }
         } else {
-            if (info instanceof ContentType) {
-                type = info.valueOf();
-                sn = randomPositiveInteger();
-                time = new Date();
+            if (typeof info === "number") {
+                type = info;
+                sn = null;
+                time = null;
                 content = {
-                    "type": type,
-                    "sn": sn,
-                    "time": time.getTime() / 1000
+                    "type": type
                 }
             } else {
                 content = info;
@@ -658,6 +650,14 @@ if (typeof DaoKeDao !== "object") {
                 sn = Content.getSerialNumber(content);
                 time = Content.getTime(content)
             }
+        }
+        if (!sn) {
+            sn = randomPositiveInteger();
+            content["sn"] = sn
+        }
+        if (!time) {
+            time = new Date();
+            content["time"] = time.getTime() / 1000
         }
         Dictionary.call(this, content);
         this.type = type;
@@ -997,9 +997,11 @@ if (typeof DaoKeDao !== "object") {
         var messages = [];
         var base64;
         var item;
-        for (var member in members) {
-            msg["receiver"] = member.toString();
-            base64 = keys[member.toString()];
+        var receiver;
+        for (var i = 0; i < members.length; ++i) {
+            receiver = members[i].toString();
+            msg["receiver"] = receiver;
+            base64 = keys[receiver];
             if (base64) {
                 msg["key"] = base64
             } else {

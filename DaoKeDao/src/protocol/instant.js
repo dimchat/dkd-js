@@ -50,7 +50,6 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
     var Content = ns.protocol.Content;
     var Message = ns.protocol.Message;
 
@@ -63,9 +62,6 @@
         return null;
     };
     InstantMessage.getContent = function (msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap();
-        }
         return Content.parse(msg['content'])
     };
 
