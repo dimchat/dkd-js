@@ -72,8 +72,9 @@
     /**
      *  Create message content
      *
-     * @param {{String:Object}|ContentType} info - content info; or content type
-     * @constructor
+     *  Usages:
+     *      1. new BaseContent(map);
+     *      2. new BaseContent(type);
      */
     var BaseContent = function (info) {
         var content, type, sn, time;

@@ -261,9 +261,9 @@
     InstantMessage.parse = function (msg) {
         if (!msg) {
             return null;
-        } else if (msg instanceof InstantMessage) {
+        } else if (ns.Interface.conforms(msg, InstantMessage)) {
             return msg;
-        } else if (msg instanceof map) {
+        } else if (ns.Interface.conforms(msg, map)) {
             msg = msg.getMap();
         }
         return InstantMessage.getFactory().parseInstantMessage(msg);

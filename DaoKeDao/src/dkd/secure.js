@@ -64,7 +64,7 @@
     /**
      *  Create secure message
      *
-     * @param {{}} msg - message info with envelope, data, key/keys
+     * @param {{String:Object}} msg - message info with envelope, data, key/keys
      * @constructor
      */
     var EncryptedMessage = function (msg) {
@@ -148,31 +148,31 @@
         if (key) {
             key = delegate.decryptKey(key, sender, receiver, this);
             if (!key) {
-                throw Error('failed to decrypt key in msg: ' + this);
+                throw new Error('failed to decrypt key in msg: ' + this);
             }
         }
         // 1.3. deserialize key
         //      if key is empty, means it should be reused, get it from key cache
         var password = delegate.deserializeKey(key, sender, receiver, this);
         if (!password) {
-            throw Error('failed to get msg key: ' + sender + ' -> ' + receiver + ', ' + key);
+            throw new Error('failed to get msg key: ' + sender + ' -> ' + receiver + ', ' + key);
         }
 
         // 2. decrypt 'message.data' to 'message.content'
         // 2.1. decode encrypted content data
         var data = this.getData();
         if (!data) {
-            throw Error('failed to decode content data: ' + this);
+            throw new Error('failed to decode content data: ' + this);
         }
         // 2.2. decrypt content data
         data = delegate.decryptContent(data, password, this);
         if (!data) {
-            throw Error('failed to decrypt data with key: ' + password);
+            throw new Error('failed to decrypt data with key: ' + password);
         }
         // 2.3. deserialize content
         var content = delegate.deserializeContent(data, password, this);
         if (!content) {
-            throw Error('failed to deserialize content: ' + data);
+            throw new Error('failed to deserialize content: ' + data);
         }
         // 2.4. check attachment for File/Image/Audio/Video message content
         //      if file data not download yet,

@@ -64,7 +64,7 @@
     /**
      *  Create reliable message
      *
-     * @param {{}} msg - message info with envelope, data, key/keys, signature
+     * @param {{String:Object}} msg - message info with envelope, data, key/keys, signature
      * @constructor
      */
     var NetworkMessage = function (msg) {
@@ -142,11 +142,11 @@
     NetworkMessage.prototype.verify = function () {
         var data = this.getData();
         if (!data) {
-            throw Error('failed to decode content data: ' + this);
+            throw new Error('failed to decode content data: ' + this);
         }
         var signature = this.getSignature();
         if (!signature) {
-            throw Error('failed to decode message signature: ' + this);
+            throw new Error('failed to decode message signature: ' + this);
         }
         // 1. verify data signature with sender's public key
         if (this.getDelegate().verifyDataSignature(data, signature, this.getSender(), this)) {
@@ -155,7 +155,7 @@
             delete msg['signature'];
             return SecureMessage.parse(msg);
         } else {
-            // throw Error('message signature not match: ' + this);
+            // throw new Error('message signature not match: ' + this);
             return null;
         }
     };

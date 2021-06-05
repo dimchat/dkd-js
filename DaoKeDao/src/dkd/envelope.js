@@ -52,6 +52,14 @@
 
     var Envelope = ns.protocol.Envelope;
 
+    /**
+     *  Create envelope
+     *
+     *  Usages:
+     *      1. new MessageEnvelope(map);
+     *      2. new MessageEnvelope(sender, receiver);
+     *      3. new MessageEnvelope(sender, receiver, time);
+     */
     var MessageEnvelope = function () {
         var from, to, when;
         var env;
@@ -62,6 +70,7 @@
             to = Envelope.getReceiver(env);
             when = Envelope.getTime(env);
         } else if (arguments.length === 2) {
+            // new MessageEnvelope(sender, receiver);
             from = arguments[0];
             to = arguments[1];
             when = new Date();
@@ -85,7 +94,7 @@
                 'time': Math.ceil(when.getTime() / 1000)
             }
         } else {
-            throw SyntaxError('envelope arguments error: ' + arguments);
+            throw new SyntaxError('envelope arguments error: ' + arguments);
         }
         Dictionary.call(this, env);
         this.sender = from;
@@ -101,7 +110,7 @@
         return this.receiver;
     };
     MessageEnvelope.prototype.getTime = function () {
-        return  this.time;
+        return this.time;
     };
 
     /*

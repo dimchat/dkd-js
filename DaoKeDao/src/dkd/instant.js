@@ -56,6 +56,10 @@
 
     /**
      *  Create instant message
+     *
+     *  Usages:
+     *      1. new PlainMessage(map);
+     *      2. new PlainMessage(envelope, content);
      */
     var PlainMessage = function () {
         var msg, head, body;
@@ -71,7 +75,7 @@
             msg = head.getMap();
             msg['content'] = body.getMap();
         } else {
-            throw SyntaxError('message arguments error: ' + arguments);
+            throw new SyntaxError('message arguments error: ' + arguments);
         }
         BaseMessage.call(this, msg);
         this.envelope = head;

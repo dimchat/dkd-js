@@ -225,9 +225,9 @@
     Envelope.parse = function (env) {
         if (!env) {
             return null;
-        } else if (env instanceof Envelope) {
+        } else if (ns.Interface.conforms(env, Envelope)) {
             return env;
-        } else if (env instanceof map) {
+        } else if (ns.Interface.conforms(env, map)) {
             env = env.getMap();
         }
         return Envelope.getFactory().parseEnvelope(env);

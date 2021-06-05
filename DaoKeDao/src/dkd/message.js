@@ -80,12 +80,13 @@
     /**
      *  Create message
      *
-     * @param {{}|Envelope} msg - message info; or envelope info
-     * @constructor
+     *  Usages:
+     *      1. new BaseMessage(map);
+     *      2. new BaseMessage(envelope);
      */
     var BaseMessage = function (msg) {
         var env;
-        if (msg instanceof Envelope) {
+        if (ns.Interface.conforms(msg, Envelope)) {
             env = msg;
             msg = env.getMap();
         } else {

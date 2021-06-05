@@ -185,9 +185,9 @@
     Content.parse = function (content) {
         if (!content) {
             return null;
-        } else if (content instanceof Content) {
+        } else if (ns.Interface.conforms(content, Content)) {
             return content;
-        } else if (content instanceof map) {
+        } else if (ns.Interface.conforms(content, map)) {
             content = content.getMap();
         }
         var type = Content.getType(content);

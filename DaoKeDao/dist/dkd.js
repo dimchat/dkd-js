@@ -19,7 +19,6 @@ if (typeof DaoKeDao !== "object") {
 })(DaoKeDao, MingKeMing);
 (function(ns) {
     var ContentType = ns.type.Enum(null, {
-        UNKNOWN: (0),
         TEXT: (1),
         FILE: (16),
         IMAGE: (18),
@@ -118,10 +117,10 @@ if (typeof DaoKeDao !== "object") {
         if (!content) {
             return null
         } else {
-            if (content instanceof Content) {
+            if (ns.Interface.conforms(content, Content)) {
                 return content
             } else {
-                if (content instanceof map) {
+                if (ns.Interface.conforms(content, map)) {
                     content = content.getMap()
                 }
             }
@@ -239,10 +238,10 @@ if (typeof DaoKeDao !== "object") {
         if (!env) {
             return null
         } else {
-            if (env instanceof Envelope) {
+            if (ns.Interface.conforms(env, Envelope)) {
                 return env
             } else {
-                if (env instanceof map) {
+                if (ns.Interface.conforms(env, map)) {
                     env = env.getMap()
                 }
             }
@@ -376,10 +375,10 @@ if (typeof DaoKeDao !== "object") {
         if (!msg) {
             return null
         } else {
-            if (msg instanceof InstantMessage) {
+            if (ns.Interface.conforms(msg, InstantMessage)) {
                 return msg
             } else {
-                if (msg instanceof map) {
+                if (ns.Interface.conforms(msg, map)) {
                     msg = msg.getMap()
                 }
             }
@@ -482,10 +481,10 @@ if (typeof DaoKeDao !== "object") {
         if (!msg) {
             return null
         } else {
-            if (msg instanceof SecureMessage) {
+            if (ns.Interface.conforms(msg, SecureMessage)) {
                 return msg
             } else {
-                if (msg instanceof map) {
+                if (ns.Interface.conforms(msg, map)) {
                     msg = msg.getMap()
                 }
             }
@@ -513,15 +512,9 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ReliableMessage.getMeta = function(msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap()
-        }
         return Meta.parse(msg["meta"])
     };
     ReliableMessage.setMeta = function(meta, msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap()
-        }
         if (meta) {
             msg["meta"] = meta.getMap()
         } else {
@@ -537,9 +530,6 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ReliableMessage.getVisa = function(msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap()
-        }
         var doc = msg["visa"];
         if (!doc) {
             doc = msg["profile"]
@@ -547,9 +537,6 @@ if (typeof DaoKeDao !== "object") {
         return Document.parse(doc)
     };
     ReliableMessage.setVisa = function(doc, msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap()
-        }
         delete msg["visa"];
         if (doc) {
             msg["profile"] = doc.getMap()
@@ -600,10 +587,10 @@ if (typeof DaoKeDao !== "object") {
         if (!msg) {
             return null
         } else {
-            if (msg instanceof ReliableMessage) {
+            if (ns.Interface.conforms(msg, ReliableMessage)) {
                 return msg
             } else {
-                if (msg instanceof map) {
+                if (ns.Interface.conforms(msg, map)) {
                     msg = msg.getMap()
                 }
             }
@@ -719,7 +706,7 @@ if (typeof DaoKeDao !== "object") {
                         "time": Math.ceil(when.getTime() / 1000)
                     }
                 } else {
-                    throw SyntaxError("envelope arguments error: " + arguments)
+                    throw new SyntaxError("envelope arguments error: " + arguments)
                 }
             }
         }
@@ -759,7 +746,7 @@ if (typeof DaoKeDao !== "object") {
     var Message = ns.protocol.Message;
     var BaseMessage = function(msg) {
         var env;
-        if (msg instanceof Envelope) {
+        if (ns.Interface.conforms(msg, Envelope)) {
             env = msg;
             msg = env.getMap()
         } else {
@@ -815,7 +802,7 @@ if (typeof DaoKeDao !== "object") {
                 msg = head.getMap();
                 msg["content"] = body.getMap()
             } else {
-                throw SyntaxError("message arguments error: " + arguments)
+                throw new SyntaxError("message arguments error: " + arguments)
             }
         }
         BaseMessage.call(this, msg);
@@ -951,24 +938,24 @@ if (typeof DaoKeDao !== "object") {
         if (key) {
             key = delegate.decryptKey(key, sender, receiver, this);
             if (!key) {
-                throw Error("failed to decrypt key in msg: " + this)
+                throw new Error("failed to decrypt key in msg: " + this)
             }
         }
         var password = delegate.deserializeKey(key, sender, receiver, this);
         if (!password) {
-            throw Error("failed to get msg key: " + sender + " -> " + receiver + ", " + key)
+            throw new Error("failed to get msg key: " + sender + " -> " + receiver + ", " + key)
         }
         var data = this.getData();
         if (!data) {
-            throw Error("failed to decode content data: " + this)
+            throw new Error("failed to decode content data: " + this)
         }
         data = delegate.decryptContent(data, password, this);
         if (!data) {
-            throw Error("failed to decrypt data with key: " + password)
+            throw new Error("failed to decrypt data with key: " + password)
         }
         var content = delegate.deserializeContent(data, password, this);
         if (!content) {
-            throw Error("failed to deserialize content: " + data)
+            throw new Error("failed to deserialize content: " + data)
         }
         var msg = this.copyMap();
         delete msg["key"];
@@ -1075,11 +1062,11 @@ if (typeof DaoKeDao !== "object") {
     NetworkMessage.prototype.verify = function() {
         var data = this.getData();
         if (!data) {
-            throw Error("failed to decode content data: " + this)
+            throw new Error("failed to decode content data: " + this)
         }
         var signature = this.getSignature();
         if (!signature) {
-            throw Error("failed to decode message signature: " + this)
+            throw new Error("failed to decode message signature: " + this)
         }
         if (this.getDelegate().verifyDataSignature(data, signature, this.getSender(), this)) {
             var msg = this.copyMap();

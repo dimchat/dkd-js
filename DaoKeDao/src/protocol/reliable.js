@@ -88,15 +88,9 @@
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap();
-        }
         return Meta.parse(msg['meta']);
     }
     ReliableMessage.setMeta = function (meta, msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap();
-        }
         if (meta) {
             msg['meta'] = meta.getMap();
         } else {
@@ -120,9 +114,6 @@
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap();
-        }
         var doc = msg['visa'];
         if (!doc) {
             // compatible with v1.0
@@ -131,9 +122,6 @@
         return Document.parse(doc);
     }
     ReliableMessage.setVisa = function (doc, msg) {
-        if (msg instanceof map) {
-            msg = msg.getMap();
-        }
         delete msg['visa'];
         if (doc) {
             msg['profile'] = doc.getMap();
@@ -259,9 +247,9 @@
     ReliableMessage.parse = function (msg) {
         if (!msg) {
             return null;
-        } else if (msg instanceof ReliableMessage) {
+        } else if (ns.Interface.conforms(msg, ReliableMessage)) {
             return msg;
-        } else if (msg instanceof map) {
+        } else if (ns.Interface.conforms(msg, map)) {
             msg = msg.getMap();
         }
         return ReliableMessage.getFactory().parseReliableMessage(msg);

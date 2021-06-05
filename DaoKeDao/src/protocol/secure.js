@@ -347,9 +347,9 @@
     SecureMessage.parse = function (msg) {
         if (!msg) {
             return null;
-        } else if (msg instanceof SecureMessage) {
+        } else if (ns.Interface.conforms(msg, SecureMessage)) {
             return msg;
-        } else if (msg instanceof map) {
+        } else if (ns.Interface.conforms(msg, map)) {
             msg = msg.getMap();
         }
         return SecureMessage.getFactory().parseSecureMessage(msg);
