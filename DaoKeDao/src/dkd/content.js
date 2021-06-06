@@ -113,22 +113,22 @@
         }
         Dictionary.call(this, content);
         // message type: text, image, ...
-        this.type = type;
+        this.__type = type;
         // serial number: random number to identify message content
-        this.sn = sn;
+        this.__sn = sn;
         // message time
-        this.time = time;
+        this.__time = time;
     };
     ns.Class(BaseContent, Dictionary, [Content]);
 
     BaseContent.prototype.getType = function () {
-        return this.type;
+        return this.__type;
     };
     BaseContent.prototype.getSerialNumber = function () {
-        return this.sn;
+        return this.__sn;
     };
     BaseContent.prototype.getTime = function () {
-        return this.time;
+        return this.__time;
     };
 
     // Group ID/string for group message

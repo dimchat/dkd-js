@@ -70,22 +70,22 @@
     var EncryptedMessage = function (msg) {
         BaseMessage.call(this, msg);
         // lazy load
-        this.data = null;
-        this.encryptedKey = null;
-        this.encryptedKeys = null;
+        this.__data = null;
+        this.__key = null;
+        this.__keys = null;
     };
     ns.Class(EncryptedMessage, BaseMessage, [SecureMessage]);
 
     EncryptedMessage.prototype.getData = function () {
-        if (!this.data) {
+        if (!this.__data) {
             var base64 = this.getValue('data');
-            this.data = this.getDelegate().decodeData(base64, this);
+            this.__data = this.getDelegate().decodeData(base64, this);
         }
-        return this.data;
+        return this.__data;
     };
 
     EncryptedMessage.prototype.getEncryptedKey = function () {
-        if (!this.encryptedKey) {
+        if (!this.__key) {
             var base64 = this.getValue('key');
             if (!base64) {
                 // check 'keys'
@@ -96,17 +96,17 @@
                 }
             }
             if (base64) {
-                this.encryptedKey = this.getDelegate().decodeKey(base64, this);
+                this.__key = this.getDelegate().decodeKey(base64, this);
             }
         }
-        return this.encryptedKey;
+        return this.__key;
     };
 
     EncryptedMessage.prototype.getEncryptedKeys = function () {
-        if (!this.encryptedKeys) {
-            this.encryptedKeys = this.getValue('keys');
+        if (!this.__keys) {
+            this.__keys = this.getValue('keys');
         }
-        return this.encryptedKeys;
+        return this.__keys;
     };
 
     /*

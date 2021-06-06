@@ -70,18 +70,18 @@
     var NetworkMessage = function (msg) {
         EncryptedMessage.call(this, msg);
         // lazy load
-        this.signature = null;
-        this.meta = null;
-        this.visa = null;
+        this.__signature = null;
+        this.__meta = null;
+        this.__visa = null;
     };
     ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage]);
 
     NetworkMessage.prototype.getSignature = function () {
-        if (!this.signature) {
+        if (!this.__signature) {
             var base64 = this.getValue('signature');
-            this.signature = this.getDelegate().decodeSignature(base64, this);
+            this.__signature = this.getDelegate().decodeSignature(base64, this);
         }
-        return this.signature;
+        return this.__signature;
     };
 
     /**
@@ -93,13 +93,13 @@
      */
     NetworkMessage.prototype.setMeta = function (meta) {
         ReliableMessage.setMeta(meta, this.getMap());
-        this.meta = meta;
+        this.__meta = meta;
     };
     NetworkMessage.prototype.getMeta = function () {
-        if (!this.meta) {
-            this.meta = ReliableMessage.getMeta(this.getMap());
+        if (!this.__meta) {
+            this.__meta = ReliableMessage.getMeta(this.getMap());
         }
-        return this.meta;
+        return this.__meta;
     };
 
     /**
@@ -111,13 +111,13 @@
      */
     NetworkMessage.prototype.setVisa = function (visa) {
         ReliableMessage.setVisa(visa, this.getMap());
-        this.visa = visa;
+        this.__visa = visa;
     };
     NetworkMessage.prototype.getVisa = function () {
-        if (!this.visa) {
-            this.visa = ReliableMessage.getVisa(this.getMap());
+        if (!this.__visa) {
+            this.__visa = ReliableMessage.getVisa(this.getMap());
         }
-        return this.visa;
+        return this.__visa;
     };
 
     /*

@@ -19,7 +19,7 @@ dkd_tests = [];
     var test_envelope = function () {
         envelope = Envelope.create('moky', 'hulk');
         log('envelope: ', envelope);
-        assert(envelope.sender === 'moky', 'failed to create envelope');
+        assert(envelope.getSender() === 'moky', 'failed to create envelope');
     };
     dkd_tests.push(test_envelope);
 
@@ -27,14 +27,14 @@ dkd_tests = [];
         content = new BaseContent(ContentType.TEXT);
         content.setValue('text', 'Hello world!');
         log('content: ', content);
-        assert(ContentType.TEXT.equals(content.type) === true, 'failed to create content');
+        assert(ContentType.TEXT.equals(content.getType()) === true, 'failed to create content');
     };
     dkd_tests.push(test_content);
 
     var test_message = function () {
         message = InstantMessage.create(envelope, content);
         log('message: ', message);
-        assert(message.content === content, 'message.content error');
+        assert(message.getContent() === content, 'message.content error');
     };
     dkd_tests.push(test_message);
 

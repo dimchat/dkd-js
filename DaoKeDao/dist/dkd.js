@@ -647,19 +647,19 @@ if (typeof DaoKeDao !== "object") {
             content["time"] = time.getTime() / 1000
         }
         Dictionary.call(this, content);
-        this.type = type;
-        this.sn = sn;
-        this.time = time
+        this.__type = type;
+        this.__sn = sn;
+        this.__time = time
     };
     ns.Class(BaseContent, Dictionary, [Content]);
     BaseContent.prototype.getType = function() {
-        return this.type
+        return this.__type
     };
     BaseContent.prototype.getSerialNumber = function() {
-        return this.sn
+        return this.__sn
     };
     BaseContent.prototype.getTime = function() {
-        return this.time
+        return this.__time
     };
     BaseContent.prototype.getGroup = function() {
         return Content.getGroup(this.getMap())
@@ -711,19 +711,19 @@ if (typeof DaoKeDao !== "object") {
             }
         }
         Dictionary.call(this, env);
-        this.sender = from;
-        this.receiver = to;
-        this.time = when
+        this.__sender = from;
+        this.__receiver = to;
+        this.__time = when
     };
     ns.Class(MessageEnvelope, Dictionary, [Envelope]);
     MessageEnvelope.prototype.getSender = function() {
-        return this.sender
+        return this.__sender
     };
     MessageEnvelope.prototype.getReceiver = function() {
-        return this.receiver
+        return this.__receiver
     };
     MessageEnvelope.prototype.getTime = function() {
-        return this.time
+        return this.__time
     };
     MessageEnvelope.prototype.getGroup = function() {
         return Envelope.getGroup(this.getMap())
@@ -753,18 +753,18 @@ if (typeof DaoKeDao !== "object") {
             env = Message.getEnvelope(msg)
         }
         Dictionary.call(this, msg);
-        this.envelope = env;
-        this.delegate = null
+        this.__envelope = env;
+        this.__delegate = null
     };
     ns.Class(BaseMessage, Dictionary, [Message]);
     BaseMessage.prototype.getDelegate = function() {
-        return this.delegate
+        return this.__delegate
     };
     BaseMessage.prototype.setDelegate = function(delegate) {
-        this.delegate = delegate
+        this.__delegate = delegate
     };
     BaseMessage.prototype.getEnvelope = function() {
-        return this.envelope
+        return this.__envelope
     };
     BaseMessage.prototype.getSender = function() {
         return this.getEnvelope().getSender()
@@ -806,12 +806,12 @@ if (typeof DaoKeDao !== "object") {
             }
         }
         BaseMessage.call(this, msg);
-        this.envelope = head;
-        this.content = body
+        this.__envelope = head;
+        this.__content = body
     };
     ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
     PlainMessage.prototype.getContent = function() {
-        return this.content
+        return this.__content
     };
     PlainMessage.prototype.getTime = function() {
         var time = this.getContent().getTime();
@@ -834,21 +834,23 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     var encrypt_message = function(password) {
+        var delegate = this.getDelegate();
         var msg = prepare_data.call(this, password);
-        var key = this.delegate.serializeKey(password, this);
+        var key = delegate.serializeKey(password, this);
         if (!key) {
             return SecureMessage.parse(msg)
         }
-        var data = this.delegate.encryptKey(key, this.getReceiver(), this);
+        var data = delegate.encryptKey(key, this.getReceiver(), this);
         if (!data) {
             return null
         }
-        msg["key"] = this.delegate.encodeKey(data, this);
+        msg["key"] = delegate.encodeKey(data, this);
         return SecureMessage.parse(msg)
     };
     var encrypt_group_message = function(password, members) {
+        var delegate = this.getDelegate();
         var msg = prepare_data.call(this, password);
-        var key = this.delegate.serializeKey(password, this);
+        var key = delegate.serializeKey(password, this);
         if (!key) {
             return SecureMessage.parse(msg)
         }
@@ -858,11 +860,11 @@ if (typeof DaoKeDao !== "object") {
         var data;
         for (var i = 0; i < members.length; ++i) {
             member = members[i];
-            data = this.delegate.encryptKey(key, member, this);
+            data = delegate.encryptKey(key, member, this);
             if (!data) {
                 continue
             }
-            keys[member] = this.delegate.encodeKey(data, this);
+            keys[member] = delegate.encodeKey(data, this);
             ++count
         }
         if (count > 0) {
@@ -871,9 +873,10 @@ if (typeof DaoKeDao !== "object") {
         return SecureMessage.parse(msg)
     };
     var prepare_data = function(password) {
-        var data = this.delegate.serializeContent(this.content, password, this);
-        data = this.delegate.encryptContent(data, password, this);
-        var base64 = this.delegate.encodeData(data, this);
+        var delegate = this.getDelegate();
+        var data = delegate.serializeContent(this.__content, password, this);
+        data = delegate.encryptContent(data, password, this);
+        var base64 = delegate.encodeData(data, this);
         var msg = this.copyMap();
         delete msg["content"];
         msg["data"] = base64;
@@ -890,20 +893,20 @@ if (typeof DaoKeDao !== "object") {
     var BaseMessage = ns.BaseMessage;
     var EncryptedMessage = function(msg) {
         BaseMessage.call(this, msg);
-        this.data = null;
-        this.encryptedKey = null;
-        this.encryptedKeys = null
+        this.__data = null;
+        this.__key = null;
+        this.__keys = null
     };
     ns.Class(EncryptedMessage, BaseMessage, [SecureMessage]);
     EncryptedMessage.prototype.getData = function() {
-        if (!this.data) {
+        if (!this.__data) {
             var base64 = this.getValue("data");
-            this.data = this.getDelegate().decodeData(base64, this)
+            this.__data = this.getDelegate().decodeData(base64, this)
         }
-        return this.data
+        return this.__data
     };
     EncryptedMessage.prototype.getEncryptedKey = function() {
-        if (!this.encryptedKey) {
+        if (!this.__key) {
             var base64 = this.getValue("key");
             if (!base64) {
                 var keys = this.getEncryptedKeys();
@@ -913,16 +916,16 @@ if (typeof DaoKeDao !== "object") {
                 }
             }
             if (base64) {
-                this.encryptedKey = this.getDelegate().decodeKey(base64, this)
+                this.__key = this.getDelegate().decodeKey(base64, this)
             }
         }
-        return this.encryptedKey
+        return this.__key
     };
     EncryptedMessage.prototype.getEncryptedKeys = function() {
-        if (!this.encryptedKeys) {
-            this.encryptedKeys = this.getValue("keys")
+        if (!this.__keys) {
+            this.__keys = this.getValue("keys")
         }
-        return this.encryptedKeys
+        return this.__keys
     };
     EncryptedMessage.prototype.decrypt = function() {
         var sender = this.getSender();
@@ -1027,37 +1030,37 @@ if (typeof DaoKeDao !== "object") {
     var EncryptedMessage = ns.EncryptedMessage;
     var NetworkMessage = function(msg) {
         EncryptedMessage.call(this, msg);
-        this.signature = null;
-        this.meta = null;
-        this.visa = null
+        this.__signature = null;
+        this.__meta = null;
+        this.__visa = null
     };
     ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage]);
     NetworkMessage.prototype.getSignature = function() {
-        if (!this.signature) {
+        if (!this.__signature) {
             var base64 = this.getValue("signature");
-            this.signature = this.getDelegate().decodeSignature(base64, this)
+            this.__signature = this.getDelegate().decodeSignature(base64, this)
         }
-        return this.signature
+        return this.__signature
     };
     NetworkMessage.prototype.setMeta = function(meta) {
         ReliableMessage.setMeta(meta, this.getMap());
-        this.meta = meta
+        this.__meta = meta
     };
     NetworkMessage.prototype.getMeta = function() {
-        if (!this.meta) {
-            this.meta = ReliableMessage.getMeta(this.getMap())
+        if (!this.__meta) {
+            this.__meta = ReliableMessage.getMeta(this.getMap())
         }
-        return this.meta
+        return this.__meta
     };
     NetworkMessage.prototype.setVisa = function(visa) {
         ReliableMessage.setVisa(visa, this.getMap());
-        this.visa = visa
+        this.__visa = visa
     };
     NetworkMessage.prototype.getVisa = function() {
-        if (!this.visa) {
-            this.visa = ReliableMessage.getVisa(this.getMap())
+        if (!this.__visa) {
+            this.__visa = ReliableMessage.getVisa(this.getMap())
         }
-        return this.visa
+        return this.__visa
     };
     NetworkMessage.prototype.verify = function() {
         var data = this.getData();

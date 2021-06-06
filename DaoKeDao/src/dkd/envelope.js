@@ -97,20 +97,20 @@
             throw new SyntaxError('envelope arguments error: ' + arguments);
         }
         Dictionary.call(this, env);
-        this.sender = from;
-        this.receiver = to;
-        this.time = when;
+        this.__sender = from;
+        this.__receiver = to;
+        this.__time = when;
     };
     ns.Class(MessageEnvelope, Dictionary, [Envelope]);
 
     MessageEnvelope.prototype.getSender = function () {
-        return this.sender;
+        return this.__sender;
     };
     MessageEnvelope.prototype.getReceiver = function () {
-        return this.receiver;
+        return this.__receiver;
     };
     MessageEnvelope.prototype.getTime = function () {
-        return this.time;
+        return this.__time;
     };
 
     /*

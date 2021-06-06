@@ -78,13 +78,13 @@
             throw new SyntaxError('message arguments error: ' + arguments);
         }
         BaseMessage.call(this, msg);
-        this.envelope = head;
-        this.content = body;
+        this.__envelope = head;
+        this.__content = body;
     };
     ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
 
     PlainMessage.prototype.getContent = function () {
-        return this.content;
+        return this.__content;
     };
 
     PlainMessage.prototype.getTime = function () {
@@ -137,18 +137,19 @@
     };
 
     var encrypt_message = function (password) {
+        var delegate = this.getDelegate();
         // 1. encrypt 'message.content' to 'message.data'
         var msg = prepare_data.call(this, password);
         // 2. encrypt symmetric key(password) to 'message.key'
         // 2.1. serialize symmetric key
-        var key = this.delegate.serializeKey(password, this);
+        var key = delegate.serializeKey(password, this);
         if (!key) {
             // A) broadcast message has no key
             // B) reused key
             return SecureMessage.parse(msg);
         }
         // 2.2. encrypt symmetric key
-        var data = this.delegate.encryptKey(key, this.getReceiver(), this);
+        var data = delegate.encryptKey(key, this.getReceiver(), this);
         if (!data) {
             // public key for encryption not found
             // TODO: suspend this message for waiting receiver's meta
@@ -156,17 +157,18 @@
         }
         // 2.3. encode encrypted key data to Base64
         // 2.4. insert as 'key'
-        msg['key'] = this.delegate.encodeKey(data, this);
+        msg['key'] = delegate.encodeKey(data, this);
         // 3. pack message
         return SecureMessage.parse(msg);
     };
 
     var encrypt_group_message = function (password, members) {
+        var delegate = this.getDelegate();
         // 1. encrypt 'message.content' to 'message.data'
         var msg = prepare_data.call(this, password);
         // 2. encrypt symmetric key(password) to 'message.key'
         // 2.1. serialize symmetric key
-        var key = this.delegate.serializeKey(password, this);
+        var key = delegate.serializeKey(password, this);
         if (!key) {
             // A) broadcast message has no key
             // B) reused key
@@ -180,7 +182,7 @@
         for (var i = 0; i < members.length; ++i) {
             member = members[i];
             // 2.2. encrypt symmetric key data
-            data = this.delegate.encryptKey(key, member, this);
+            data = delegate.encryptKey(key, member, this);
             if (!data) {
                 // public key for encryption not found
                 // TODO: suspend this message for waiting receiver's meta
@@ -188,7 +190,7 @@
             }
             // 2.3. encode encrypted key data
             // 2.4. insert to 'message.keys' with member ID
-            keys[member] = this.delegate.encodeKey(data, this);
+            keys[member] = delegate.encodeKey(data, this);
             ++count;
         }
         if (count > 0) {
@@ -199,12 +201,13 @@
     };
 
     var prepare_data = function (password) {
+        var delegate = this.getDelegate();
         // 1. serialize message content
-        var data = this.delegate.serializeContent(this.content, password, this);
+        var data = delegate.serializeContent(this.__content, password, this);
         // 2. encrypt content data with password
-        data = this.delegate.encryptContent(data, password, this);
+        data = delegate.encryptContent(data, password, this);
         // 3. encode encrypted data
-        var base64 = this.delegate.encodeData(data, this);
+        var base64 = delegate.encodeData(data, this);
         // 4. replace 'content' with encrypted 'data'
         var msg = this.copyMap();
         delete msg['content'];

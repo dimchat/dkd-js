@@ -94,21 +94,21 @@
         }
         Dictionary.call(this, msg);
         // envelope, which shared the same dictionary with the message
-        this.envelope = env;
+        this.__envelope = env;
         // delegate to transform messages
-        this.delegate = null;
+        this.__delegate = null;
     };
     ns.Class(BaseMessage, Dictionary, [Message]);
 
     BaseMessage.prototype.getDelegate = function () {
-        return this.delegate;
+        return this.__delegate;
     };
     BaseMessage.prototype.setDelegate = function (delegate) {
-        this.delegate = delegate;
+        this.__delegate = delegate;
     };
 
     BaseMessage.prototype.getEnvelope = function () {
-        return this.envelope;
+        return this.__envelope;
     };
 
     BaseMessage.prototype.getSender = function () {
