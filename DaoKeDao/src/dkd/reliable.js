@@ -59,7 +59,7 @@
 
     var SecureMessage = ns.protocol.SecureMessage;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var EncryptedMessage = ns.EncryptedMessage;
+    var EncryptedMessage = ns.dkd.EncryptedMessage;
 
     /**
      *  Create reliable message
@@ -161,8 +161,8 @@
     };
 
     //-------- namespace --------
-    ns.NetworkMessage = NetworkMessage;
+    ns.dkd.NetworkMessage = NetworkMessage;
 
-    ns.register('NetworkMessage');
+    ns.dkd.registers('NetworkMessage');
 
 })(DaoKeDao);

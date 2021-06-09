@@ -113,6 +113,6 @@
     //-------- namespace --------
     ns.protocol.ContentType = ContentType;
 
-    ns.protocol.register('ContentType');
+    ns.protocol.registers('ContentType');
 
 })(DaoKeDao);

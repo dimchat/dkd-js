@@ -163,7 +163,7 @@
     //-------- namespace --------
     ns.protocol.Envelope = Envelope;
 
-    ns.protocol.register('Envelope');
+    ns.protocol.registers('Envelope');
 
 })(DaoKeDao);
 

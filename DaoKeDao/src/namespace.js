@@ -31,9 +31,10 @@
 //
 
 //! require <crypto.js>
+//! require <mkm.js>
 
 if (typeof DaoKeDao !== 'object') {
-    DaoKeDao = {};
+    DaoKeDao = new MONKEY.Namespace();
 }
 
 (function (ns, base) {
@@ -44,11 +45,13 @@ if (typeof DaoKeDao !== 'object') {
 
     //-------- namespace --------
     if (typeof ns.protocol !== 'object') {
-        ns.protocol = {};
+        ns.protocol = new MONKEY.Namespace();
+    }
+    if (typeof ns.dkd !== 'object') {
+        ns.dkd = new MONKEY.Namespace();
     }
 
-    base.Namespace(ns.protocol);
-
-    ns.register('protocol');
+    ns.registers('protocol');
+    ns.registers('dkd');
 
 })(DaoKeDao, MingKeMing);

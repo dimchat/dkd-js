@@ -129,8 +129,8 @@
     };
 
     //-------- namespace --------
-    ns.BaseMessage = BaseMessage;
+    ns.dkd.BaseMessage = BaseMessage;
 
-    ns.register('BaseMessage');
+    ns.dkd.registers('BaseMessage');
 
 })(DaoKeDao);

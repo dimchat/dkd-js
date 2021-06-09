@@ -157,7 +157,7 @@
     //-------- namespace --------
     ns.protocol.ReliableMessage = ReliableMessage;
 
-    ns.protocol.register('ReliableMessage');
+    ns.protocol.registers('ReliableMessage');
 
 })(DaoKeDao);
 

@@ -52,7 +52,7 @@
     var Message = ns.protocol.Message;
     var InstantMessage = ns.protocol.InstantMessage;
     var SecureMessage = ns.protocol.SecureMessage;
-    var BaseMessage = ns.BaseMessage;
+    var BaseMessage = ns.dkd.BaseMessage;
 
     /**
      *  Create instant message
@@ -216,8 +216,8 @@
     };
 
     //-------- namespace --------
-    ns.PlainMessage = PlainMessage;
+    ns.dkd.PlainMessage = PlainMessage;
 
-    ns.register('PlainMessage');
+    ns.dkd.registers('PlainMessage');
 
 })(DaoKeDao);

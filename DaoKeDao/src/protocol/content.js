@@ -128,7 +128,7 @@
     //-------- namespace --------
     ns.protocol.Content = Content;
 
-    ns.protocol.register('Content');
+    ns.protocol.registers('Content');
 
 })(DaoKeDao);
 

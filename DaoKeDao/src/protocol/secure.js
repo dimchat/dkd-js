@@ -162,7 +162,7 @@
     //-------- namespace --------
     ns.protocol.SecureMessage = SecureMessage;
 
-    ns.protocol.register('SecureMessage');
+    ns.protocol.registers('SecureMessage');
 
 })(DaoKeDao);
 

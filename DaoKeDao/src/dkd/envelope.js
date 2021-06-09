@@ -143,8 +143,8 @@
     };
 
     //-------- namespace --------
-    ns.MessageEnvelope = MessageEnvelope;
+    ns.dkd.MessageEnvelope = MessageEnvelope;
 
-    ns.register('MessageEnvelope');
+    ns.dkd.registers('MessageEnvelope');
 
 })(DaoKeDao);

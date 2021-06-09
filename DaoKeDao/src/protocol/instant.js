@@ -93,7 +93,7 @@
     //-------- namespace --------
     ns.protocol.InstantMessage = InstantMessage;
 
-    ns.protocol.register('InstantMessage');
+    ns.protocol.registers('InstantMessage');
 
 })(DaoKeDao);
 

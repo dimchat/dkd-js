@@ -59,7 +59,7 @@
     var InstantMessage = ns.protocol.InstantMessage;
     var SecureMessage = ns.protocol.SecureMessage;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var BaseMessage = ns.BaseMessage;
+    var BaseMessage = ns.dkd.BaseMessage;
 
     /**
      *  Create secure message
@@ -292,8 +292,8 @@
     };
 
     //-------- namespace --------
-    ns.EncryptedMessage = EncryptedMessage;
+    ns.dkd.EncryptedMessage = EncryptedMessage;
 
-    ns.register('EncryptedMessage');
+    ns.dkd.registers('EncryptedMessage');
 
 })(DaoKeDao);

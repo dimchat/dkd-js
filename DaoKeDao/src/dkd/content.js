@@ -142,8 +142,8 @@
     };
 
     //-------- namespace --------
-    ns.BaseContent = BaseContent;
+    ns.dkd.BaseContent = BaseContent;
 
-    ns.register('BaseContent');
+    ns.dkd.registers('BaseContent');
 
 })(DaoKeDao);

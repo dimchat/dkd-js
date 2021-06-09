@@ -7,15 +7,18 @@
  * @license   {@link https://mit-license.org | MIT License}
  */;
 if (typeof DaoKeDao !== "object") {
-    DaoKeDao = {}
+    DaoKeDao = new MONKEY.Namespace()
 }
 (function(ns, base) {
     base.exports(ns);
     if (typeof ns.protocol !== "object") {
-        ns.protocol = {}
+        ns.protocol = new MONKEY.Namespace()
     }
-    base.Namespace(ns.protocol);
-    ns.register("protocol")
+    if (typeof ns.dkd !== "object") {
+        ns.dkd = new MONKEY.Namespace()
+    }
+    ns.registers("protocol");
+    ns.registers("dkd")
 })(DaoKeDao, MingKeMing);
 (function(ns) {
     var ContentType = ns.type.Enum(null, {
@@ -36,7 +39,7 @@ if (typeof DaoKeDao !== "object") {
         FORWARD: (255)
     });
     ns.protocol.ContentType = ContentType;
-    ns.protocol.register("ContentType")
+    ns.protocol.registers("ContentType")
 })(DaoKeDao);
 (function(ns) {
     var map = ns.type.Map;
@@ -87,7 +90,7 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     ns.protocol.Content = Content;
-    ns.protocol.register("Content")
+    ns.protocol.registers("Content")
 })(DaoKeDao);
 (function(ns) {
     var map = ns.type.Map;
@@ -208,7 +211,7 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     ns.protocol.Envelope = Envelope;
-    ns.protocol.register("Envelope")
+    ns.protocol.registers("Envelope")
 })(DaoKeDao);
 (function(ns) {
     var map = ns.type.Map;
@@ -289,7 +292,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ns.protocol.Message = Message;
-    ns.protocol.register("Message")
+    ns.protocol.registers("Message")
 })(DaoKeDao);
 (function(ns) {
     var Message = ns.protocol.Message;
@@ -314,7 +317,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ns.protocol.InstantMessage = InstantMessage;
-    ns.protocol.register("InstantMessage")
+    ns.protocol.registers("InstantMessage")
 })(DaoKeDao);
 (function(ns) {
     var Message = ns.protocol.Message;
@@ -419,7 +422,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ns.protocol.SecureMessage = SecureMessage;
-    ns.protocol.register("SecureMessage")
+    ns.protocol.registers("SecureMessage")
 })(DaoKeDao);
 (function(ns) {
     var Message = ns.protocol.Message;
@@ -549,7 +552,7 @@ if (typeof DaoKeDao !== "object") {
         return null
     };
     ns.protocol.ReliableMessage = ReliableMessage;
-    ns.protocol.register("ReliableMessage")
+    ns.protocol.registers("ReliableMessage")
 })(DaoKeDao);
 (function(ns) {
     var SecureMessage = ns.protocol.SecureMessage;
@@ -667,8 +670,8 @@ if (typeof DaoKeDao !== "object") {
     BaseContent.prototype.setGroup = function(identifier) {
         Content.setGroup(identifier, this.getMap())
     };
-    ns.BaseContent = BaseContent;
-    ns.register("BaseContent")
+    ns.dkd.BaseContent = BaseContent;
+    ns.dkd.registers("BaseContent")
 })(DaoKeDao);
 (function(ns) {
     var Dictionary = ns.type.Dictionary;
@@ -737,8 +740,8 @@ if (typeof DaoKeDao !== "object") {
     MessageEnvelope.prototype.setType = function(type) {
         Envelope.setType(type, this.getMap())
     };
-    ns.MessageEnvelope = MessageEnvelope;
-    ns.register("MessageEnvelope")
+    ns.dkd.MessageEnvelope = MessageEnvelope;
+    ns.dkd.registers("MessageEnvelope")
 })(DaoKeDao);
 (function(ns) {
     var Dictionary = ns.type.Dictionary;
@@ -781,14 +784,14 @@ if (typeof DaoKeDao !== "object") {
     BaseMessage.prototype.getType = function() {
         return this.getEnvelope().getTime()
     };
-    ns.BaseMessage = BaseMessage;
-    ns.register("BaseMessage")
+    ns.dkd.BaseMessage = BaseMessage;
+    ns.dkd.registers("BaseMessage")
 })(DaoKeDao);
 (function(ns) {
     var Message = ns.protocol.Message;
     var InstantMessage = ns.protocol.InstantMessage;
     var SecureMessage = ns.protocol.SecureMessage;
-    var BaseMessage = ns.BaseMessage;
+    var BaseMessage = ns.dkd.BaseMessage;
     var PlainMessage = function() {
         var msg, head, body;
         if (arguments.length === 1) {
@@ -882,15 +885,15 @@ if (typeof DaoKeDao !== "object") {
         msg["data"] = base64;
         return msg
     };
-    ns.PlainMessage = PlainMessage;
-    ns.register("PlainMessage")
+    ns.dkd.PlainMessage = PlainMessage;
+    ns.dkd.registers("PlainMessage")
 })(DaoKeDao);
 (function(ns) {
     var map = ns.type.Map;
     var InstantMessage = ns.protocol.InstantMessage;
     var SecureMessage = ns.protocol.SecureMessage;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var BaseMessage = ns.BaseMessage;
+    var BaseMessage = ns.dkd.BaseMessage;
     var EncryptedMessage = function(msg) {
         BaseMessage.call(this, msg);
         this.__data = null;
@@ -1021,13 +1024,13 @@ if (typeof DaoKeDao !== "object") {
         msg["receiver"] = member.toString();
         return SecureMessage.parse(msg)
     };
-    ns.EncryptedMessage = EncryptedMessage;
-    ns.register("EncryptedMessage")
+    ns.dkd.EncryptedMessage = EncryptedMessage;
+    ns.dkd.registers("EncryptedMessage")
 })(DaoKeDao);
 (function(ns) {
     var SecureMessage = ns.protocol.SecureMessage;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var EncryptedMessage = ns.EncryptedMessage;
+    var EncryptedMessage = ns.dkd.EncryptedMessage;
     var NetworkMessage = function(msg) {
         EncryptedMessage.call(this, msg);
         this.__signature = null;
@@ -1079,14 +1082,17 @@ if (typeof DaoKeDao !== "object") {
             return null
         }
     };
-    ns.NetworkMessage = NetworkMessage;
-    ns.register("NetworkMessage")
+    ns.dkd.NetworkMessage = NetworkMessage;
+    ns.dkd.registers("NetworkMessage")
 })(DaoKeDao);
 (function(ns) {
+    var obj = ns.type.Object;
     var Envelope = ns.protocol.Envelope;
-    var MessageEnvelope = ns.MessageEnvelope;
-    var EnvelopeFactory = function() {};
-    ns.Class(EnvelopeFactory, null, [Envelope.Factory]);
+    var MessageEnvelope = ns.dkd.MessageEnvelope;
+    var EnvelopeFactory = function() {
+        obj.call(this)
+    };
+    ns.Class(EnvelopeFactory, obj, [Envelope.Factory]);
     EnvelopeFactory.prototype.createEnvelope = function(from, to, when) {
         if (!when) {
             when = new Date()
@@ -1100,14 +1106,17 @@ if (typeof DaoKeDao !== "object") {
         return new MessageEnvelope(env)
     };
     Envelope.setFactory(new EnvelopeFactory());
-    ns.EnvelopeFactory = EnvelopeFactory;
-    ns.register("EnvelopeFactory")
+    ns.dkd.EnvelopeFactory = EnvelopeFactory;
+    ns.dkd.registers("EnvelopeFactory")
 })(DaoKeDao);
 (function(ns) {
+    var obj = ns.type.Object;
     var InstantMessage = ns.protocol.InstantMessage;
-    var PlainMessage = ns.PlainMessage;
-    var InstantMessageFactory = function() {};
-    ns.Class(InstantMessageFactory, null, [InstantMessage.Factory]);
+    var PlainMessage = ns.dkd.PlainMessage;
+    var InstantMessageFactory = function() {
+        obj.call(this)
+    };
+    ns.Class(InstantMessageFactory, obj, [InstantMessage.Factory]);
     InstantMessageFactory.prototype.createInstantMessage = function(head, body) {
         return new PlainMessage(head, body)
     };
@@ -1115,30 +1124,36 @@ if (typeof DaoKeDao !== "object") {
         return new PlainMessage(msg)
     };
     InstantMessage.setFactory(new InstantMessageFactory());
-    ns.InstantMessageFactory = InstantMessageFactory;
-    ns.register("InstantMessageFactory")
+    ns.dkd.InstantMessageFactory = InstantMessageFactory;
+    ns.dkd.registers("InstantMessageFactory")
 })(DaoKeDao);
 (function(ns) {
+    var obj = ns.type.Object;
     var SecureMessage = ns.protocol.SecureMessage;
-    var EncryptedMessage = ns.EncryptedMessage;
-    var SecureMessageFactory = function() {};
-    ns.Class(SecureMessageFactory, null, [SecureMessage.Factory]);
+    var EncryptedMessage = ns.dkd.EncryptedMessage;
+    var SecureMessageFactory = function() {
+        obj.call(this)
+    };
+    ns.Class(SecureMessageFactory, obj, [SecureMessage.Factory]);
     SecureMessageFactory.prototype.parseSecureMessage = function(msg) {
         return new EncryptedMessage(msg)
     };
     SecureMessage.setFactory(new SecureMessageFactory());
-    ns.SecureMessageFactory = SecureMessageFactory;
-    ns.register("SecureMessageFactory")
+    ns.dkd.SecureMessageFactory = SecureMessageFactory;
+    ns.dkd.registers("SecureMessageFactory")
 })(DaoKeDao);
 (function(ns) {
+    var obj = ns.type.Object;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var NetworkMessage = ns.NetworkMessage;
-    var ReliableMessageFactory = function() {};
-    ns.Class(ReliableMessageFactory, null, [ReliableMessage.Factory]);
+    var NetworkMessage = ns.dkd.NetworkMessage;
+    var ReliableMessageFactory = function() {
+        obj.call(this)
+    };
+    ns.Class(ReliableMessageFactory, obj, [ReliableMessage.Factory]);
     ReliableMessageFactory.prototype.parseReliableMessage = function(msg) {
         return new NetworkMessage(msg)
     };
     ReliableMessage.setFactory(new ReliableMessageFactory());
-    ns.ReliableMessageFactory = ReliableMessageFactory;
-    ns.register("ReliableMessageFactory")
+    ns.dkd.ReliableMessageFactory = ReliableMessageFactory;
+    ns.dkd.registers("ReliableMessageFactory")
 })(DaoKeDao);

@@ -124,7 +124,7 @@
     //-------- namespace --------
     ns.protocol.Message = Message;
 
-    ns.protocol.register('Message');
+    ns.protocol.registers('Message');
 
 })(DaoKeDao);
 

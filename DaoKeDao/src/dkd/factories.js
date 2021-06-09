@@ -38,12 +38,14 @@
 (function (ns) {
     'use strict';
 
+    var obj = ns.type.Object;
     var Envelope = ns.protocol.Envelope;
-    var MessageEnvelope = ns.MessageEnvelope;
+    var MessageEnvelope = ns.dkd.MessageEnvelope;
 
     var EnvelopeFactory = function () {
+        obj.call(this);
     };
-    ns.Class(EnvelopeFactory, null, [Envelope.Factory]);
+    ns.Class(EnvelopeFactory, obj, [Envelope.Factory]);
 
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
         if (!when) {
@@ -63,21 +65,23 @@
     Envelope.setFactory(new EnvelopeFactory());
 
     //-------- namespace --------
-    ns.EnvelopeFactory = EnvelopeFactory;
+    ns.dkd.EnvelopeFactory = EnvelopeFactory;
 
-    ns.register('EnvelopeFactory');
+    ns.dkd.registers('EnvelopeFactory');
 
 })(DaoKeDao);
 
 (function (ns) {
     'use strict';
 
+    var obj = ns.type.Object;
     var InstantMessage = ns.protocol.InstantMessage;
-    var PlainMessage = ns.PlainMessage;
+    var PlainMessage = ns.dkd.PlainMessage;
 
     var InstantMessageFactory = function () {
+        obj.call(this);
     };
-    ns.Class(InstantMessageFactory, null, [InstantMessage.Factory]);
+    ns.Class(InstantMessageFactory, obj, [InstantMessage.Factory]);
 
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
         return new PlainMessage(head, body);
@@ -90,21 +94,23 @@
     InstantMessage.setFactory(new InstantMessageFactory());
 
     //-------- namespace --------
-    ns.InstantMessageFactory = InstantMessageFactory;
+    ns.dkd.InstantMessageFactory = InstantMessageFactory;
 
-    ns.register('InstantMessageFactory');
+    ns.dkd.registers('InstantMessageFactory');
 
 })(DaoKeDao);
 
 (function (ns) {
     'use strict';
 
+    var obj = ns.type.Object;
     var SecureMessage = ns.protocol.SecureMessage;
-    var EncryptedMessage = ns.EncryptedMessage;
+    var EncryptedMessage = ns.dkd.EncryptedMessage;
 
     var SecureMessageFactory = function () {
+        obj.call(this);
     };
-    ns.Class(SecureMessageFactory, null, [SecureMessage.Factory]);
+    ns.Class(SecureMessageFactory, obj, [SecureMessage.Factory]);
 
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
         return new EncryptedMessage(msg);
@@ -113,21 +119,23 @@
     SecureMessage.setFactory(new SecureMessageFactory());
 
     //-------- namespace --------
-    ns.SecureMessageFactory = SecureMessageFactory;
+    ns.dkd.SecureMessageFactory = SecureMessageFactory;
 
-    ns.register('SecureMessageFactory');
+    ns.dkd.registers('SecureMessageFactory');
 
 })(DaoKeDao);
 
 (function (ns) {
     'use strict';
 
+    var obj = ns.type.Object;
     var ReliableMessage = ns.protocol.ReliableMessage;
-    var NetworkMessage = ns.NetworkMessage;
+    var NetworkMessage = ns.dkd.NetworkMessage;
 
     var ReliableMessageFactory = function () {
+        obj.call(this);
     };
-    ns.Class(ReliableMessageFactory, null, [ReliableMessage.Factory]);
+    ns.Class(ReliableMessageFactory, obj, [ReliableMessage.Factory]);
 
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
         return new NetworkMessage(msg);
@@ -136,8 +144,8 @@
     ReliableMessage.setFactory(new ReliableMessageFactory());
 
     //-------- namespace --------
-    ns.ReliableMessageFactory = ReliableMessageFactory;
+    ns.dkd.ReliableMessageFactory = ReliableMessageFactory;
 
-    ns.register('ReliableMessageFactory');
+    ns.dkd.registers('ReliableMessageFactory');
 
 })(DaoKeDao);
