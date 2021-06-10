@@ -12,7 +12,7 @@ dkd_tests = [];
 
     var Envelope = ns.protocol.Envelope;
     var InstantMessage = ns.protocol.InstantMessage;
-    var BaseContent = ns.BaseContent;
+    var BaseContent = ns.dkd.BaseContent;
 
     var envelope, content, message;
 

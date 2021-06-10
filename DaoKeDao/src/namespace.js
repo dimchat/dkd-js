@@ -34,7 +34,7 @@
 //! require <mkm.js>
 
 if (typeof DaoKeDao !== 'object') {
-    DaoKeDao = new MONKEY.Namespace();
+    DaoKeDao = new MingKeMing.Namespace();
 }
 
 (function (ns, base) {
@@ -45,10 +45,10 @@ if (typeof DaoKeDao !== 'object') {
 
     //-------- namespace --------
     if (typeof ns.protocol !== 'object') {
-        ns.protocol = new MONKEY.Namespace();
+        ns.protocol = new ns.Namespace();
     }
     if (typeof ns.dkd !== 'object') {
-        ns.dkd = new MONKEY.Namespace();
+        ns.dkd = new ns.Namespace();
     }
 
     ns.registers('protocol');
