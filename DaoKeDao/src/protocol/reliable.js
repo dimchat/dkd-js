@@ -58,13 +58,12 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
+    var Wrapper = ns.type.Wrapper;
     var Meta = ns.protocol.Meta;
     var Document = ns.protocol.Document;
     var SecureMessage = ns.protocol.SecureMessage;
 
-    var ReliableMessage = function () {
-    };
+    var ReliableMessage = function () {};
     ns.Interface(ReliableMessage, [SecureMessage]);
 
     ReliableMessage.prototype.getSignature = function () {
@@ -88,11 +87,13 @@
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
+        msg = Wrapper.fetchMap(msg);
         return Meta.parse(msg['meta']);
     }
     ReliableMessage.setMeta = function (meta, msg) {
+        msg = Wrapper.fetchMap(msg);
         if (meta) {
-            msg['meta'] = meta.getMap();
+            msg['meta'] = meta.toMap();
         } else {
             delete msg['meta'];
         }
@@ -114,21 +115,17 @@
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
-        var doc = msg['visa'];
-        if (!doc) {
-            // compatible with v1.0
-            doc = msg['profile'];
-        }
-        return Document.parse(doc);
-    }
+        msg = Wrapper.fetchMap(msg);
+        return Document.parse(msg['visa']);
+    };
     ReliableMessage.setVisa = function (doc, msg) {
-        delete msg['visa'];
+        msg = Wrapper.fetchMap(msg);
         if (doc) {
-            msg['profile'] = doc.getMap();
+            msg['visa'] = doc.toMap();
         } else {
-            delete msg['profile'];
+            delete msg['visa'];
         }
-    }
+    };
 
     /*
      *  Verify the Reliable Message to Secure Message
@@ -154,25 +151,11 @@
         return null;
     };
 
-    //-------- namespace --------
-    ns.protocol.ReliableMessage = ReliableMessage;
-
-    ns.protocol.registers('ReliableMessage');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var SecureMessage = ns.protocol.SecureMessage;
-    var ReliableMessage = ns.protocol.ReliableMessage;
-
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var ReliableMessageDelegate = function () {
-    };
+    var ReliableMessageDelegate = function () {};
     ns.Interface(ReliableMessageDelegate, [SecureMessage.Delegate])
 
     // noinspection JSUnusedLocalSymbols
@@ -205,20 +188,11 @@
 
     ReliableMessage.Delegate = ReliableMessageDelegate;
 
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var map = ns.type.Map;
-    var ReliableMessage = ns.protocol.ReliableMessage;
-
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var ReliableMessageFactory = function () {
-    };
+    var ReliableMessageFactory = function () {};
     ns.Interface(ReliableMessageFactory, null)
 
     // noinspection JSUnusedLocalSymbols
@@ -229,19 +203,22 @@
 
     ReliableMessage.Factory = ReliableMessageFactory;
 
-    var s_factory = null;
+    //
+    //  Instance of ReliableMessageFactory
+    //
+    var s_reliable_factory = null;
 
     ReliableMessage.getFactory = function () {
-        return s_factory;
+        return s_reliable_factory;
     };
     ReliableMessage.setFactory = function (factory) {
-        s_factory = factory;
+        s_reliable_factory = factory;
     };
 
     /**
      *  Parse map object to message
      *
-     * @param {{String:Object}} msg - message info
+     * @param {*} msg - message info
      * @return {ReliableMessage}
      */
     ReliableMessage.parse = function (msg) {
@@ -249,10 +226,15 @@
             return null;
         } else if (ns.Interface.conforms(msg, ReliableMessage)) {
             return msg;
-        } else if (ns.Interface.conforms(msg, map)) {
-            msg = msg.getMap();
         }
-        return ReliableMessage.getFactory().parseReliableMessage(msg);
+        msg = Wrapper.fetchMap(msg);
+        var factory = ReliableMessage.getFactory();
+        return factory.parseReliableMessage(msg);
     };
+
+    //-------- namespace --------
+    ns.protocol.ReliableMessage = ReliableMessage;
+
+    ns.protocol.registers('ReliableMessage');
 
 })(DaoKeDao);

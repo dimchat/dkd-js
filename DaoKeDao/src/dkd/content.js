@@ -56,18 +56,7 @@
     var Dictionary = ns.type.Dictionary;
     var ContentType = ns.protocol.ContentType;
     var Content = ns.protocol.Content;
-
-    var MAX_LONG = 0xFFFFFFFF;
-    var randomPositiveInteger = function () {
-        var sn = Math.ceil(Math.random() * MAX_LONG);
-        if (sn > 0) {
-            return sn;
-        } else if (sn < 0) {
-            return -sn;
-        }
-        // ZERO? do it again!
-        return 9527 + 9394; // randomPositiveInteger();
-    };
+    var InstantMessage = ns.protocol.InstantMessage;
 
     /**
      *  Create message content
@@ -77,22 +66,20 @@
      *      2. new BaseContent(type);
      */
     var BaseContent = function (info) {
-        var content, type, sn, time;
         if (info instanceof ContentType) {
             // new BaseContent(type);
-            type = info.valueOf();
-            sn = null;
-            time = null;
-            content = {
-                'type': type
-            };
-        } else if (typeof info === 'number') {
+            info = info.valueOf();
+        }
+        var content, type, sn, time;
+        if (typeof info === 'number') {
             // new BaseContent(type);
             type = info;
-            sn = null;
-            time = null;
+            time = new Date();
+            sn = InstantMessage.generateSerialNumber(type, time);
             content = {
-                'type': type
+                'type': type,
+                'sn': sn,
+                'time': time.getTime() / 1000.0
             };
         } else {
             // new BaseContent(map);
@@ -100,16 +87,6 @@
             type = Content.getType(content);
             sn = Content.getSerialNumber(content);
             time = Content.getTime(content);
-        }
-        // check serial number
-        if (!sn) {
-            sn = randomPositiveInteger();
-            content['sn'] = sn;
-        }
-        // check message time
-        if (!time) {
-            time = new Date();
-            content['time'] = time.getTime() / 1000;
         }
         Dictionary.call(this, content);
         // message type: text, image, ...
@@ -134,11 +111,11 @@
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message
     BaseContent.prototype.getGroup = function () {
-        return Content.getGroup(this.getMap());
+        return Content.getGroup(this);
     };
 
     BaseContent.prototype.setGroup = function (identifier) {
-        Content.setGroup(identifier, this.getMap());
+        Content.setGroup(identifier, this);
     };
 
     //-------- namespace --------

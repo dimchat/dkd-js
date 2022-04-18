@@ -38,14 +38,13 @@
 (function (ns) {
     'use strict';
 
-    var obj = ns.type.Object;
     var Envelope = ns.protocol.Envelope;
     var MessageEnvelope = ns.dkd.MessageEnvelope;
 
     var EnvelopeFactory = function () {
-        obj.call(this);
+        Object.call(this);
     };
-    ns.Class(EnvelopeFactory, obj, [Envelope.Factory]);
+    ns.Class(EnvelopeFactory, Object, [Envelope.Factory]);
 
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
         if (!when) {
@@ -55,7 +54,7 @@
     };
 
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
-        if (!env || !env['sender']) {
+        if (!env['sender']) {
             // env.sender should not empty
             return null;
         }
@@ -74,14 +73,28 @@
 (function (ns) {
     'use strict';
 
-    var obj = ns.type.Object;
     var InstantMessage = ns.protocol.InstantMessage;
     var PlainMessage = ns.dkd.PlainMessage;
 
     var InstantMessageFactory = function () {
-        obj.call(this);
+        Object.call(this);
     };
-    ns.Class(InstantMessageFactory, obj, [InstantMessage.Factory]);
+    ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory]);
+
+    var MAX_LONG = 0xFFFFFFFF;
+    InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
+        // because we must make sure all messages in a same chat box won't have
+        // same serial numbers, so we can't use time-related numbers, therefore
+        // the best choice is a totally random number, maybe.
+        var sn = Math.ceil(Math.random() * MAX_LONG);
+        if (sn > 0) {
+            return sn;
+        } else if (sn < 0) {
+            return -sn;
+        }
+        // ZERO? do it again!
+        return 9527 + 9394; // randomPositiveInteger();
+    };
 
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
         return new PlainMessage(head, body);
@@ -103,16 +116,19 @@
 (function (ns) {
     'use strict';
 
-    var obj = ns.type.Object;
     var SecureMessage = ns.protocol.SecureMessage;
     var EncryptedMessage = ns.dkd.EncryptedMessage;
+    var NetworkMessage = ns.dkd.NetworkMessage;
 
     var SecureMessageFactory = function () {
-        obj.call(this);
+        Object.call(this);
     };
-    ns.Class(SecureMessageFactory, obj, [SecureMessage.Factory]);
+    ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory]);
 
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
+        if (msg['signature']) {
+            return new NetworkMessage(msg);
+        }
         return new EncryptedMessage(msg);
     };
 
@@ -128,16 +144,21 @@
 (function (ns) {
     'use strict';
 
-    var obj = ns.type.Object;
     var ReliableMessage = ns.protocol.ReliableMessage;
     var NetworkMessage = ns.dkd.NetworkMessage;
 
     var ReliableMessageFactory = function () {
-        obj.call(this);
+        Object.call(this);
     };
-    ns.Class(ReliableMessageFactory, obj, [ReliableMessage.Factory]);
+    ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory]);
 
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
+        if (!msg['sender'] || !msg['data'] || !msg['signature']) {
+            // msg.sender should not empty
+            // msg.data should not empty
+            // msg.signature should not empty
+            return null;
+        }
         return new NetworkMessage(msg);
     };
 

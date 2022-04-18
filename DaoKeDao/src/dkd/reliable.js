@@ -79,7 +79,8 @@
     NetworkMessage.prototype.getSignature = function () {
         if (!this.__signature) {
             var base64 = this.getValue('signature');
-            this.__signature = this.getDelegate().decodeSignature(base64, this);
+            var delegate = this.getDelegate();
+            this.__signature = delegate.decodeSignature(base64, this);
         }
         return this.__signature;
     };
@@ -92,12 +93,12 @@
      * @param {Meta} meta
      */
     NetworkMessage.prototype.setMeta = function (meta) {
-        ReliableMessage.setMeta(meta, this.getMap());
+        ReliableMessage.setMeta(meta, this);
         this.__meta = meta;
     };
     NetworkMessage.prototype.getMeta = function () {
         if (!this.__meta) {
-            this.__meta = ReliableMessage.getMeta(this.getMap());
+            this.__meta = ReliableMessage.getMeta(this);
         }
         return this.__meta;
     };
@@ -110,12 +111,12 @@
      * @param {Visa} visa
      */
     NetworkMessage.prototype.setVisa = function (visa) {
-        ReliableMessage.setVisa(visa, this.getMap());
+        ReliableMessage.setVisa(visa, this);
         this.__visa = visa;
     };
     NetworkMessage.prototype.getVisa = function () {
         if (!this.__visa) {
-            this.__visa = ReliableMessage.getVisa(this.getMap());
+            this.__visa = ReliableMessage.getVisa(this);
         }
         return this.__visa;
     };
@@ -149,9 +150,10 @@
             throw new Error('failed to decode message signature: ' + this);
         }
         // 1. verify data signature with sender's public key
-        if (this.getDelegate().verifyDataSignature(data, signature, this.getSender(), this)) {
+        var delegate = this.getDelegate();
+        if (delegate.verifyDataSignature(data, signature, this.getSender(), this)) {
             // 2. pack message
-            var msg = this.copyMap();
+            var msg = this.copyMap(false);
             delete msg['signature'];
             return SecureMessage.parse(msg);
         } else {

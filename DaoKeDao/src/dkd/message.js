@@ -88,7 +88,7 @@
         var env;
         if (ns.Interface.conforms(msg, Envelope)) {
             env = msg;
-            msg = env.getMap();
+            msg = env.toMap();
         } else {
             env = Message.getEnvelope(msg);
         }
@@ -112,20 +112,25 @@
     };
 
     BaseMessage.prototype.getSender = function () {
-        return this.getEnvelope().getSender();
+        var env = this.getEnvelope();
+        return env.getSender();
     };
     BaseMessage.prototype.getReceiver = function () {
-        return this.getEnvelope().getReceiver()
+        var env = this.getEnvelope();
+        return env.getReceiver()
     };
     BaseMessage.prototype.getTime = function () {
-        return this.getEnvelope().getTime();
+        var env = this.getEnvelope();
+        return env.getTime();
     };
 
     BaseMessage.prototype.getGroup = function () {
-        return this.getEnvelope().getGroup();
+        var env = this.getEnvelope();
+        return env.getGroup();
     };
     BaseMessage.prototype.getType = function () {
-        return this.getEnvelope().getTime();
+        var env = this.getEnvelope();
+        return env.getTime();
     };
 
     //-------- namespace --------

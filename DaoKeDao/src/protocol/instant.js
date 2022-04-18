@@ -50,11 +50,11 @@
 (function (ns) {
     'use strict';
 
+    var Wrapper = ns.type.Wrapper;
     var Content = ns.protocol.Content;
     var Message = ns.protocol.Message;
 
-    var InstantMessage = function () {
-    };
+    var InstantMessage = function () {};
     ns.Interface(InstantMessage, [Message]);
 
     InstantMessage.prototype.getContent = function () {
@@ -62,6 +62,7 @@
         return null;
     };
     InstantMessage.getContent = function (msg) {
+        msg = Wrapper.fetchMap(msg);
         return Content.parse(msg['content'])
     };
 
@@ -90,25 +91,11 @@
         return null;
     };
 
-    //-------- namespace --------
-    ns.protocol.InstantMessage = InstantMessage;
-
-    ns.protocol.registers('InstantMessage');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var Message = ns.protocol.Message;
-    var InstantMessage = ns.protocol.InstantMessage;
-
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var InstantMessageDelegate = function () {
-    };
+    var InstantMessageDelegate = function () {};
     ns.Interface(InstantMessageDelegate, [Message.Delegate])
 
     //
@@ -202,21 +189,18 @@
 
     InstantMessage.Delegate = InstantMessageDelegate;
 
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var map = ns.type.Map;
-    var InstantMessage = ns.protocol.InstantMessage;
-
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var InstantMessageFactory = function () {
-    };
+    var InstantMessageFactory = function () {};
     ns.Interface(InstantMessageFactory, null)
+
+    // noinspection JSUnusedLocalSymbols
+    InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
+        console.assert(false, 'implement me!');
+        return 0;
+    };
 
     // noinspection JSUnusedLocalSymbols
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
@@ -232,13 +216,28 @@
 
     InstantMessage.Factory = InstantMessageFactory;
 
-    var s_factory = null;
+    //
+    //  Instance of InstantMessageFactory
+    //
+    var s_instant_factory = null;
 
     InstantMessage.getFactory = function () {
-        return s_factory;
+        return s_instant_factory;
     };
     InstantMessage.setFactory = function (factory) {
-        s_factory = factory;
+        s_instant_factory = factory;
+    };
+
+    /**
+     *  Generate SN (Message ID) with msg type & time
+     *
+     * @param {ContentType|uint} msgType
+     * @param {float} now
+     * @return {uint}
+     */
+    InstantMessage.generateSerialNumber = function (msgType, now) {
+        var factory = InstantMessage.getFactory();
+        return factory.generateSerialNumber(msgType, now);
     };
 
     /**
@@ -249,13 +248,14 @@
      * @return {InstantMessage}
      */
     InstantMessage.create = function (head, body) {
-        return InstantMessage.getFactory().createInstantMessage(head, body);
+        var factory = InstantMessage.getFactory();
+        return factory.createInstantMessage(head, body);
     };
 
     /**
      *  Parse map object to message
      *
-     * @param {{String:Object}} msg - message info
+     * @param {*} msg - message info
      * @return {InstantMessage}
      */
     InstantMessage.parse = function (msg) {
@@ -263,10 +263,15 @@
             return null;
         } else if (ns.Interface.conforms(msg, InstantMessage)) {
             return msg;
-        } else if (ns.Interface.conforms(msg, map)) {
-            msg = msg.getMap();
         }
-        return InstantMessage.getFactory().parseInstantMessage(msg);
+        msg = Wrapper.fetchMap(msg);
+        var factory = InstantMessage.getFactory();
+        return factory.parseInstantMessage(msg);
     };
+
+    //-------- namespace --------
+    ns.protocol.InstantMessage = InstantMessage;
+
+    ns.protocol.registers('InstantMessage');
 
 })(DaoKeDao);

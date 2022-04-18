@@ -72,8 +72,8 @@
             // new PlainMessage(envelope, content);
             head = arguments[0];
             body = arguments[1];
-            msg = head.getMap();
-            msg['content'] = body.getMap();
+            msg = head.toMap();
+            msg['content'] = body.toMap();
         } else {
             throw new SyntaxError('message arguments error: ' + arguments);
         }
@@ -88,18 +88,22 @@
     };
 
     PlainMessage.prototype.getTime = function () {
-        var time = this.getContent().getTime();
+        var content = this.getContent();
+        var time = content.getTime();
         if (!time) {
-            time = this.getEnvelope().getTime();
+            var env = this.getEnvelope();
+            time = env.getTime();
         }
         return time;
     };
 
     PlainMessage.prototype.getGroup = function () {
-        return this.getContent().getGroup();
+        var content = this.getContent();
+        return content.getGroup();
     };
     PlainMessage.prototype.getType = function () {
-        return this.getContent().getType();
+        var content = this.getContent();
+        return content.getType();
     };
 
     /*

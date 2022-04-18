@@ -54,12 +54,13 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
+    var Wrapper = ns.type.Wrapper;
+    var Mapper = ns.type.Mapper;
     var ID = ns.protocol.ID;
+    var ContentType = ns.protocol.ContentType;
 
-    var Content = function () {
-    };
-    ns.Interface(Content, [map]);
+    var Content = function () {};
+    ns.Interface(Content, [Mapper]);
 
     /**
      *  Get content type
@@ -71,6 +72,7 @@
         return 0;
     };
     Content.getType = function (content) {
+        content = Wrapper.fetchMap(content);
         return content['type'];
     };
 
@@ -84,6 +86,7 @@
         return 0;
     };
     Content.getSerialNumber = function (content) {
+        content = Wrapper.fetchMap(content);
         return content['sn'];
     };
 
@@ -97,6 +100,7 @@
         return null;
     };
     Content.getTime = function (content) {
+        content = Wrapper.fetchMap(content);
         var timestamp = content['time'];
         if (timestamp) {
             return new Date(timestamp * 1000);
@@ -115,9 +119,11 @@
         console.assert(false, 'implement me!');
     };
     Content.getGroup = function (content) {
+        content = Wrapper.fetchMap(content);
         return ID.parse(content['group']);
     };
     Content.setGroup = function (group, content) {
+        content = Wrapper.fetchMap(content);
         if (group) {
             content['group'] = group.toString();
         } else {
@@ -125,26 +131,19 @@
         }
     };
 
-    //-------- namespace --------
-    ns.protocol.Content = Content;
-
-    ns.protocol.registers('Content');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var map = ns.type.Map;
-    var ContentType = ns.protocol.ContentType;
-    var Content = ns.protocol.Content;
+    var EnumToUint = function (type) {
+        if (typeof type === 'number') {
+            return type;
+        } else {
+            return type.valueOf();
+        }
+    };
 
     /**
      *  Content Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var ContentFactory = function () {
-    };
+    var ContentFactory = function () {};
     ns.Interface(ContentFactory, null);
 
     // noinspection JSUnusedLocalSymbols
@@ -155,7 +154,10 @@
 
     Content.Factory = ContentFactory;
 
-    var s_factories = {};  // type(uint8|ContentType) -> ContentFactory
+    //
+    //  Instances of ContentFactory
+    //
+    var s_content_factories = {};  // type(uint8|ContentType) -> ContentFactory
 
     /**
      *  Register content factory with type
@@ -163,23 +165,17 @@
      * @param {ContentType|uint} type
      * @param {ContentFactory} factory
      */
-    Content.register = function (type, factory) {
-        if (type instanceof ContentType) {
-            type = type.valueOf();
-        }
-        s_factories[type] = factory;
+    Content.setFactory = function (type, factory) {
+        s_content_factories[EnumToUint(type)] = factory;
     };
     Content.getFactory = function (type) {
-        if (type instanceof ContentType) {
-            type = type.valueOf();
-        }
-        return s_factories[type];
-    }
+        return s_content_factories[EnumToUint(type)];
+    };
 
     /**
      *  Parse map object to content
      *
-     * @param {{String:Object}} content - content info
+     * @param {*} content - content info
      * @return {Content}
      */
     Content.parse = function (content) {
@@ -187,9 +183,8 @@
             return null;
         } else if (ns.Interface.conforms(content, Content)) {
             return content;
-        } else if (ns.Interface.conforms(content, map)) {
-            content = content.getMap();
         }
+        content = Wrapper.fetchMap(content);
         var type = Content.getType(content);
         var factory = Content.getFactory(type);
         if (!factory) {
@@ -197,5 +192,10 @@
         }
         return factory.parseContent(content);
     };
+
+    //-------- namespace --------
+    ns.protocol.Content = Content;
+
+    ns.protocol.registers('Content');
 
 })(DaoKeDao);

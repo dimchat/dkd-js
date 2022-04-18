@@ -49,13 +49,13 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
+    var Wrapper = ns.type.Wrapper;
+    var Mapper = ns.type.Mapper;
     var ID = ns.protocol.ID;
     var ContentType = ns.protocol.ContentType;
 
-    var Envelope = function () {
-    };
-    ns.Interface(Envelope, [map]);
+    var Envelope = function () {};
+    ns.Interface(Envelope, [Mapper]);
 
     /**
      *  message from
@@ -67,7 +67,8 @@
         return null;
     };
     Envelope.getSender = function (env) {
-        return ns.protocol.ID.parse(env['sender']);
+        env = Wrapper.fetchMap(env);
+        return ID.parse(env['sender']);
     };
 
     /**
@@ -80,6 +81,7 @@
         return null;
     };
     Envelope.getReceiver = function (env) {
+        env = Wrapper.fetchMap(env);
         return ID.parse(env['receiver']);
     };
 
@@ -93,6 +95,7 @@
         return null;
     };
     Envelope.getTime = function (env) {
+        env = Wrapper.fetchMap(env);
         var timestamp = env['time'];
         if (timestamp) {
             return new Date(timestamp * 1000);
@@ -116,9 +119,11 @@
         console.assert(false, 'implement me!');
     };
     Envelope.getGroup = function (env) {
+        env = Wrapper.fetchMap(env);
         return ID.parse(env['group']);
     };
     Envelope.setGroup = function (group, env) {
+        env = Wrapper.fetchMap(env);
         if (group) {
             env['group'] = group.toString();
         } else {
@@ -142,6 +147,7 @@
         console.assert(false, 'implement me!');
     };
     Envelope.getType = function (env) {
+        env = Wrapper.fetchMap(env);
         var type = env['type'];
         if (type) {
             return type;
@@ -150,6 +156,7 @@
         }
     };
     Envelope.setType = function (type, env) {
+        env = Wrapper.fetchMap(env);
         if (type) {
             if (type instanceof ContentType) {
                 type = type.valueOf();
@@ -160,25 +167,11 @@
         }
     };
 
-    //-------- namespace --------
-    ns.protocol.Envelope = Envelope;
-
-    ns.protocol.registers('Envelope');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var map = ns.type.Map;
-    var Envelope = ns.protocol.Envelope;
-
     /**
      *  Envelope Factory
      *  ~~~~~~~~~~~~~~~~
      */
-    var EnvelopeFactory = function () {
-    };
+    var EnvelopeFactory = function () {};
     ns.Interface(EnvelopeFactory, null);
 
     // noinspection JSUnusedLocalSymbols
@@ -195,13 +188,16 @@
 
     Envelope.Factory = EnvelopeFactory;
 
-    var s_factory = null;
+    //
+    //  Instance of EnvelopeFactory
+    //
+    var s_envelope_factory = null;
 
     Envelope.getFactory = function () {
-        return s_factory;
+        return s_envelope_factory;
     }
     Envelope.setFactory = function (factory) {
-        s_factory = factory;
+        s_envelope_factory = factory;
     };
 
     /**
@@ -213,13 +209,14 @@
      * @return {Envelope}
      */
     Envelope.create = function (from, to, when) {
-        return Envelope.getFactory().createEnvelope(from, to, when);
+        var factory = Envelope.getFactory();
+        return factory.createEnvelope(from, to, when);
     };
 
     /**
      *  Parse map object to envelope
      *
-     * @param {{String:Object}} env - envelope info
+     * @param {*} env - envelope info
      * @return {Envelope}
      */
     Envelope.parse = function (env) {
@@ -227,10 +224,15 @@
             return null;
         } else if (ns.Interface.conforms(env, Envelope)) {
             return env;
-        } else if (ns.Interface.conforms(env, map)) {
-            env = env.getMap();
         }
-        return Envelope.getFactory().parseEnvelope(env);
+        env = Wrapper.fetchMap(env);
+        var factory = Envelope.getFactory();
+        return factory.parseEnvelope(env);
     };
+
+    //-------- namespace --------
+    ns.protocol.Envelope = Envelope;
+
+    ns.protocol.registers('Envelope');
 
 })(DaoKeDao);

@@ -72,12 +72,11 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
+    var Mapper = ns.type.Mapper;
     var Envelope = ns.protocol.Envelope;
 
-    var Message = function () {
-    };
-    ns.Interface(Message, [map]);
+    var Message = function () {};
+    ns.Interface(Message, [Mapper]);
 
     // message delegate
     Message.prototype.getDelegate = function () {
@@ -121,22 +120,18 @@
         return null;
     };
 
+    /**
+     *  Message Delegate
+     *  ~~~~~~~~~~~~~~~~
+     */
+    var MessageDelegate = function () {};
+    ns.Interface(MessageDelegate, null);
+
+    Message.Delegate = MessageDelegate;
+
     //-------- namespace --------
     ns.protocol.Message = Message;
 
     ns.protocol.registers('Message');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var Message = ns.protocol.Message;
-
-    var MessageDelegate = function () {
-    };
-    ns.Interface(MessageDelegate, null);
-
-    Message.Delegate = MessageDelegate;
 
 })(DaoKeDao);

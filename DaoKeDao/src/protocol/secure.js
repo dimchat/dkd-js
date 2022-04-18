@@ -54,10 +54,10 @@
 (function (ns) {
     'use strict';
 
+    var Wrapper = ns.type.Wrapper;
     var Message = ns.protocol.Message;
 
-    var SecureMessage = function () {
-    };
+    var SecureMessage = function () {};
     ns.Interface(SecureMessage, [Message]);
 
     /**
@@ -159,25 +159,11 @@
         return null;
     };
 
-    //-------- namespace --------
-    ns.protocol.SecureMessage = SecureMessage;
-
-    ns.protocol.registers('SecureMessage');
-
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var Message = ns.protocol.Message;
-    var SecureMessage = ns.protocol.SecureMessage;
-
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var SecureMessageDelegate = function () {
-    };
+    var SecureMessageDelegate = function () {};
     ns.Interface(SecureMessageDelegate, [Message.Delegate])
 
     //
@@ -305,20 +291,11 @@
 
     SecureMessage.Delegate = SecureMessageDelegate;
 
-})(DaoKeDao);
-
-(function (ns) {
-    'use strict';
-
-    var map = ns.type.Map;
-    var SecureMessage = ns.protocol.SecureMessage;
-
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var SecureMessageFactory = function () {
-    };
+    var SecureMessageFactory = function () {};
     ns.Interface(SecureMessageFactory, null)
 
     // noinspection JSUnusedLocalSymbols
@@ -329,19 +306,22 @@
 
     SecureMessage.Factory = SecureMessageFactory;
 
-    var s_factory = null;
+    //
+    //  Instance of SecureMessageFactory
+    //
+    var s_secure_factory = null;
 
     SecureMessage.getFactory = function () {
-        return s_factory;
+        return s_secure_factory;
     };
     SecureMessage.setFactory = function (factory) {
-        s_factory = factory;
+        s_secure_factory = factory;
     };
 
     /**
      *  Parse map object to message
      *
-     * @param {{String:Object}} msg - message info
+     * @param {*} msg - message info
      * @return {SecureMessage}
      */
     SecureMessage.parse = function (msg) {
@@ -349,10 +329,15 @@
             return null;
         } else if (ns.Interface.conforms(msg, SecureMessage)) {
             return msg;
-        } else if (ns.Interface.conforms(msg, map)) {
-            msg = msg.getMap();
         }
-        return SecureMessage.getFactory().parseSecureMessage(msg);
+        msg = Wrapper.fetchMap(msg);
+        var factory = SecureMessage.getFactory();
+        return factory.parseSecureMessage(msg);
     };
+
+    //-------- namespace --------
+    ns.protocol.SecureMessage = SecureMessage;
+
+    ns.protocol.registers('SecureMessage');
 
 })(DaoKeDao);

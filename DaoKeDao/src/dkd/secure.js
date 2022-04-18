@@ -55,7 +55,7 @@
 (function (ns) {
     'use strict';
 
-    var map = ns.type.Map;
+    var Copier = ns.type.Copier;
     var InstantMessage = ns.protocol.InstantMessage;
     var SecureMessage = ns.protocol.SecureMessage;
     var ReliableMessage = ns.protocol.ReliableMessage;
@@ -79,7 +79,8 @@
     EncryptedMessage.prototype.getData = function () {
         if (!this.__data) {
             var base64 = this.getValue('data');
-            this.__data = this.getDelegate().decodeData(base64, this);
+            var delegate = this.getDelegate();
+            this.__data = delegate.decodeData(base64, this);
         }
         return this.__data;
     };
@@ -96,7 +97,8 @@
                 }
             }
             if (base64) {
-                this.__key = this.getDelegate().decodeKey(base64, this);
+                var delegate = this.getDelegate();
+                this.__key = delegate.decodeKey(base64, this);
             }
         }
         return this.__key;
@@ -182,11 +184,11 @@
         //      (do it in 'core' module)
 
         // 3. pack message
-        var msg = this.copyMap();
+        var msg = this.copyMap(false);
         delete msg['key'];
         delete msg['keys'];
         delete msg['data'];
-        msg['content'] = content.getMap();
+        msg['content'] = content.toMap();
         return InstantMessage.parse(msg);
     };
 
@@ -202,7 +204,7 @@
         // 2. encode signature
         var base64 = delegate.encodeSignature(signature, this);
         // 3. pack message
-        var msg = this.copyMap();
+        var msg = this.copyMap(false);
         msg['signature'] = base64;
         return ReliableMessage.parse(msg);
     };
@@ -220,7 +222,7 @@
      * @returns {SecureMessage[]}
      */
     EncryptedMessage.prototype.split = function (members) {
-        var msg = this.copyMap();
+        var msg = this.copyMap(false);
         // check 'keys'
         var keys = this.getEncryptedKeys();
         if (keys) {
@@ -252,7 +254,7 @@
                 delete msg['key'];
             }
             // 4. repack message
-            item = SecureMessage.parse(map.copyMap(msg))
+            item = SecureMessage.parse(Copier.copyMap(msg))
             if (item) {
                 messages.push(item);
             }
@@ -267,7 +269,7 @@
      * @returns {ReliableMessage|SecureMessage}
      */
     EncryptedMessage.prototype.trim = function (member) {
-        var msg = this.copyMap();
+        var msg = this.copyMap(false);
         // check 'keys'
         var keys = this.getEncryptedKeys();
         if (keys) {

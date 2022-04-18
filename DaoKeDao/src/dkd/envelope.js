@@ -77,21 +77,22 @@
             env = {
                 'sender': from.toString(),
                 'receiver': to.toString(),
-                'time': Math.ceil(when.getTime() / 1000)
+                'time': when.getTime() / 1000.0
             }
         } else if (arguments.length === 3) {
             // new MessageEnvelope(sender, receiver, time);
             from = arguments[0];
             to = arguments[1];
-            if (arguments[2] instanceof Date) {
-                when = arguments[2];
-            } else {
-                when = new Date(arguments[2] * 1000);
+            when = arguments[2];
+            if (!when) {
+                when = new Date();
+            } else if (typeof when === 'number') {
+                when = new Date(when * 1000);
             }
             env = {
                 'sender': from.toString(),
                 'receiver': to.toString(),
-                'time': Math.ceil(when.getTime() / 1000)
+                'time': when.getTime() / 1000.0
             }
         } else {
             throw new SyntaxError('envelope arguments error: ' + arguments);
@@ -121,10 +122,10 @@
      *  the group ID will be saved as 'group'.
      */
     MessageEnvelope.prototype.getGroup = function () {
-        return Envelope.getGroup(this.getMap());
+        return Envelope.getGroup(this);
     };
     MessageEnvelope.prototype.setGroup = function (identifier) {
-        Envelope.setGroup(identifier, this.getMap());
+        Envelope.setGroup(identifier, this);
     };
 
     /*
@@ -136,10 +137,10 @@
      *  to let the station do its job.
      */
     MessageEnvelope.prototype.getType = function () {
-        return Envelope.getType(this.getMap());
+        return Envelope.getType(this);
     };
     MessageEnvelope.prototype.setType = function (type) {
-        Envelope.setType(type, this.getMap());
+        Envelope.setType(type, this);
     };
 
     //-------- namespace --------
