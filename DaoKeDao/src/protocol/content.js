@@ -54,7 +54,6 @@
 (function (ns) {
     'use strict';
 
-    var Wrapper = ns.type.Wrapper;
     var Mapper = ns.type.Mapper;
     var ID = ns.protocol.ID;
     var ContentType = ns.protocol.ContentType;
@@ -72,7 +71,6 @@
         return 0;
     };
     Content.getType = function (content) {
-        content = Wrapper.fetchMap(content);
         return content['type'];
     };
 
@@ -86,7 +84,6 @@
         return 0;
     };
     Content.getSerialNumber = function (content) {
-        content = Wrapper.fetchMap(content);
         return content['sn'];
     };
 
@@ -100,7 +97,6 @@
         return null;
     };
     Content.getTime = function (content) {
-        content = Wrapper.fetchMap(content);
         var timestamp = content['time'];
         if (timestamp) {
             return new Date(timestamp * 1000);
@@ -119,11 +115,9 @@
         console.assert(false, 'implement me!');
     };
     Content.getGroup = function (content) {
-        content = Wrapper.fetchMap(content);
         return ID.parse(content['group']);
     };
     Content.setGroup = function (group, content) {
-        content = Wrapper.fetchMap(content);
         if (group) {
             content['group'] = group.toString();
         } else {
@@ -184,7 +178,7 @@
         } else if (ns.Interface.conforms(content, Content)) {
             return content;
         }
-        content = Wrapper.fetchMap(content);
+        content = ns.type.Wrapper.fetchMap(content);
         var type = Content.getType(content);
         var factory = Content.getFactory(type);
         if (!factory) {

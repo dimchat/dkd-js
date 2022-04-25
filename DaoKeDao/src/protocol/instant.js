@@ -50,7 +50,6 @@
 (function (ns) {
     'use strict';
 
-    var Wrapper = ns.type.Wrapper;
     var Content = ns.protocol.Content;
     var Message = ns.protocol.Message;
 
@@ -62,7 +61,6 @@
         return null;
     };
     InstantMessage.getContent = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Content.parse(msg['content'])
     };
 
@@ -264,7 +262,7 @@
         } else if (ns.Interface.conforms(msg, InstantMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = InstantMessage.getFactory();
         return factory.parseInstantMessage(msg);
     };

@@ -42,7 +42,6 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.registers("ContentType");
 })(DaoKeDao);
 (function (ns) {
-    var Wrapper = ns.type.Wrapper;
     var Mapper = ns.type.Mapper;
     var ID = ns.protocol.ID;
     var ContentType = ns.protocol.ContentType;
@@ -53,7 +52,6 @@ if (typeof DaoKeDao !== "object") {
         return 0;
     };
     Content.getType = function (content) {
-        content = Wrapper.fetchMap(content);
         return content["type"];
     };
     Content.prototype.getSerialNumber = function () {
@@ -61,7 +59,6 @@ if (typeof DaoKeDao !== "object") {
         return 0;
     };
     Content.getSerialNumber = function (content) {
-        content = Wrapper.fetchMap(content);
         return content["sn"];
     };
     Content.prototype.getTime = function () {
@@ -69,7 +66,6 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     Content.getTime = function (content) {
-        content = Wrapper.fetchMap(content);
         var timestamp = content["time"];
         if (timestamp) {
             return new Date(timestamp * 1000);
@@ -85,11 +81,9 @@ if (typeof DaoKeDao !== "object") {
         console.assert(false, "implement me!");
     };
     Content.getGroup = function (content) {
-        content = Wrapper.fetchMap(content);
         return ID.parse(content["group"]);
     };
     Content.setGroup = function (group, content) {
-        content = Wrapper.fetchMap(content);
         if (group) {
             content["group"] = group.toString();
         } else {
@@ -125,7 +119,7 @@ if (typeof DaoKeDao !== "object") {
                 return content;
             }
         }
-        content = Wrapper.fetchMap(content);
+        content = ns.type.Wrapper.fetchMap(content);
         var type = Content.getType(content);
         var factory = Content.getFactory(type);
         if (!factory) {
@@ -137,7 +131,6 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.registers("Content");
 })(DaoKeDao);
 (function (ns) {
-    var Wrapper = ns.type.Wrapper;
     var Mapper = ns.type.Mapper;
     var ID = ns.protocol.ID;
     var ContentType = ns.protocol.ContentType;
@@ -148,7 +141,6 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     Envelope.getSender = function (env) {
-        env = Wrapper.fetchMap(env);
         return ID.parse(env["sender"]);
     };
     Envelope.prototype.getReceiver = function () {
@@ -156,7 +148,6 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     Envelope.getReceiver = function (env) {
-        env = Wrapper.fetchMap(env);
         return ID.parse(env["receiver"]);
     };
     Envelope.prototype.getTime = function () {
@@ -164,7 +155,6 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     Envelope.getTime = function (env) {
-        env = Wrapper.fetchMap(env);
         var timestamp = env["time"];
         if (timestamp) {
             return new Date(timestamp * 1000);
@@ -180,11 +170,9 @@ if (typeof DaoKeDao !== "object") {
         console.assert(false, "implement me!");
     };
     Envelope.getGroup = function (env) {
-        env = Wrapper.fetchMap(env);
         return ID.parse(env["group"]);
     };
     Envelope.setGroup = function (group, env) {
-        env = Wrapper.fetchMap(env);
         if (group) {
             env["group"] = group.toString();
         } else {
@@ -199,7 +187,6 @@ if (typeof DaoKeDao !== "object") {
         console.assert(false, "implement me!");
     };
     Envelope.getType = function (env) {
-        env = Wrapper.fetchMap(env);
         var type = env["type"];
         if (type) {
             return type;
@@ -208,7 +195,6 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     Envelope.setType = function (type, env) {
-        env = Wrapper.fetchMap(env);
         if (type) {
             if (type instanceof ContentType) {
                 type = type.valueOf();
@@ -248,7 +234,7 @@ if (typeof DaoKeDao !== "object") {
                 return env;
             }
         }
-        env = Wrapper.fetchMap(env);
+        env = ns.type.Wrapper.fetchMap(env);
         var factory = Envelope.getFactory();
         return factory.parseEnvelope(env);
     };
@@ -301,7 +287,6 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.registers("Message");
 })(DaoKeDao);
 (function (ns) {
-    var Wrapper = ns.type.Wrapper;
     var Content = ns.protocol.Content;
     var Message = ns.protocol.Message;
     var InstantMessage = function () {};
@@ -311,7 +296,6 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     InstantMessage.getContent = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Content.parse(msg["content"]);
     };
     InstantMessage.prototype.encrypt = function (password, members) {
@@ -394,7 +378,7 @@ if (typeof DaoKeDao !== "object") {
                 return msg;
             }
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = InstantMessage.getFactory();
         return factory.parseInstantMessage(msg);
     };
@@ -402,7 +386,6 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.registers("InstantMessage");
 })(DaoKeDao);
 (function (ns) {
-    var Wrapper = ns.type.Wrapper;
     var Message = ns.protocol.Message;
     var SecureMessage = function () {};
     ns.Interface(SecureMessage, [Message]);
@@ -505,7 +488,7 @@ if (typeof DaoKeDao !== "object") {
                 return msg;
             }
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = SecureMessage.getFactory();
         return factory.parseSecureMessage(msg);
     };
@@ -513,7 +496,6 @@ if (typeof DaoKeDao !== "object") {
     ns.protocol.registers("SecureMessage");
 })(DaoKeDao);
 (function (ns) {
-    var Wrapper = ns.type.Wrapper;
     var Meta = ns.protocol.Meta;
     var Document = ns.protocol.Document;
     var SecureMessage = ns.protocol.SecureMessage;
@@ -532,11 +514,9 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Meta.parse(msg["meta"]);
     };
     ReliableMessage.setMeta = function (meta, msg) {
-        msg = Wrapper.fetchMap(msg);
         if (meta) {
             msg["meta"] = meta.toMap();
         } else {
@@ -552,11 +532,9 @@ if (typeof DaoKeDao !== "object") {
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Document.parse(msg["visa"]);
     };
     ReliableMessage.setVisa = function (doc, msg) {
-        msg = Wrapper.fetchMap(msg);
         if (doc) {
             msg["visa"] = doc.toMap();
         } else {
@@ -608,7 +586,7 @@ if (typeof DaoKeDao !== "object") {
                 return msg;
             }
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = ReliableMessage.getFactory();
         return factory.parseReliableMessage(msg);
     };
@@ -652,10 +630,12 @@ if (typeof DaoKeDao !== "object") {
         return this.__time;
     };
     BaseContent.prototype.getGroup = function () {
-        return Content.getGroup(this);
+        var dict = this.toMap();
+        return Content.getGroup(dict);
     };
     BaseContent.prototype.setGroup = function (identifier) {
-        Content.setGroup(identifier, this);
+        var dict = this.toMap();
+        Content.setGroup(identifier, dict);
     };
     ns.dkd.BaseContent = BaseContent;
     ns.dkd.registers("BaseContent");
@@ -719,16 +699,20 @@ if (typeof DaoKeDao !== "object") {
         return this.__time;
     };
     MessageEnvelope.prototype.getGroup = function () {
-        return Envelope.getGroup(this);
+        var dict = this.toMap();
+        return Envelope.getGroup(dict);
     };
     MessageEnvelope.prototype.setGroup = function (identifier) {
-        Envelope.setGroup(identifier, this);
+        var dict = this.toMap();
+        Envelope.setGroup(identifier, dict);
     };
     MessageEnvelope.prototype.getType = function () {
-        return Envelope.getType(this);
+        var dict = this.toMap();
+        return Envelope.getType(dict);
     };
     MessageEnvelope.prototype.setType = function (type) {
-        Envelope.setType(type, this);
+        var dict = this.toMap();
+        Envelope.setType(type, dict);
     };
     ns.dkd.MessageEnvelope = MessageEnvelope;
     ns.dkd.registers("MessageEnvelope");
@@ -1050,22 +1034,26 @@ if (typeof DaoKeDao !== "object") {
         return this.__signature;
     };
     NetworkMessage.prototype.setMeta = function (meta) {
-        ReliableMessage.setMeta(meta, this);
+        var dict = this.toMap();
+        ReliableMessage.setMeta(meta, dict);
         this.__meta = meta;
     };
     NetworkMessage.prototype.getMeta = function () {
         if (!this.__meta) {
-            this.__meta = ReliableMessage.getMeta(this);
+            var dict = this.toMap();
+            this.__meta = ReliableMessage.getMeta(dict);
         }
         return this.__meta;
     };
     NetworkMessage.prototype.setVisa = function (visa) {
-        ReliableMessage.setVisa(visa, this);
+        var dict = this.toMap();
+        ReliableMessage.setVisa(visa, dict);
         this.__visa = visa;
     };
     NetworkMessage.prototype.getVisa = function () {
         if (!this.__visa) {
-            this.__visa = ReliableMessage.getVisa(this);
+            var dict = this.toMap();
+            this.__visa = ReliableMessage.getVisa(dict);
         }
         return this.__visa;
     };

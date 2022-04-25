@@ -100,34 +100,46 @@
     };
     ns.Class(BaseMessage, Dictionary, [Message]);
 
+    // Override
     BaseMessage.prototype.getDelegate = function () {
         return this.__delegate;
     };
+
+    // Override
     BaseMessage.prototype.setDelegate = function (delegate) {
         this.__delegate = delegate;
     };
 
+    // Override
     BaseMessage.prototype.getEnvelope = function () {
         return this.__envelope;
     };
 
+    // Override
     BaseMessage.prototype.getSender = function () {
         var env = this.getEnvelope();
         return env.getSender();
     };
+
+    // Override
     BaseMessage.prototype.getReceiver = function () {
         var env = this.getEnvelope();
         return env.getReceiver()
     };
+
+    // Override
     BaseMessage.prototype.getTime = function () {
         var env = this.getEnvelope();
         return env.getTime();
     };
 
+    // Override
     BaseMessage.prototype.getGroup = function () {
         var env = this.getEnvelope();
         return env.getGroup();
     };
+
+    // Override
     BaseMessage.prototype.getType = function () {
         var env = this.getEnvelope();
         return env.getTime();

@@ -98,24 +98,31 @@
     };
     ns.Class(BaseContent, Dictionary, [Content]);
 
+    // Override
     BaseContent.prototype.getType = function () {
         return this.__type;
     };
+
+    // Override
     BaseContent.prototype.getSerialNumber = function () {
         return this.__sn;
     };
+
+    // Override
     BaseContent.prototype.getTime = function () {
         return this.__time;
     };
 
-    // Group ID/string for group message
-    //    if field 'group' exists, it means this is a group message
+    // Override
     BaseContent.prototype.getGroup = function () {
-        return Content.getGroup(this);
+        var dict = this.toMap();
+        return Content.getGroup(dict);
     };
 
+    // Override
     BaseContent.prototype.setGroup = function (identifier) {
-        Content.setGroup(identifier, this);
+        var dict = this.toMap();
+        Content.setGroup(identifier, dict);
     };
 
     //-------- namespace --------

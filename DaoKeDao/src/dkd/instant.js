@@ -83,10 +83,12 @@
     };
     ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
 
+    // Override
     PlainMessage.prototype.getContent = function () {
         return this.__content;
     };
 
+    // Override
     PlainMessage.prototype.getTime = function () {
         var content = this.getContent();
         var time = content.getTime();
@@ -97,10 +99,13 @@
         return time;
     };
 
+    // Override
     PlainMessage.prototype.getGroup = function () {
         var content = this.getContent();
         return content.getGroup();
     };
+
+    // Override
     PlainMessage.prototype.getType = function () {
         var content = this.getContent();
         return content.getType();
@@ -119,13 +124,7 @@
      *                      +----------+
      */
 
-    /**
-     *  Encrypt group message, replace 'content' field with encrypted 'data'
-     *
-     * @param {SymmetricKey} password
-     * @param {String[]} members - group members ID/string list
-     * @returns {SecureMessage}
-     */
+    // Override
     PlainMessage.prototype.encrypt = function (password, members) {
         // 0. check attachment for File/Image/Audio/Video message content
         //    (do it in 'core' module)

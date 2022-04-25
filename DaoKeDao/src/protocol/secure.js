@@ -54,7 +54,6 @@
 (function (ns) {
     'use strict';
 
-    var Wrapper = ns.type.Wrapper;
     var Message = ns.protocol.Message;
 
     var SecureMessage = function () {};
@@ -330,7 +329,7 @@
         } else if (ns.Interface.conforms(msg, SecureMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = SecureMessage.getFactory();
         return factory.parseSecureMessage(msg);
     };

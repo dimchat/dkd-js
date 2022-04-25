@@ -58,7 +58,6 @@
 (function (ns) {
     'use strict';
 
-    var Wrapper = ns.type.Wrapper;
     var Meta = ns.protocol.Meta;
     var Document = ns.protocol.Document;
     var SecureMessage = ns.protocol.SecureMessage;
@@ -87,11 +86,9 @@
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Meta.parse(msg['meta']);
     }
     ReliableMessage.setMeta = function (meta, msg) {
-        msg = Wrapper.fetchMap(msg);
         if (meta) {
             msg['meta'] = meta.toMap();
         } else {
@@ -115,11 +112,9 @@
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
-        msg = Wrapper.fetchMap(msg);
         return Document.parse(msg['visa']);
     };
     ReliableMessage.setVisa = function (doc, msg) {
-        msg = Wrapper.fetchMap(msg);
         if (doc) {
             msg['visa'] = doc.toMap();
         } else {
@@ -227,7 +222,7 @@
         } else if (ns.Interface.conforms(msg, ReliableMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        msg = ns.type.Wrapper.fetchMap(msg);
         var factory = ReliableMessage.getFactory();
         return factory.parseReliableMessage(msg);
     };

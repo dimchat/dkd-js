@@ -104,43 +104,43 @@
     };
     ns.Class(MessageEnvelope, Dictionary, [Envelope]);
 
+    // Override
     MessageEnvelope.prototype.getSender = function () {
         return this.__sender;
     };
+
+    // Override
     MessageEnvelope.prototype.getReceiver = function () {
         return this.__receiver;
     };
+
+    // Override
     MessageEnvelope.prototype.getTime = function () {
         return this.__time;
     };
 
-    /*
-     *  Group ID
-     *  ~~~~~~~~
-     *  when a group message was split/trimmed to a single message
-     *  the 'receiver' will be changed to a member ID, and
-     *  the group ID will be saved as 'group'.
-     */
+    // Override
     MessageEnvelope.prototype.getGroup = function () {
-        return Envelope.getGroup(this);
-    };
-    MessageEnvelope.prototype.setGroup = function (identifier) {
-        Envelope.setGroup(identifier, this);
+        var dict = this.toMap();
+        return Envelope.getGroup(dict);
     };
 
-    /*
-     *  Message Type
-     *  ~~~~~~~~~~~~
-     *  because the message content will be encrypted, so
-     *  the intermediate nodes(station) cannot recognize what kind of it.
-     *  we pick out the content type and set it in envelope
-     *  to let the station do its job.
-     */
-    MessageEnvelope.prototype.getType = function () {
-        return Envelope.getType(this);
+    // Override
+    MessageEnvelope.prototype.setGroup = function (identifier) {
+        var dict = this.toMap();
+        Envelope.setGroup(identifier, dict);
     };
+
+    // Override
+    MessageEnvelope.prototype.getType = function () {
+        var dict = this.toMap();
+        return Envelope.getType(dict);
+    };
+
+    // Override
     MessageEnvelope.prototype.setType = function (type) {
-        Envelope.setType(type, this);
+        var dict = this.toMap();
+        Envelope.setType(type, dict);
     };
 
     //-------- namespace --------

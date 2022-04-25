@@ -76,6 +76,7 @@
     };
     ns.Class(EncryptedMessage, BaseMessage, [SecureMessage]);
 
+    // Override
     EncryptedMessage.prototype.getData = function () {
         if (!this.__data) {
             var base64 = this.getValue('data');
@@ -85,6 +86,7 @@
         return this.__data;
     };
 
+    // Override
     EncryptedMessage.prototype.getEncryptedKey = function () {
         if (!this.__key) {
             var base64 = this.getValue('key');
@@ -104,6 +106,7 @@
         return this.__key;
     };
 
+    // Override
     EncryptedMessage.prototype.getEncryptedKeys = function () {
         if (!this.__keys) {
             this.__keys = this.getValue('keys');
@@ -124,11 +127,7 @@
      *    +----------+
      */
 
-    /**
-     *  Decrypt message, replace encrypted 'data' with 'content' field
-     *
-     * @returns {InstantMessage}
-     */
+    // Override
     EncryptedMessage.prototype.decrypt = function () {
         var sender = this.getSender();
         var receiver;
@@ -192,11 +191,7 @@
         return InstantMessage.parse(msg);
     };
 
-    /**
-     *  Sign message.data, add 'signature' field
-     *
-     * @returns {ReliableMessage}
-     */
+    // Override
     EncryptedMessage.prototype.sign = function () {
         var delegate = this.getDelegate();
         // 1. sign with sender's private key
@@ -215,12 +210,7 @@
      *  for each members, get key from 'keys' and replace 'receiver' to member ID
      */
 
-    /**
-     *  Split the group message to single person messages
-     *
-     * @param {ID[]} members - group member ID/string list
-     * @returns {SecureMessage[]}
-     */
+    // Override
     EncryptedMessage.prototype.split = function (members) {
         var msg = this.copyMap(false);
         // check 'keys'
@@ -262,12 +252,7 @@
         return messages;
     };
 
-    /**
-     *  Trim the group message for a member
-     *
-     * @param {ID} member - group member ID
-     * @returns {ReliableMessage|SecureMessage}
-     */
+    // Override
     EncryptedMessage.prototype.trim = function (member) {
         var msg = this.copyMap(false);
         // check 'keys'

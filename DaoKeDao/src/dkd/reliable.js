@@ -76,6 +76,7 @@
     };
     ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage]);
 
+    // Override
     NetworkMessage.prototype.getSignature = function () {
         if (!this.__signature) {
             var base64 = this.getValue('signature');
@@ -85,38 +86,34 @@
         return this.__signature;
     };
 
-    /**
-     *  Sender's Meta
-     *  ~~~~~~~~~~~~~
-     *  Extends for the first message package of 'Handshake' protocol.
-     *
-     * @param {Meta} meta
-     */
+    // Override
     NetworkMessage.prototype.setMeta = function (meta) {
-        ReliableMessage.setMeta(meta, this);
+        var dict = this.toMap();
+        ReliableMessage.setMeta(meta, dict);
         this.__meta = meta;
     };
+
+    // Override
     NetworkMessage.prototype.getMeta = function () {
         if (!this.__meta) {
-            this.__meta = ReliableMessage.getMeta(this);
+            var dict = this.toMap();
+            this.__meta = ReliableMessage.getMeta(dict);
         }
         return this.__meta;
     };
 
-    /**
-     *  Sender's Visa
-     *  ~~~~~~~~~~~~~
-     *  Extends for the first message package of 'Handshake' protocol.
-     *
-     * @param {Visa} visa
-     */
+    // Override
     NetworkMessage.prototype.setVisa = function (visa) {
-        ReliableMessage.setVisa(visa, this);
+        var dict = this.toMap();
+        ReliableMessage.setVisa(visa, dict);
         this.__visa = visa;
     };
+
+    // Override
     NetworkMessage.prototype.getVisa = function () {
         if (!this.__visa) {
-            this.__visa = ReliableMessage.getVisa(this);
+            var dict = this.toMap();
+            this.__visa = ReliableMessage.getVisa(dict);
         }
         return this.__visa;
     };
@@ -135,11 +132,7 @@
      *    +----------+
      */
 
-    /**
-     *  Verify 'data' and 'signature' field with sender's public key
-     *
-     * @returns {SecureMessage}
-     */
+    // Override
     NetworkMessage.prototype.verify = function () {
         var data = this.getData();
         if (!data) {

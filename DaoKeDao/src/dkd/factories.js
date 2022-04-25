@@ -46,6 +46,7 @@
     };
     ns.Class(EnvelopeFactory, Object, [Envelope.Factory]);
 
+    // Override
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
         if (!when) {
             when = new Date();
@@ -53,6 +54,7 @@
         return new MessageEnvelope(from, to, when);
     };
 
+    // Override
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
         if (!env['sender']) {
             // env.sender should not empty
@@ -82,6 +84,7 @@
     ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory]);
 
     var MAX_LONG = 0xFFFFFFFF;
+    // Override
     InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
         // because we must make sure all messages in a same chat box won't have
         // same serial numbers, so we can't use time-related numbers, therefore
@@ -96,10 +99,12 @@
         return 9527 + 9394; // randomPositiveInteger();
     };
 
+    // Override
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
         return new PlainMessage(head, body);
     };
 
+    // Override
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
         return new PlainMessage(msg);
     };
@@ -125,6 +130,7 @@
     };
     ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory]);
 
+    // Override
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
         if (msg['signature']) {
             return new NetworkMessage(msg);
@@ -152,6 +158,7 @@
     };
     ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory]);
 
+    // Override
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
         if (!msg['sender'] || !msg['data'] || !msg['signature']) {
             // msg.sender should not empty
