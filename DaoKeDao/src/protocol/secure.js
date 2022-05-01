@@ -65,7 +65,7 @@
      * @return {Uint8Array}
      */
     SecureMessage.prototype.getData = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -75,11 +75,11 @@
      * @return {Uint8Array}
      */
     SecureMessage.prototype.getEncryptedKey = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     SecureMessage.prototype.getEncryptedKeys = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -102,7 +102,7 @@
      * @return {InstantMessage}
      */
     SecureMessage.prototype.decrypt = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -126,7 +126,7 @@
      * @return {ReliableMessage}
      */
     SecureMessage.prototype.sign = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -143,7 +143,7 @@
      *  @return {SecureMessage[]}secure/reliable message(s)
      */
     SecureMessage.prototype.split = function (members) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -154,7 +154,7 @@
      * @return {SecureMessage}
      */
     SecureMessage.prototype.trim = function (member) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -163,13 +163,12 @@
      *  ~~~~~~~~~~~~~~~~
      */
     var SecureMessageDelegate = function () {};
-    ns.Interface(SecureMessageDelegate, [Message.Delegate])
+    ns.Interface(SecureMessageDelegate, [Message.Delegate]);
 
     //
     //  Decrypt Key
     //
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  1. Decode 'message.key' to encrypted symmetric key data
      *
@@ -178,11 +177,10 @@
      * @returns {Uint8Array} encrypted symmetric key data
      */
     SecureMessageDelegate.prototype.decodeKey = function (key, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  2. Decrypt 'message.key' with receiver's private key
      *
@@ -193,11 +191,10 @@
      * @returns {Uint8Array} serialized symmetric key
      */
     SecureMessageDelegate.prototype.decryptKey = function (data, sender, receiver, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  3. Deserialize message key from data (JsON / ProtoBuf / ...)
      *
@@ -208,7 +205,7 @@
      * @returns {SymmetricKey} symmetric key
      */
     SecureMessageDelegate.prototype.deserializeKey = function (data, sender, receiver, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -216,7 +213,6 @@
     //  Decrypt Content
     //
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  4. Decode 'message.data' to encrypted content data
      *
@@ -225,11 +221,10 @@
      * @returns {Uint8Array} encrypt content data
      */
     SecureMessageDelegate.prototype.decodeData = function (data, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  5. Decrypt 'message.data' with symmetric key
      *
@@ -239,11 +234,10 @@
      * @returns {Uint8Array} serialized message content
      */
     SecureMessageDelegate.prototype.decryptContent = function (data, pwd, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  6. Deserialize message content from data (JsON / ProtoBuf / ...)
      *
@@ -253,7 +247,7 @@
      * @returns {Content} message content
      */
     SecureMessageDelegate.prototype.deserializeContent = function (data, pwd, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -261,7 +255,6 @@
     //  Signature
     //
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  1. Sign 'message.data' with sender's private key
      *
@@ -271,11 +264,10 @@
      * @returns {Uint8Array} signature of encrypted message data
      */
     SecureMessageDelegate.prototype.signData = function (data, sender, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  2. Encode 'message.signature' to String (Base64)
      *
@@ -284,7 +276,7 @@
      * @returns {String} Base64 string
      */
     SecureMessageDelegate.prototype.encodeSignature = function (signature, sMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -295,11 +287,10 @@
      *  ~~~~~~~~~~~~~~~
      */
     var SecureMessageFactory = function () {};
-    ns.Interface(SecureMessageFactory, null)
+    ns.Interface(SecureMessageFactory, null);
 
-    // noinspection JSUnusedLocalSymbols
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

@@ -66,7 +66,7 @@
     ns.Interface(ReliableMessage, [SecureMessage]);
 
     ReliableMessage.prototype.getSignature = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -78,11 +78,11 @@
      * @return {Meta}
      */
     ReliableMessage.prototype.getMeta = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     ReliableMessage.prototype.setMeta = function (meta) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
@@ -104,11 +104,11 @@
      * @return {Visa}
      */
     ReliableMessage.prototype.getVisa = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     ReliableMessage.prototype.setVisa = function (doc) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
@@ -142,7 +142,7 @@
      * @return {SecureMessage}
      */
     ReliableMessage.prototype.verify = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -151,9 +151,8 @@
      *  ~~~~~~~~~~~~~~~~
      */
     var ReliableMessageDelegate = function () {};
-    ns.Interface(ReliableMessageDelegate, [SecureMessage.Delegate])
+    ns.Interface(ReliableMessageDelegate, [SecureMessage.Delegate]);
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  1. Decode 'message.signature' from String (Base64)
      *
@@ -162,11 +161,10 @@
      * @returns {Uint8Array} signature
      */
     ReliableMessageDelegate.prototype.decodeSignature = function (signature, rMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  2. Verify the message data and signature with sender's public key
      *
@@ -177,7 +175,7 @@
      * @returns {boolean} true on signature matched
      */
     ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, rMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return false;
     };
 
@@ -188,11 +186,10 @@
      *  ~~~~~~~~~~~~~~~
      */
     var ReliableMessageFactory = function () {};
-    ns.Interface(ReliableMessageFactory, null)
+    ns.Interface(ReliableMessageFactory, null);
 
-    // noinspection JSUnusedLocalSymbols
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

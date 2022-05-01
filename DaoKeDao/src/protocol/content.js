@@ -67,7 +67,7 @@
      * @return {uint}
      */
     Content.prototype.getType = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return 0;
     };
     Content.getType = function (content) {
@@ -80,7 +80,7 @@
      * @return {uint}
      */
     Content.prototype.getSerialNumber = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return 0;
     };
     Content.getSerialNumber = function (content) {
@@ -93,7 +93,7 @@
      * @return {Date}
      */
     Content.prototype.getTime = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Content.getTime = function (content) {
@@ -108,11 +108,11 @@
     // Group ID/string for group message
     //    if field 'group' exists, it means this is a group message
     Content.prototype.getGroup = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Content.prototype.setGroup = function (identifier) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
     };
     Content.getGroup = function (content) {
         return ID.parse(content['group']);
@@ -140,9 +140,8 @@
     var ContentFactory = function () {};
     ns.Interface(ContentFactory, null);
 
-    // noinspection JSUnusedLocalSymbols
     ContentFactory.prototype.parseContent = function (content) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

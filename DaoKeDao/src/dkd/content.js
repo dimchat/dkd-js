@@ -96,34 +96,34 @@
         // message time
         this.__time = time;
     };
-    ns.Class(BaseContent, Dictionary, [Content]);
+    ns.Class(BaseContent, Dictionary, [Content], {
+        // Override
+        getType: function () {
+            return this.__type;
+        },
 
-    // Override
-    BaseContent.prototype.getType = function () {
-        return this.__type;
-    };
+        // Override
+        getSerialNumber: function () {
+            return this.__sn;
+        },
 
-    // Override
-    BaseContent.prototype.getSerialNumber = function () {
-        return this.__sn;
-    };
+        // Override
+        getTime: function () {
+            return this.__time;
+        },
 
-    // Override
-    BaseContent.prototype.getTime = function () {
-        return this.__time;
-    };
+        // Override
+        getGroup: function () {
+            var dict = this.toMap();
+            return Content.getGroup(dict);
+        },
 
-    // Override
-    BaseContent.prototype.getGroup = function () {
-        var dict = this.toMap();
-        return Content.getGroup(dict);
-    };
-
-    // Override
-    BaseContent.prototype.setGroup = function (identifier) {
-        var dict = this.toMap();
-        Content.setGroup(identifier, dict);
-    };
+        // Override
+        setGroup: function (identifier) {
+            var dict = this.toMap();
+            Content.setGroup(identifier, dict);
+        }
+    });
 
     //-------- namespace --------
     ns.dkd.BaseContent = BaseContent;

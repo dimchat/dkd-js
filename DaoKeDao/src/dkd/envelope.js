@@ -102,46 +102,46 @@
         this.__receiver = to;
         this.__time = when;
     };
-    ns.Class(MessageEnvelope, Dictionary, [Envelope]);
+    ns.Class(MessageEnvelope, Dictionary, [Envelope], {
+        // Override
+        getSender: function () {
+            return this.__sender;
+        },
 
-    // Override
-    MessageEnvelope.prototype.getSender = function () {
-        return this.__sender;
-    };
+        // Override
+        getReceiver: function () {
+            return this.__receiver;
+        },
 
-    // Override
-    MessageEnvelope.prototype.getReceiver = function () {
-        return this.__receiver;
-    };
+        // Override
+        getTime: function () {
+            return this.__time;
+        },
 
-    // Override
-    MessageEnvelope.prototype.getTime = function () {
-        return this.__time;
-    };
+        // Override
+        getGroup: function () {
+            var dict = this.toMap();
+            return Envelope.getGroup(dict);
+        },
 
-    // Override
-    MessageEnvelope.prototype.getGroup = function () {
-        var dict = this.toMap();
-        return Envelope.getGroup(dict);
-    };
+        // Override
+        setGroup: function (identifier) {
+            var dict = this.toMap();
+            Envelope.setGroup(identifier, dict);
+        },
 
-    // Override
-    MessageEnvelope.prototype.setGroup = function (identifier) {
-        var dict = this.toMap();
-        Envelope.setGroup(identifier, dict);
-    };
+        // Override
+        getType: function () {
+            var dict = this.toMap();
+            return Envelope.getType(dict);
+        },
 
-    // Override
-    MessageEnvelope.prototype.getType = function () {
-        var dict = this.toMap();
-        return Envelope.getType(dict);
-    };
-
-    // Override
-    MessageEnvelope.prototype.setType = function (type) {
-        var dict = this.toMap();
-        Envelope.setType(type, dict);
-    };
+        // Override
+        setType: function (type) {
+            var dict = this.toMap();
+            Envelope.setType(type, dict);
+        }
+    });
 
     //-------- namespace --------
     ns.dkd.MessageEnvelope = MessageEnvelope;

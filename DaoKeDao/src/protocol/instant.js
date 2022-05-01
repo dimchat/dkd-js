@@ -57,7 +57,7 @@
     ns.Interface(InstantMessage, [Message]);
 
     InstantMessage.prototype.getContent = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     InstantMessage.getContent = function (msg) {
@@ -85,7 +85,7 @@
      * @return SecureMessage object
      */
     InstantMessage.prototype.encrypt = function (password, members) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -94,13 +94,12 @@
      *  ~~~~~~~~~~~~~~~~
      */
     var InstantMessageDelegate = function () {};
-    ns.Interface(InstantMessageDelegate, [Message.Delegate])
+    ns.Interface(InstantMessageDelegate, [Message.Delegate]);
 
     //
     //  Encrypt Content
     //
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  1. Serialize 'message.content' to data (JsON / ProtoBuf / ...)
      *
@@ -110,11 +109,10 @@
      * @return {Uint8Array} serialized content data
      */
     InstantMessageDelegate.prototype.serializeContent = function (content, pwd, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  2. Encrypt content data to 'message.data' with symmetric key
      *
@@ -124,11 +122,10 @@
      * @return {Uint8Array} encrypted message content data
      */
     InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  3. Encode 'message.data' to String (Base64)
      *
@@ -137,7 +134,7 @@
      * @returns {String} Base64 string
      */
     InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -145,7 +142,6 @@
     //  Encrypt Key
     //
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  4. Serialize message key to data (JsON / ProtoBuf / ...)
      *
@@ -154,11 +150,10 @@
      * @return {Uint8Array} serialized key data
      */
     InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  5. Encrypt key data to 'message.key' with receiver's public key
      *
@@ -168,11 +163,10 @@
      * @returns {Uint8Array} encrypted symmetric key data
      */
     InstantMessageDelegate.prototype.encryptKey = function (data, receiver, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     /**
      *  6. Encode 'message.key' to String (Base64)
      *
@@ -181,7 +175,7 @@
      * @returns {String} Base64 string
      */
     InstantMessageDelegate.prototype.encodeKey = function (data, iMsg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
@@ -192,23 +186,20 @@
      *  ~~~~~~~~~~~~~~~
      */
     var InstantMessageFactory = function () {};
-    ns.Interface(InstantMessageFactory, null)
+    ns.Interface(InstantMessageFactory, null);
 
-    // noinspection JSUnusedLocalSymbols
     InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return 0;
     };
 
-    // noinspection JSUnusedLocalSymbols
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

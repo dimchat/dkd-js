@@ -81,63 +81,63 @@
         this.__envelope = head;
         this.__content = body;
     };
-    ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
+    ns.Class(PlainMessage, BaseMessage, [InstantMessage], {
+        // Override
+        getContent: function () {
+            return this.__content;
+        },
 
-    // Override
-    PlainMessage.prototype.getContent = function () {
-        return this.__content;
-    };
+        // Override
+        getTime: function () {
+            var content = this.getContent();
+            var time = content.getTime();
+            if (!time) {
+                var env = this.getEnvelope();
+                time = env.getTime();
+            }
+            return time;
+        },
 
-    // Override
-    PlainMessage.prototype.getTime = function () {
-        var content = this.getContent();
-        var time = content.getTime();
-        if (!time) {
-            var env = this.getEnvelope();
-            time = env.getTime();
+        // Override
+        getGroup: function () {
+            var content = this.getContent();
+            return content.getGroup();
+        },
+
+        // Override
+        getType: function () {
+            var content = this.getContent();
+            return content.getType();
+        },
+
+        /*
+         *  Encrypt the Instant Message to Secure Message
+         *
+         *    +----------+      +----------+
+         *    | sender   |      | sender   |
+         *    | receiver |      | receiver |
+         *    | time     |  ->  | time     |
+         *    |          |      |          |
+         *    | content  |      | data     |  1. data = encrypt(content, PW)
+         *    +----------+      | key/keys |  2. key  = encrypt(PW, receiver.PK)
+         *                      +----------+
+         */
+
+        // Override
+        encrypt: function (password, members) {
+            // 0. check attachment for File/Image/Audio/Video message content
+            //    (do it in 'core' module)
+
+            // 1., 2., 3.
+            if (members && members.length > 0) {
+                // group message
+                return encrypt_group_message.call(this, password, members);
+            } else {
+                // personal message
+                return encrypt_message.call(this, password);
+            }
         }
-        return time;
-    };
-
-    // Override
-    PlainMessage.prototype.getGroup = function () {
-        var content = this.getContent();
-        return content.getGroup();
-    };
-
-    // Override
-    PlainMessage.prototype.getType = function () {
-        var content = this.getContent();
-        return content.getType();
-    };
-
-    /*
-     *  Encrypt the Instant Message to Secure Message
-     *
-     *    +----------+      +----------+
-     *    | sender   |      | sender   |
-     *    | receiver |      | receiver |
-     *    | time     |  ->  | time     |
-     *    |          |      |          |
-     *    | content  |      | data     |  1. data = encrypt(content, PW)
-     *    +----------+      | key/keys |  2. key  = encrypt(PW, receiver.PK)
-     *                      +----------+
-     */
-
-    // Override
-    PlainMessage.prototype.encrypt = function (password, members) {
-        // 0. check attachment for File/Image/Audio/Video message content
-        //    (do it in 'core' module)
-
-        // 1., 2., 3.
-        if (members && members.length > 0) {
-            // group message
-            return encrypt_group_message.call(this, password, members);
-        } else {
-            // personal message
-            return encrypt_message.call(this, password);
-        }
-    };
+    });
 
     var encrypt_message = function (password) {
         var delegate = this.getDelegate();

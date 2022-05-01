@@ -11,6 +11,9 @@ if (typeof DaoKeDao !== "object") {
 }
 (function (ns, base) {
     base.exports(ns);
+    if (typeof ns.assert !== "function") {
+        ns.assert = console.assert;
+    }
     if (typeof ns.protocol !== "object") {
         ns.protocol = new ns.Namespace();
     }
@@ -48,21 +51,21 @@ if (typeof DaoKeDao !== "object") {
     var Content = function () {};
     ns.Interface(Content, [Mapper]);
     Content.prototype.getType = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return 0;
     };
     Content.getType = function (content) {
         return content["type"];
     };
     Content.prototype.getSerialNumber = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return 0;
     };
     Content.getSerialNumber = function (content) {
         return content["sn"];
     };
     Content.prototype.getTime = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Content.getTime = function (content) {
@@ -74,11 +77,11 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     Content.prototype.getGroup = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Content.prototype.setGroup = function (identifier) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
     };
     Content.getGroup = function (content) {
         return ID.parse(content["group"]);
@@ -100,7 +103,7 @@ if (typeof DaoKeDao !== "object") {
     var ContentFactory = function () {};
     ns.Interface(ContentFactory, null);
     ContentFactory.prototype.parseContent = function (content) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Content.Factory = ContentFactory;
@@ -137,21 +140,21 @@ if (typeof DaoKeDao !== "object") {
     var Envelope = function () {};
     ns.Interface(Envelope, [Mapper]);
     Envelope.prototype.getSender = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.getSender = function (env) {
         return ID.parse(env["sender"]);
     };
     Envelope.prototype.getReceiver = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.getReceiver = function (env) {
         return ID.parse(env["receiver"]);
     };
     Envelope.prototype.getTime = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.getTime = function (env) {
@@ -163,11 +166,11 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     Envelope.prototype.getGroup = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.prototype.setGroup = function (identifier) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
     };
     Envelope.getGroup = function (env) {
         return ID.parse(env["group"]);
@@ -180,11 +183,11 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     Envelope.prototype.getType = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.prototype.setType = function (type) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
     };
     Envelope.getType = function (env) {
         var type = env["type"];
@@ -207,11 +210,11 @@ if (typeof DaoKeDao !== "object") {
     var EnvelopeFactory = function () {};
     ns.Interface(EnvelopeFactory, null);
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Envelope.Factory = EnvelopeFactory;
@@ -247,37 +250,37 @@ if (typeof DaoKeDao !== "object") {
     var Message = function () {};
     ns.Interface(Message, [Mapper]);
     Message.prototype.getDelegate = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.prototype.setDelegate = function (delegate) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
     };
     Message.prototype.getEnvelope = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.getEnvelope = function (msg) {
         return Envelope.parse(msg);
     };
     Message.prototype.getSender = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.prototype.getReceiver = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.prototype.getTime = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.prototype.getGroup = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     Message.prototype.getType = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     var MessageDelegate = function () {};
@@ -292,14 +295,14 @@ if (typeof DaoKeDao !== "object") {
     var InstantMessage = function () {};
     ns.Interface(InstantMessage, [Message]);
     InstantMessage.prototype.getContent = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessage.getContent = function (msg) {
         return Content.parse(msg["content"]);
     };
     InstantMessage.prototype.encrypt = function (password, members) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     var InstantMessageDelegate = function () {};
@@ -309,19 +312,19 @@ if (typeof DaoKeDao !== "object") {
         pwd,
         iMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageDelegate.prototype.encryptKey = function (
@@ -329,11 +332,11 @@ if (typeof DaoKeDao !== "object") {
         receiver,
         iMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageDelegate.prototype.encodeKey = function (data, iMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessage.Delegate = InstantMessageDelegate;
@@ -343,15 +346,15 @@ if (typeof DaoKeDao !== "object") {
         msgType,
         now
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return 0;
     };
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     InstantMessage.Factory = InstantMessageFactory;
@@ -390,37 +393,37 @@ if (typeof DaoKeDao !== "object") {
     var SecureMessage = function () {};
     ns.Interface(SecureMessage, [Message]);
     SecureMessage.prototype.getData = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.getEncryptedKey = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.getEncryptedKeys = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.decrypt = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.sign = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.split = function (members) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.prototype.trim = function (member) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     var SecureMessageDelegate = function () {};
     ns.Interface(SecureMessageDelegate, [Message.Delegate]);
     SecureMessageDelegate.prototype.decodeKey = function (key, sMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.decryptKey = function (
@@ -429,7 +432,7 @@ if (typeof DaoKeDao !== "object") {
         receiver,
         sMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.deserializeKey = function (
@@ -438,15 +441,15 @@ if (typeof DaoKeDao !== "object") {
         receiver,
         sMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.decodeData = function (data, sMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.decryptContent = function (data, pwd, sMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.deserializeContent = function (
@@ -454,22 +457,22 @@ if (typeof DaoKeDao !== "object") {
         pwd,
         sMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.signData = function (data, sender, sMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessageDelegate.prototype.encodeSignature = function (signature, sMsg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.Delegate = SecureMessageDelegate;
     var SecureMessageFactory = function () {};
     ns.Interface(SecureMessageFactory, null);
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     SecureMessage.Factory = SecureMessageFactory;
@@ -502,15 +505,15 @@ if (typeof DaoKeDao !== "object") {
     var ReliableMessage = function () {};
     ns.Interface(ReliableMessage, [SecureMessage]);
     ReliableMessage.prototype.getSignature = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.prototype.getMeta = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.prototype.setMeta = function (meta) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.getMeta = function (msg) {
@@ -524,11 +527,11 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     ReliableMessage.prototype.getVisa = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.prototype.setVisa = function (doc) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.getVisa = function (msg) {
@@ -542,7 +545,7 @@ if (typeof DaoKeDao !== "object") {
         }
     };
     ReliableMessage.prototype.verify = function () {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     var ReliableMessageDelegate = function () {};
@@ -551,7 +554,7 @@ if (typeof DaoKeDao !== "object") {
         signature,
         rMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessageDelegate.prototype.verifyDataSignature = function (
@@ -560,14 +563,14 @@ if (typeof DaoKeDao !== "object") {
         sender,
         rMsg
     ) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return false;
     };
     ReliableMessage.Delegate = ReliableMessageDelegate;
     var ReliableMessageFactory = function () {};
     ns.Interface(ReliableMessageFactory, null);
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
-        console.assert(false, "implement me!");
+        ns.assert(false, "implement me!");
         return null;
     };
     ReliableMessage.Factory = ReliableMessageFactory;
@@ -619,24 +622,25 @@ if (typeof DaoKeDao !== "object") {
         this.__sn = sn;
         this.__time = time;
     };
-    ns.Class(BaseContent, Dictionary, [Content]);
-    BaseContent.prototype.getType = function () {
-        return this.__type;
-    };
-    BaseContent.prototype.getSerialNumber = function () {
-        return this.__sn;
-    };
-    BaseContent.prototype.getTime = function () {
-        return this.__time;
-    };
-    BaseContent.prototype.getGroup = function () {
-        var dict = this.toMap();
-        return Content.getGroup(dict);
-    };
-    BaseContent.prototype.setGroup = function (identifier) {
-        var dict = this.toMap();
-        Content.setGroup(identifier, dict);
-    };
+    ns.Class(BaseContent, Dictionary, [Content], {
+        getType: function () {
+            return this.__type;
+        },
+        getSerialNumber: function () {
+            return this.__sn;
+        },
+        getTime: function () {
+            return this.__time;
+        },
+        getGroup: function () {
+            var dict = this.toMap();
+            return Content.getGroup(dict);
+        },
+        setGroup: function (identifier) {
+            var dict = this.toMap();
+            Content.setGroup(identifier, dict);
+        }
+    });
     ns.dkd.BaseContent = BaseContent;
     ns.dkd.registers("BaseContent");
 })(DaoKeDao);
@@ -688,32 +692,33 @@ if (typeof DaoKeDao !== "object") {
         this.__receiver = to;
         this.__time = when;
     };
-    ns.Class(MessageEnvelope, Dictionary, [Envelope]);
-    MessageEnvelope.prototype.getSender = function () {
-        return this.__sender;
-    };
-    MessageEnvelope.prototype.getReceiver = function () {
-        return this.__receiver;
-    };
-    MessageEnvelope.prototype.getTime = function () {
-        return this.__time;
-    };
-    MessageEnvelope.prototype.getGroup = function () {
-        var dict = this.toMap();
-        return Envelope.getGroup(dict);
-    };
-    MessageEnvelope.prototype.setGroup = function (identifier) {
-        var dict = this.toMap();
-        Envelope.setGroup(identifier, dict);
-    };
-    MessageEnvelope.prototype.getType = function () {
-        var dict = this.toMap();
-        return Envelope.getType(dict);
-    };
-    MessageEnvelope.prototype.setType = function (type) {
-        var dict = this.toMap();
-        Envelope.setType(type, dict);
-    };
+    ns.Class(MessageEnvelope, Dictionary, [Envelope], {
+        getSender: function () {
+            return this.__sender;
+        },
+        getReceiver: function () {
+            return this.__receiver;
+        },
+        getTime: function () {
+            return this.__time;
+        },
+        getGroup: function () {
+            var dict = this.toMap();
+            return Envelope.getGroup(dict);
+        },
+        setGroup: function (identifier) {
+            var dict = this.toMap();
+            Envelope.setGroup(identifier, dict);
+        },
+        getType: function () {
+            var dict = this.toMap();
+            return Envelope.getType(dict);
+        },
+        setType: function (type) {
+            var dict = this.toMap();
+            Envelope.setType(type, dict);
+        }
+    });
     ns.dkd.MessageEnvelope = MessageEnvelope;
     ns.dkd.registers("MessageEnvelope");
 })(DaoKeDao);
@@ -733,7 +738,7 @@ if (typeof DaoKeDao !== "object") {
         this.__envelope = env;
         this.__delegate = null;
     };
-    ns.Class(BaseMessage, Dictionary, [Message]);
+    ns.Class(BaseMessage, Dictionary, [Message], null);
     BaseMessage.prototype.getDelegate = function () {
         return this.__delegate;
     };
@@ -791,34 +796,35 @@ if (typeof DaoKeDao !== "object") {
         this.__envelope = head;
         this.__content = body;
     };
-    ns.Class(PlainMessage, BaseMessage, [InstantMessage]);
-    PlainMessage.prototype.getContent = function () {
-        return this.__content;
-    };
-    PlainMessage.prototype.getTime = function () {
-        var content = this.getContent();
-        var time = content.getTime();
-        if (!time) {
-            var env = this.getEnvelope();
-            time = env.getTime();
+    ns.Class(PlainMessage, BaseMessage, [InstantMessage], {
+        getContent: function () {
+            return this.__content;
+        },
+        getTime: function () {
+            var content = this.getContent();
+            var time = content.getTime();
+            if (!time) {
+                var env = this.getEnvelope();
+                time = env.getTime();
+            }
+            return time;
+        },
+        getGroup: function () {
+            var content = this.getContent();
+            return content.getGroup();
+        },
+        getType: function () {
+            var content = this.getContent();
+            return content.getType();
+        },
+        encrypt: function (password, members) {
+            if (members && members.length > 0) {
+                return encrypt_group_message.call(this, password, members);
+            } else {
+                return encrypt_message.call(this, password);
+            }
         }
-        return time;
-    };
-    PlainMessage.prototype.getGroup = function () {
-        var content = this.getContent();
-        return content.getGroup();
-    };
-    PlainMessage.prototype.getType = function () {
-        var content = this.getContent();
-        return content.getType();
-    };
-    PlainMessage.prototype.encrypt = function (password, members) {
-        if (members && members.length > 0) {
-            return encrypt_group_message.call(this, password, members);
-        } else {
-            return encrypt_message.call(this, password);
-        }
-    };
+    });
     var encrypt_message = function (password) {
         var delegate = this.getDelegate();
         var msg = prepare_data.call(this, password);
@@ -883,134 +889,135 @@ if (typeof DaoKeDao !== "object") {
         this.__key = null;
         this.__keys = null;
     };
-    ns.Class(EncryptedMessage, BaseMessage, [SecureMessage]);
-    EncryptedMessage.prototype.getData = function () {
-        if (!this.__data) {
-            var base64 = this.getValue("data");
-            var delegate = this.getDelegate();
-            this.__data = delegate.decodeData(base64, this);
-        }
-        return this.__data;
-    };
-    EncryptedMessage.prototype.getEncryptedKey = function () {
-        if (!this.__key) {
-            var base64 = this.getValue("key");
-            if (!base64) {
-                var keys = this.getEncryptedKeys();
-                if (keys) {
-                    var receiver = this.getReceiver();
-                    base64 = keys[receiver.toString()];
+    ns.Class(EncryptedMessage, BaseMessage, [SecureMessage], {
+        getData: function () {
+            if (!this.__data) {
+                var base64 = this.getValue("data");
+                var delegate = this.getDelegate();
+                this.__data = delegate.decodeData(base64, this);
+            }
+            return this.__data;
+        },
+        getEncryptedKey: function () {
+            if (!this.__key) {
+                var base64 = this.getValue("key");
+                if (!base64) {
+                    var keys = this.getEncryptedKeys();
+                    if (keys) {
+                        var receiver = this.getReceiver();
+                        base64 = keys[receiver.toString()];
+                    }
+                }
+                if (base64) {
+                    var delegate = this.getDelegate();
+                    this.__key = delegate.decodeKey(base64, this);
                 }
             }
-            if (base64) {
-                var delegate = this.getDelegate();
-                this.__key = delegate.decodeKey(base64, this);
+            return this.__key;
+        },
+        getEncryptedKeys: function () {
+            if (!this.__keys) {
+                this.__keys = this.getValue("keys");
             }
-        }
-        return this.__key;
-    };
-    EncryptedMessage.prototype.getEncryptedKeys = function () {
-        if (!this.__keys) {
-            this.__keys = this.getValue("keys");
-        }
-        return this.__keys;
-    };
-    EncryptedMessage.prototype.decrypt = function () {
-        var sender = this.getSender();
-        var receiver;
-        var group = this.getGroup();
-        if (group) {
-            receiver = group;
-        } else {
-            receiver = this.getReceiver();
-        }
-        var delegate = this.getDelegate();
-        var key = this.getEncryptedKey();
-        if (key) {
-            key = delegate.decryptKey(key, sender, receiver, this);
-            if (!key) {
-                throw new Error("failed to decrypt key in msg: " + this);
-            }
-        }
-        var password = delegate.deserializeKey(key, sender, receiver, this);
-        if (!password) {
-            throw new Error(
-                "failed to get msg key: " + sender + " -> " + receiver + ", " + key
-            );
-        }
-        var data = this.getData();
-        if (!data) {
-            throw new Error("failed to decode content data: " + this);
-        }
-        data = delegate.decryptContent(data, password, this);
-        if (!data) {
-            throw new Error("failed to decrypt data with key: " + password);
-        }
-        var content = delegate.deserializeContent(data, password, this);
-        if (!content) {
-            throw new Error("failed to deserialize content: " + data);
-        }
-        var msg = this.copyMap(false);
-        delete msg["key"];
-        delete msg["keys"];
-        delete msg["data"];
-        msg["content"] = content.toMap();
-        return InstantMessage.parse(msg);
-    };
-    EncryptedMessage.prototype.sign = function () {
-        var delegate = this.getDelegate();
-        var signature = delegate.signData(this.getData(), this.getSender(), this);
-        var base64 = delegate.encodeSignature(signature, this);
-        var msg = this.copyMap(false);
-        msg["signature"] = base64;
-        return ReliableMessage.parse(msg);
-    };
-    EncryptedMessage.prototype.split = function (members) {
-        var msg = this.copyMap(false);
-        var keys = this.getEncryptedKeys();
-        if (keys) {
-            delete msg["keys"];
-        } else {
-            keys = {};
-        }
-        msg["group"] = this.getReceiver().toString();
-        var messages = [];
-        var base64;
-        var item;
-        var receiver;
-        for (var i = 0; i < members.length; ++i) {
-            receiver = members[i].toString();
-            msg["receiver"] = receiver;
-            base64 = keys[receiver];
-            if (base64) {
-                msg["key"] = base64;
+            return this.__keys;
+        },
+        decrypt: function () {
+            var sender = this.getSender();
+            var receiver;
+            var group = this.getGroup();
+            if (group) {
+                receiver = group;
             } else {
-                delete msg["key"];
+                receiver = this.getReceiver();
             }
-            item = SecureMessage.parse(Copier.copyMap(msg));
-            if (item) {
-                messages.push(item);
+            var delegate = this.getDelegate();
+            var key = this.getEncryptedKey();
+            if (key) {
+                key = delegate.decryptKey(key, sender, receiver, this);
+                if (!key) {
+                    throw new Error("failed to decrypt key in msg: " + this);
+                }
             }
-        }
-        return messages;
-    };
-    EncryptedMessage.prototype.trim = function (member) {
-        var msg = this.copyMap(false);
-        var keys = this.getEncryptedKeys();
-        if (keys) {
-            var base64 = keys[member.toString()];
-            if (base64) {
-                msg["key"] = base64;
+            var password = delegate.deserializeKey(key, sender, receiver, this);
+            if (!password) {
+                throw new Error(
+                    "failed to get msg key: " + sender + " -> " + receiver + ", " + key
+                );
             }
+            var data = this.getData();
+            if (!data) {
+                throw new Error("failed to decode content data: " + this);
+            }
+            data = delegate.decryptContent(data, password, this);
+            if (!data) {
+                throw new Error("failed to decrypt data with key: " + password);
+            }
+            var content = delegate.deserializeContent(data, password, this);
+            if (!content) {
+                throw new Error("failed to deserialize content: " + data);
+            }
+            var msg = this.copyMap(false);
+            delete msg["key"];
             delete msg["keys"];
-        }
-        var group = this.getGroup();
-        if (!group) {
+            delete msg["data"];
+            msg["content"] = content.toMap();
+            return InstantMessage.parse(msg);
+        },
+        sign: function () {
+            var delegate = this.getDelegate();
+            var signature = delegate.signData(this.getData(), this.getSender(), this);
+            var base64 = delegate.encodeSignature(signature, this);
+            var msg = this.copyMap(false);
+            msg["signature"] = base64;
+            return ReliableMessage.parse(msg);
+        },
+        split: function (members) {
+            var msg = this.copyMap(false);
+            var keys = this.getEncryptedKeys();
+            if (keys) {
+                delete msg["keys"];
+            } else {
+                keys = {};
+            }
             msg["group"] = this.getReceiver().toString();
+            var messages = [];
+            var base64;
+            var item;
+            var receiver;
+            for (var i = 0; i < members.length; ++i) {
+                receiver = members[i].toString();
+                msg["receiver"] = receiver;
+                base64 = keys[receiver];
+                if (base64) {
+                    msg["key"] = base64;
+                } else {
+                    delete msg["key"];
+                }
+                item = SecureMessage.parse(Copier.copyMap(msg));
+                if (item) {
+                    messages.push(item);
+                }
+            }
+            return messages;
+        },
+        trim: function (member) {
+            var msg = this.copyMap(false);
+            var keys = this.getEncryptedKeys();
+            if (keys) {
+                var base64 = keys[member.toString()];
+                if (base64) {
+                    msg["key"] = base64;
+                }
+                delete msg["keys"];
+            }
+            var group = this.getGroup();
+            if (!group) {
+                msg["group"] = this.getReceiver().toString();
+            }
+            msg["receiver"] = member.toString();
+            return SecureMessage.parse(msg);
         }
-        msg["receiver"] = member.toString();
-        return SecureMessage.parse(msg);
-    };
+    });
     ns.dkd.EncryptedMessage = EncryptedMessage;
     ns.dkd.registers("EncryptedMessage");
 })(DaoKeDao);
@@ -1024,57 +1031,60 @@ if (typeof DaoKeDao !== "object") {
         this.__meta = null;
         this.__visa = null;
     };
-    ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage]);
-    NetworkMessage.prototype.getSignature = function () {
-        if (!this.__signature) {
-            var base64 = this.getValue("signature");
+    ns.Class(NetworkMessage, EncryptedMessage, [ReliableMessage], {
+        getSignature: function () {
+            if (!this.__signature) {
+                var base64 = this.getValue("signature");
+                var delegate = this.getDelegate();
+                this.__signature = delegate.decodeSignature(base64, this);
+            }
+            return this.__signature;
+        },
+        setMeta: function (meta) {
+            var dict = this.toMap();
+            ReliableMessage.setMeta(meta, dict);
+            this.__meta = meta;
+        },
+        getMeta: function () {
+            if (!this.__meta) {
+                var dict = this.toMap();
+                this.__meta = ReliableMessage.getMeta(dict);
+            }
+            return this.__meta;
+        },
+        setVisa: function (visa) {
+            var dict = this.toMap();
+            ReliableMessage.setVisa(visa, dict);
+            this.__visa = visa;
+        },
+        getVisa: function () {
+            if (!this.__visa) {
+                var dict = this.toMap();
+                this.__visa = ReliableMessage.getVisa(dict);
+            }
+            return this.__visa;
+        },
+        verify: function () {
+            var data = this.getData();
+            if (!data) {
+                throw new Error("failed to decode content data: " + this);
+            }
+            var signature = this.getSignature();
+            if (!signature) {
+                throw new Error("failed to decode message signature: " + this);
+            }
             var delegate = this.getDelegate();
-            this.__signature = delegate.decodeSignature(base64, this);
+            if (
+                delegate.verifyDataSignature(data, signature, this.getSender(), this)
+            ) {
+                var msg = this.copyMap(false);
+                delete msg["signature"];
+                return SecureMessage.parse(msg);
+            } else {
+                return null;
+            }
         }
-        return this.__signature;
-    };
-    NetworkMessage.prototype.setMeta = function (meta) {
-        var dict = this.toMap();
-        ReliableMessage.setMeta(meta, dict);
-        this.__meta = meta;
-    };
-    NetworkMessage.prototype.getMeta = function () {
-        if (!this.__meta) {
-            var dict = this.toMap();
-            this.__meta = ReliableMessage.getMeta(dict);
-        }
-        return this.__meta;
-    };
-    NetworkMessage.prototype.setVisa = function (visa) {
-        var dict = this.toMap();
-        ReliableMessage.setVisa(visa, dict);
-        this.__visa = visa;
-    };
-    NetworkMessage.prototype.getVisa = function () {
-        if (!this.__visa) {
-            var dict = this.toMap();
-            this.__visa = ReliableMessage.getVisa(dict);
-        }
-        return this.__visa;
-    };
-    NetworkMessage.prototype.verify = function () {
-        var data = this.getData();
-        if (!data) {
-            throw new Error("failed to decode content data: " + this);
-        }
-        var signature = this.getSignature();
-        if (!signature) {
-            throw new Error("failed to decode message signature: " + this);
-        }
-        var delegate = this.getDelegate();
-        if (delegate.verifyDataSignature(data, signature, this.getSender(), this)) {
-            var msg = this.copyMap(false);
-            delete msg["signature"];
-            return SecureMessage.parse(msg);
-        } else {
-            return null;
-        }
-    };
+    });
     ns.dkd.NetworkMessage = NetworkMessage;
     ns.dkd.registers("NetworkMessage");
 })(DaoKeDao);
@@ -1084,7 +1094,7 @@ if (typeof DaoKeDao !== "object") {
     var EnvelopeFactory = function () {
         Object.call(this);
     };
-    ns.Class(EnvelopeFactory, Object, [Envelope.Factory]);
+    ns.Class(EnvelopeFactory, Object, [Envelope.Factory], null);
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
         if (!when) {
             when = new Date();
@@ -1107,7 +1117,7 @@ if (typeof DaoKeDao !== "object") {
     var InstantMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory]);
+    ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory], null);
     var MAX_LONG = 4294967295;
     InstantMessageFactory.prototype.generateSerialNumber = function (
         msgType,
@@ -1140,7 +1150,7 @@ if (typeof DaoKeDao !== "object") {
     var SecureMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory]);
+    ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory], null);
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
         if (msg["signature"]) {
             return new NetworkMessage(msg);
@@ -1157,7 +1167,7 @@ if (typeof DaoKeDao !== "object") {
     var ReliableMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory]);
+    ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory], null);
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
         if (!msg["sender"] || !msg["data"] || !msg["signature"]) {
             return null;

@@ -43,6 +43,10 @@ if (typeof DaoKeDao !== 'object') {
     // exports namespace from MingKeMing
     base.exports(ns);
 
+    if (typeof ns.assert !== 'function') {
+        ns.assert = console.assert;
+    }
+
     //-------- namespace --------
     if (typeof ns.protocol !== 'object') {
         ns.protocol = new ns.Namespace();

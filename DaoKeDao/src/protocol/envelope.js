@@ -62,7 +62,7 @@
      * @return {ID}
      */
     Envelope.prototype.getSender = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Envelope.getSender = function (env) {
@@ -75,7 +75,7 @@
      * @return {ID}
      */
     Envelope.prototype.getReceiver = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Envelope.getReceiver = function (env) {
@@ -88,7 +88,7 @@
      * @return {Date}
      */
     Envelope.prototype.getTime = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Envelope.getTime = function (env) {
@@ -108,11 +108,11 @@
      *  the group ID will be saved as 'group'.
      */
     Envelope.prototype.getGroup = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Envelope.prototype.setGroup = function (identifier) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
     };
     Envelope.getGroup = function (env) {
         return ID.parse(env['group']);
@@ -134,11 +134,11 @@
      *  to let the station do its job.
      */
     Envelope.prototype.getType = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Envelope.prototype.setType = function (type) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
     };
     Envelope.getType = function (env) {
         var type = env['type'];
@@ -166,15 +166,13 @@
     var EnvelopeFactory = function () {};
     ns.Interface(EnvelopeFactory, null);
 
-    // noinspection JSUnusedLocalSymbols
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
-    // noinspection JSUnusedLocalSymbols
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

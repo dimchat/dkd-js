@@ -80,16 +80,16 @@
 
     // message delegate
     Message.prototype.getDelegate = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Message.prototype.setDelegate = function (delegate) {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
     };
 
     // message envelope
     Message.prototype.getEnvelope = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Message.getEnvelope = function (msg) {
@@ -99,24 +99,24 @@
     //--------
 
     Message.prototype.getSender = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Message.prototype.getReceiver = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Message.prototype.getTime = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 
     Message.prototype.getGroup = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
     Message.prototype.getType = function () {
-        console.assert(false, 'implement me!');
+        ns.assert(false, 'implement me!');
         return null;
     };
 

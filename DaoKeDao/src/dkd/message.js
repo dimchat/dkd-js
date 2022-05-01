@@ -98,7 +98,7 @@
         // delegate to transform messages
         this.__delegate = null;
     };
-    ns.Class(BaseMessage, Dictionary, [Message]);
+    ns.Class(BaseMessage, Dictionary, [Message], null);
 
     // Override
     BaseMessage.prototype.getDelegate = function () {

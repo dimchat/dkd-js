@@ -44,7 +44,7 @@
     var EnvelopeFactory = function () {
         Object.call(this);
     };
-    ns.Class(EnvelopeFactory, Object, [Envelope.Factory]);
+    ns.Class(EnvelopeFactory, Object, [Envelope.Factory], null);
 
     // Override
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
@@ -81,7 +81,7 @@
     var InstantMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory]);
+    ns.Class(InstantMessageFactory, Object, [InstantMessage.Factory], null);
 
     var MAX_LONG = 0xFFFFFFFF;
     // Override
@@ -128,7 +128,7 @@
     var SecureMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory]);
+    ns.Class(SecureMessageFactory, Object, [SecureMessage.Factory], null);
 
     // Override
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
@@ -156,7 +156,7 @@
     var ReliableMessageFactory = function () {
         Object.call(this);
     };
-    ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory]);
+    ns.Class(ReliableMessageFactory, Object, [ReliableMessage.Factory], null);
 
     // Override
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
