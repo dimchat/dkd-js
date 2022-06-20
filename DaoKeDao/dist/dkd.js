@@ -2,7 +2,7 @@
  * DaoKeDao - Message Module (v0.2.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Apr. 19, 2022
+ * @date      Jun. 20, 2022
  * @copyright (c) 2022 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */;
@@ -39,6 +39,8 @@ if (typeof DaoKeDao !== "object") {
         SPLIT_BILL: 73,
         COMMAND: 136,
         HISTORY: 137,
+        APPLICATION: 160,
+        CUSTOMIZED: 204,
         FORWARD: 255
     });
     ns.protocol.ContentType = ContentType;
