@@ -54,10 +54,15 @@
 (function (ns) {
     'use strict';
 
+    var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
 
-    var SecureMessage = function () {};
-    ns.Interface(SecureMessage, [Message]);
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
+
+    var SecureMessage = Interface(null, [Message]);
 
     /**
      *  Get encrypted content data
@@ -65,8 +70,7 @@
      * @return {Uint8Array}
      */
     SecureMessage.prototype.getData = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -75,12 +79,10 @@
      * @return {Uint8Array}
      */
     SecureMessage.prototype.getEncryptedKey = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     SecureMessage.prototype.getEncryptedKeys = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -102,8 +104,7 @@
      * @return {InstantMessage}
      */
     SecureMessage.prototype.decrypt = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -126,8 +127,7 @@
      * @return {ReliableMessage}
      */
     SecureMessage.prototype.sign = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -143,8 +143,7 @@
      *  @return {SecureMessage[]}secure/reliable message(s)
      */
     SecureMessage.prototype.split = function (members) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -154,16 +153,14 @@
      * @return {SecureMessage}
      */
     SecureMessage.prototype.trim = function (member) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var SecureMessageDelegate = function () {};
-    ns.Interface(SecureMessageDelegate, [Message.Delegate]);
+    var SecureMessageDelegate = Interface(null, [Message.Delegate]);
 
     //
     //  Decrypt Key
@@ -177,8 +174,7 @@
      * @returns {Uint8Array} encrypted symmetric key data
      */
     SecureMessageDelegate.prototype.decodeKey = function (key, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -191,8 +187,7 @@
      * @returns {Uint8Array} serialized symmetric key
      */
     SecureMessageDelegate.prototype.decryptKey = function (data, sender, receiver, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -205,8 +200,7 @@
      * @returns {SymmetricKey} symmetric key
      */
     SecureMessageDelegate.prototype.deserializeKey = function (data, sender, receiver, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     //
@@ -221,8 +215,7 @@
      * @returns {Uint8Array} encrypt content data
      */
     SecureMessageDelegate.prototype.decodeData = function (data, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -234,8 +227,7 @@
      * @returns {Uint8Array} serialized message content
      */
     SecureMessageDelegate.prototype.decryptContent = function (data, pwd, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -247,8 +239,7 @@
      * @returns {Content} message content
      */
     SecureMessageDelegate.prototype.deserializeContent = function (data, pwd, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     //
@@ -264,8 +255,7 @@
      * @returns {Uint8Array} signature of encrypted message data
      */
     SecureMessageDelegate.prototype.signData = function (data, sender, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -276,8 +266,7 @@
      * @returns {String} Base64 string
      */
     SecureMessageDelegate.prototype.encodeSignature = function (signature, sMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     SecureMessage.Delegate = SecureMessageDelegate;
@@ -286,26 +275,21 @@
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var SecureMessageFactory = function () {};
-    ns.Interface(SecureMessageFactory, null);
+    var SecureMessageFactory = Interface(null, null);
 
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     SecureMessage.Factory = SecureMessageFactory;
 
-    //
-    //  Instance of SecureMessageFactory
-    //
-    var s_secure_factory = null;
-
     SecureMessage.getFactory = function () {
-        return s_secure_factory;
+        var gf = general_factory();
+        return gf.getSecureMessageFactory();
     };
     SecureMessage.setFactory = function (factory) {
-        s_secure_factory = factory;
+        var gf = general_factory();
+        gf.setSecureMessageFactory(factory);
     };
 
     /**
@@ -315,19 +299,11 @@
      * @return {SecureMessage}
      */
     SecureMessage.parse = function (msg) {
-        if (!msg) {
-            return null;
-        } else if (ns.Interface.conforms(msg, SecureMessage)) {
-            return msg;
-        }
-        msg = ns.type.Wrapper.fetchMap(msg);
-        var factory = SecureMessage.getFactory();
-        return factory.parseSecureMessage(msg);
+        var gf = general_factory();
+        return gf.parseSecureMessage(msg);
     };
 
     //-------- namespace --------
     ns.protocol.SecureMessage = SecureMessage;
-
-    ns.protocol.registers('SecureMessage');
 
 })(DaoKeDao);

@@ -43,18 +43,20 @@
  *  }
  */
 
-//! require <mkm.js>
 //! require 'types.js'
 
 (function (ns) {
     'use strict';
 
-    var Mapper = ns.type.Mapper;
-    var ID = ns.protocol.ID;
-    var ContentType = ns.protocol.ContentType;
+    var Interface = ns.type.Interface;
+    var Mapper    = ns.type.Mapper;
 
-    var Envelope = function () {};
-    ns.Interface(Envelope, [Mapper]);
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
+
+    var Envelope = Interface(null, [Mapper]);
 
     /**
      *  message from
@@ -62,11 +64,7 @@
      * @return {ID}
      */
     Envelope.prototype.getSender = function () {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    Envelope.getSender = function (env) {
-        return ID.parse(env['sender']);
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -75,11 +73,7 @@
      * @return {ID}
      */
     Envelope.prototype.getReceiver = function () {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    Envelope.getReceiver = function (env) {
-        return ID.parse(env['receiver']);
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -88,16 +82,7 @@
      * @return {Date}
      */
     Envelope.prototype.getTime = function () {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    Envelope.getTime = function (env) {
-        var timestamp = env['time'];
-        if (timestamp) {
-            return new Date(timestamp * 1000);
-        } else {
-            return null;
-        }
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -108,21 +93,10 @@
      *  the group ID will be saved as 'group'.
      */
     Envelope.prototype.getGroup = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Envelope.prototype.setGroup = function (identifier) {
-        ns.assert(false, 'implement me!');
-    };
-    Envelope.getGroup = function (env) {
-        return ID.parse(env['group']);
-    };
-    Envelope.setGroup = function (group, env) {
-        if (group) {
-            env['group'] = group.toString();
-        } else {
-            delete env['group'];
-        }
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -134,60 +108,35 @@
      *  to let the station do its job.
      */
     Envelope.prototype.getType = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Envelope.prototype.setType = function (type) {
-        ns.assert(false, 'implement me!');
-    };
-    Envelope.getType = function (env) {
-        var type = env['type'];
-        if (type) {
-            return type;
-        } else {
-            return 0;
-        }
-    };
-    Envelope.setType = function (type, env) {
-        if (type) {
-            if (type instanceof ContentType) {
-                type = type.valueOf();
-            }
-            env['type'] = type;
-        } else {
-            delete env['type'];
-        }
+        throw new Error('NotImplemented');
     };
 
     /**
      *  Envelope Factory
      *  ~~~~~~~~~~~~~~~~
      */
-    var EnvelopeFactory = function () {};
-    ns.Interface(EnvelopeFactory, null);
+    var EnvelopeFactory = Interface(null, null);
 
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     Envelope.Factory = EnvelopeFactory;
 
-    //
-    //  Instance of EnvelopeFactory
-    //
-    var s_envelope_factory = null;
-
     Envelope.getFactory = function () {
-        return s_envelope_factory;
+        var gf = general_factory();
+        return gf.getEnvelopeFactory();
     }
     Envelope.setFactory = function (factory) {
-        s_envelope_factory = factory;
+        var gf = general_factory();
+        gf.setEnvelopeFactory(factory);
     };
 
     /**
@@ -199,8 +148,8 @@
      * @return {Envelope}
      */
     Envelope.create = function (from, to, when) {
-        var factory = Envelope.getFactory();
-        return factory.createEnvelope(from, to, when);
+        var gf = general_factory();
+        return gf.createEnvelope(from, to, when);
     };
 
     /**
@@ -210,19 +159,11 @@
      * @return {Envelope}
      */
     Envelope.parse = function (env) {
-        if (!env) {
-            return null;
-        } else if (ns.Interface.conforms(env, Envelope)) {
-            return env;
-        }
-        env = ns.type.Wrapper.fetchMap(env);
-        var factory = Envelope.getFactory();
-        return factory.parseEnvelope(env);
+        var gf = general_factory();
+        return gf.parseEnvelope(env);
     };
 
     //-------- namespace --------
     ns.protocol.Envelope = Envelope;
-
-    ns.protocol.registers('Envelope');
 
 })(DaoKeDao);

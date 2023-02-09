@@ -72,66 +72,52 @@
 (function (ns) {
     'use strict';
 
-    var Mapper = ns.type.Mapper;
-    var Envelope = ns.protocol.Envelope;
+    var Interface = ns.type.Interface;
+    var Mapper    = ns.type.Mapper;
 
-    var Message = function () {};
-    ns.Interface(Message, [Mapper]);
+    var Message = Interface(null, [Mapper]);
 
     // message delegate
     Message.prototype.getDelegate = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Message.prototype.setDelegate = function (delegate) {
-        ns.assert(false, 'implement me!');
+        throw new Error('NotImplemented');
     };
 
     // message envelope
     Message.prototype.getEnvelope = function () {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    Message.getEnvelope = function (msg) {
-        return Envelope.parse(msg);
+        throw new Error('NotImplemented');
     };
 
     //--------
 
     Message.prototype.getSender = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Message.prototype.getReceiver = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Message.prototype.getTime = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     Message.prototype.getGroup = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     Message.prototype.getType = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var MessageDelegate = function () {};
-    ns.Interface(MessageDelegate, null);
+    var MessageDelegate = Interface(null, null);
 
     Message.Delegate = MessageDelegate;
 
     //-------- namespace --------
     ns.protocol.Message = Message;
-
-    ns.protocol.registers('Message');
 
 })(DaoKeDao);

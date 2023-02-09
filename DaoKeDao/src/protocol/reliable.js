@@ -52,22 +52,23 @@
  *  }
  */
 
-//! require <mkm.js>
 //! require 'secure.js'
 
 (function (ns) {
     'use strict';
 
-    var Meta = ns.protocol.Meta;
-    var Document = ns.protocol.Document;
+    var Interface = ns.type.Interface;
     var SecureMessage = ns.protocol.SecureMessage;
 
-    var ReliableMessage = function () {};
-    ns.Interface(ReliableMessage, [SecureMessage]);
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
+
+    var ReliableMessage = Interface(null, [SecureMessage]);
 
     ReliableMessage.prototype.getSignature = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -78,23 +79,11 @@
      * @return {Meta}
      */
     ReliableMessage.prototype.getMeta = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     ReliableMessage.prototype.setMeta = function (meta) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
-    ReliableMessage.getMeta = function (msg) {
-        return Meta.parse(msg['meta']);
-    }
-    ReliableMessage.setMeta = function (meta, msg) {
-        if (meta) {
-            msg['meta'] = meta.toMap();
-        } else {
-            delete msg['meta'];
-        }
-    }
 
     /**
      *  Sender's Visa
@@ -104,22 +93,10 @@
      * @return {Visa}
      */
     ReliableMessage.prototype.getVisa = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
     ReliableMessage.prototype.setVisa = function (doc) {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    ReliableMessage.getVisa = function (msg) {
-        return Document.parse(msg['visa']);
-    };
-    ReliableMessage.setVisa = function (doc, msg) {
-        if (doc) {
-            msg['visa'] = doc.toMap();
-        } else {
-            delete msg['visa'];
-        }
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -142,16 +119,14 @@
      * @return {SecureMessage}
      */
     ReliableMessage.prototype.verify = function () {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var ReliableMessageDelegate = function () {};
-    ns.Interface(ReliableMessageDelegate, [SecureMessage.Delegate]);
+    var ReliableMessageDelegate = Interface(null, [SecureMessage.Delegate]);
 
     /**
      *  1. Decode 'message.signature' from String (Base64)
@@ -161,8 +136,7 @@
      * @returns {Uint8Array} signature
      */
     ReliableMessageDelegate.prototype.decodeSignature = function (signature, rMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -175,8 +149,7 @@
      * @returns {boolean} true on signature matched
      */
     ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, sender, rMsg) {
-        ns.assert(false, 'implement me!');
-        return false;
+        throw new Error('NotImplemented');
     };
 
     ReliableMessage.Delegate = ReliableMessageDelegate;
@@ -185,26 +158,21 @@
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var ReliableMessageFactory = function () {};
-    ns.Interface(ReliableMessageFactory, null);
+    var ReliableMessageFactory = Interface(null, null);
 
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     ReliableMessage.Factory = ReliableMessageFactory;
 
-    //
-    //  Instance of ReliableMessageFactory
-    //
-    var s_reliable_factory = null;
-
     ReliableMessage.getFactory = function () {
-        return s_reliable_factory;
+        var gf = general_factory();
+        return gf.getReliableMessageFactory();
     };
     ReliableMessage.setFactory = function (factory) {
-        s_reliable_factory = factory;
+        var gf = general_factory();
+        gf.setReliableMessageFactory(factory);
     };
 
     /**
@@ -214,19 +182,11 @@
      * @return {ReliableMessage}
      */
     ReliableMessage.parse = function (msg) {
-        if (!msg) {
-            return null;
-        } else if (ns.Interface.conforms(msg, ReliableMessage)) {
-            return msg;
-        }
-        msg = ns.type.Wrapper.fetchMap(msg);
-        var factory = ReliableMessage.getFactory();
-        return factory.parseReliableMessage(msg);
+        var gf = general_factory();
+        return gf.parseReliableMessage(msg);
     };
 
     //-------- namespace --------
     ns.protocol.ReliableMessage = ReliableMessage;
-
-    ns.protocol.registers('ReliableMessage');
 
 })(DaoKeDao);

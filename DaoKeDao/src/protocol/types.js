@@ -30,7 +30,42 @@
 // =============================================================================
 //
 
-//! require 'namespace.js'
+//! require <crypto.js>
+//! require <mkm.js>
+
+if (typeof DaoKeDao !== 'object') {
+    DaoKeDao = {};
+}
+
+(function (ns) {
+    'use strict';
+
+    //-------- namespaces --------
+    if (typeof ns.type !== 'object') {
+        ns.type = MONKEY.type;
+    }
+    if (typeof ns.format !== 'object') {
+        ns.format = MONKEY.format;
+    }
+    if (typeof ns.digest !== 'object') {
+        ns.digest = MONKEY.digest;
+    }
+    if (typeof ns.crypto !== 'object') {
+        ns.crypto = MONKEY.crypto;
+    }
+
+    if (typeof ns.protocol !== 'object') {
+        ns.protocol = MingKeMing.protocol;
+    }
+    if (typeof ns.mkm !== 'object') {
+        ns.mkm = MingKeMing.mkm;
+    }
+
+    if (typeof ns.dkd !== 'object') {
+        ns.dkd = {};
+    }
+
+})(DaoKeDao);
 
 (function (ns) {
     'use strict';
@@ -91,34 +126,41 @@
         AUDIO:      (0x14), // 0001 0100
         VIDEO:      (0x16), // 0001 0110
 
-        // web page
+        // Web Page
         PAGE:       (0x20), // 0010 0000
 
-        // quote a message before and reply it with text
+        // Quote a message before and reply it with text
         QUOTE:      (0x37), // 0011 0111
 
         MONEY:         (0x40), // 0100 0000
         TRANSFER:      (0x41), // 0100 0001
         LUCKY_MONEY:   (0x42), // 0100 0010
-        CLAIM_PAYMENT: (0x48), // 0100 1000 (Claim for payment)
-        SPLIT_BILL:    (0x49), // 0100 1001 (Split the bill)
+        CLAIM_PAYMENT: (0x48), // 0100 1000 (Claim for Payment)
+        SPLIT_BILL:    (0x49), // 0100 1001 (Split the Bill)
 
         COMMAND:    (0x88), // 1000 1000
-        HISTORY:    (0x89), // 1000 1001 (Entity history command)
+        HISTORY:    (0x89), // 1000 1001 (Entity History Command)
 
-        // application customized
-        APPLICATION:   (0xA0), // 1010 0000 (Application 0nly, reserved)
-        //APPLICATION:   (0xAC), // 1010 0000 (Application Customized, reserved)
-        //CUSTOMIZED:    (0xC0), // 1100 1100 (Customized Content, reserved)
-        CUSTOMIZED:    (0xCC), // 1100 1100 (Customized Content)
+        // Application Customized
+        APPLICATION:      (0xA0), // 1010 0000 (Application 0nly, Reserved)
+        //APPLICATION_1:  (0xA1), // 1010 0001 (Reserved)
+                                  // 1010 ???? (Reserved)
+        //APPLICATION_15: (0xAF), // 1010 1111 (Reserved)
 
-        // top-secret message forward by proxy (MTA)
+        //CUSTOMIZED_0:   (0xC0), // 1100 0000 (Reserved)
+        //CUSTOMIZED_1:   (0xC1), // 1100 0001 (Reserved)
+                                  // 1100 ???? (Reserved)
+        ARRAY:            (0xCA), // 1100 1010 (Content Array)
+                                  // 1100 ???? (Reserved)
+        CUSTOMIZED:       (0xCC), // 1100 1100 (Customized Content)
+                                  // 1100 ???? (Reserved)
+        //CUSTOMIZED_15:  (0xCF), // 1100 1111 (Reserved)
+
+        // Top-Secret message forward by proxy (MTA)
         FORWARD:    (0xFF)  // 1111 1111
     });
 
     //-------- namespace --------
     ns.protocol.ContentType = ContentType;
-
-    ns.protocol.registers('ContentType');
 
 })(DaoKeDao);

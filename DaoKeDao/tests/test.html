@@ -16,8 +16,6 @@
     <script>
         !function (ns) {
             var sources = [
-                'src/namespace.js',
-
                 'src/protocol/types.js',
                 'src/protocol/content.js',
                 'src/protocol/envelope.js',
@@ -26,20 +24,15 @@
                 'src/protocol/secure.js',
                 'src/protocol/reliable.js',
 
-                'src/dkd/content.js',
-                'src/dkd/envelope.js',
-                'src/dkd/message.js',
-                'src/dkd/instant.js',
-                'src/dkd/secure.js',
-                'src/dkd/reliable.js',
-                'src/dkd/factories.js',
+                'src/dkd/factory.js',
                 null
             ];
 
             var dist = 'dist/dkd.js';
 
             var tests = [
-                '../Crypto/tests/crypto_tests.js',
+                '../../Crypto/tests/crypto_tests.js',
+                '../../MingKeMing/tests/mkm_tests.js',
                 'tests/dkd_tests.js',
                 null
             ];
@@ -65,6 +58,11 @@
         });
 
         $(function () {
+            var runner = new Runner('mkm_tests');
+            runner.run(mkm_tests);
+        });
+
+        $(function () {
             var runner = new Runner('dkd_tests');
             runner.run(dkd_tests);
         });
@@ -74,6 +72,10 @@
 
     <h2>Crypto Tests</h2>
     <div id="crypto_tests">Testing ...</div>
+    <div>&nbsp;</div>
+
+    <h2>MingKeMing Tests</h2>
+    <div id="mkm_tests">Testing ...</div>
     <div>&nbsp;</div>
 
     <h2>DaoKeDao Tests</h2>

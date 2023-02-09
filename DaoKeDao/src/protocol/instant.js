@@ -45,23 +45,22 @@
  */
 
 //! require 'message.js'
-//! require 'content.js'
 
 (function (ns) {
     'use strict';
 
-    var Content = ns.protocol.Content;
+    var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
 
-    var InstantMessage = function () {};
-    ns.Interface(InstantMessage, [Message]);
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
+
+    var InstantMessage = Interface(null, [Message]);
 
     InstantMessage.prototype.getContent = function () {
-        ns.assert(false, 'implement me!');
-        return null;
-    };
-    InstantMessage.getContent = function (msg) {
-        return Content.parse(msg['content'])
+        throw new Error('NotImplemented');
     };
 
     /*
@@ -85,16 +84,14 @@
      * @return SecureMessage object
      */
     InstantMessage.prototype.encrypt = function (password, members) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
      *  Message Delegate
      *  ~~~~~~~~~~~~~~~~
      */
-    var InstantMessageDelegate = function () {};
-    ns.Interface(InstantMessageDelegate, [Message.Delegate]);
+    var InstantMessageDelegate = Interface(null, [Message.Delegate]);
 
     //
     //  Encrypt Content
@@ -109,8 +106,7 @@
      * @return {Uint8Array} serialized content data
      */
     InstantMessageDelegate.prototype.serializeContent = function (content, pwd, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -122,8 +118,7 @@
      * @return {Uint8Array} encrypted message content data
      */
     InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -134,8 +129,7 @@
      * @returns {String} Base64 string
      */
     InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     //
@@ -150,8 +144,7 @@
      * @return {Uint8Array} serialized key data
      */
     InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -163,8 +156,7 @@
      * @returns {Uint8Array} encrypted symmetric key data
      */
     InstantMessageDelegate.prototype.encryptKey = function (data, receiver, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     /**
@@ -175,8 +167,7 @@
      * @returns {String} Base64 string
      */
     InstantMessageDelegate.prototype.encodeKey = function (data, iMsg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     InstantMessage.Delegate = InstantMessageDelegate;
@@ -185,48 +176,41 @@
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var InstantMessageFactory = function () {};
-    ns.Interface(InstantMessageFactory, null);
+    var InstantMessageFactory = Interface(null, null);
 
     InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
-        ns.assert(false, 'implement me!');
-        return 0;
+        throw new Error('NotImplemented');
     };
 
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
-        ns.assert(false, 'implement me!');
-        return null;
+        throw new Error('NotImplemented');
     };
 
     InstantMessage.Factory = InstantMessageFactory;
 
-    //
-    //  Instance of InstantMessageFactory
-    //
-    var s_instant_factory = null;
-
     InstantMessage.getFactory = function () {
-        return s_instant_factory;
+        var gf = general_factory();
+        return gf.getInstantMessageFactory();
     };
     InstantMessage.setFactory = function (factory) {
-        s_instant_factory = factory;
+        var gf = general_factory();
+        gf.setInstantMessageFactory(factory);
     };
 
     /**
      *  Generate SN (Message ID) with msg type & time
      *
-     * @param {ContentType|uint} msgType
+     * @param {ContentType|uint} type
      * @param {float} now
      * @return {uint}
      */
-    InstantMessage.generateSerialNumber = function (msgType, now) {
-        var factory = InstantMessage.getFactory();
-        return factory.generateSerialNumber(msgType, now);
+    InstantMessage.generateSerialNumber = function (type, now) {
+        var gf = general_factory();
+        return gf.generateSerialNumber(type, now);
     };
 
     /**
@@ -237,8 +221,8 @@
      * @return {InstantMessage}
      */
     InstantMessage.create = function (head, body) {
-        var factory = InstantMessage.getFactory();
-        return factory.createInstantMessage(head, body);
+        var gf = general_factory();
+        return gf.createInstantMessage(head, body);
     };
 
     /**
@@ -248,19 +232,11 @@
      * @return {InstantMessage}
      */
     InstantMessage.parse = function (msg) {
-        if (!msg) {
-            return null;
-        } else if (ns.Interface.conforms(msg, InstantMessage)) {
-            return msg;
-        }
-        msg = ns.type.Wrapper.fetchMap(msg);
-        var factory = InstantMessage.getFactory();
-        return factory.parseInstantMessage(msg);
+        var gf = general_factory();
+        return gf.parseInstantMessage(msg);
     };
 
     //-------- namespace --------
     ns.protocol.InstantMessage = InstantMessage;
-
-    ns.protocol.registers('InstantMessage');
 
 })(DaoKeDao);
