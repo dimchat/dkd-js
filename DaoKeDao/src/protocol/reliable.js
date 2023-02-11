@@ -60,11 +60,6 @@
     var Interface = ns.type.Interface;
     var SecureMessage = ns.protocol.SecureMessage;
 
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
-
     var ReliableMessage = Interface(null, [SecureMessage]);
 
     ReliableMessage.prototype.getSignature = function () {
@@ -165,6 +160,11 @@
     };
 
     ReliableMessage.Factory = ReliableMessageFactory;
+
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
 
     ReliableMessage.getFactory = function () {
         var gf = general_factory();

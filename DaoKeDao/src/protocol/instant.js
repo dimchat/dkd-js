@@ -52,11 +52,6 @@
     var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
 
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
-
     var InstantMessage = Interface(null, [Message]);
 
     InstantMessage.prototype.getContent = function () {
@@ -191,6 +186,11 @@
     };
 
     InstantMessage.Factory = InstantMessageFactory;
+
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
 
     InstantMessage.getFactory = function () {
         var gf = general_factory();

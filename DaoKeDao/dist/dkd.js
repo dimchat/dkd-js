@@ -58,10 +58,6 @@ if (typeof DaoKeDao !== "object") {
 (function (ns) {
     var Interface = ns.type.Interface;
     var Mapper = ns.type.Mapper;
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
     var Content = Interface(null, [Mapper]);
     Content.prototype.getType = function () {
         throw new Error("NotImplemented");
@@ -83,6 +79,10 @@ if (typeof DaoKeDao !== "object") {
         throw new Error("NotImplemented");
     };
     Content.Factory = ContentFactory;
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
     Content.setFactory = function (type, factory) {
         var gf = general_factory();
         gf.setContentFactory(type, factory);
@@ -100,10 +100,6 @@ if (typeof DaoKeDao !== "object") {
 (function (ns) {
     var Interface = ns.type.Interface;
     var Mapper = ns.type.Mapper;
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
     var Envelope = Interface(null, [Mapper]);
     Envelope.prototype.getSender = function () {
         throw new Error("NotImplemented");
@@ -134,6 +130,10 @@ if (typeof DaoKeDao !== "object") {
         throw new Error("NotImplemented");
     };
     Envelope.Factory = EnvelopeFactory;
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
     Envelope.getFactory = function () {
         var gf = general_factory();
         return gf.getEnvelopeFactory();
@@ -187,10 +187,6 @@ if (typeof DaoKeDao !== "object") {
 (function (ns) {
     var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
     var InstantMessage = Interface(null, [Message]);
     InstantMessage.prototype.getContent = function () {
         throw new Error("NotImplemented");
@@ -240,6 +236,10 @@ if (typeof DaoKeDao !== "object") {
         throw new Error("NotImplemented");
     };
     InstantMessage.Factory = InstantMessageFactory;
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
     InstantMessage.getFactory = function () {
         var gf = general_factory();
         return gf.getInstantMessageFactory();
@@ -265,10 +265,6 @@ if (typeof DaoKeDao !== "object") {
 (function (ns) {
     var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
     var SecureMessage = Interface(null, [Message]);
     SecureMessage.prototype.getData = function () {
         throw new Error("NotImplemented");
@@ -336,6 +332,10 @@ if (typeof DaoKeDao !== "object") {
         throw new Error("NotImplemented");
     };
     SecureMessage.Factory = SecureMessageFactory;
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
     SecureMessage.getFactory = function () {
         var gf = general_factory();
         return gf.getSecureMessageFactory();
@@ -353,10 +353,6 @@ if (typeof DaoKeDao !== "object") {
 (function (ns) {
     var Interface = ns.type.Interface;
     var SecureMessage = ns.protocol.SecureMessage;
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
     var ReliableMessage = Interface(null, [SecureMessage]);
     ReliableMessage.prototype.getSignature = function () {
         throw new Error("NotImplemented");
@@ -397,6 +393,10 @@ if (typeof DaoKeDao !== "object") {
         throw new Error("NotImplemented");
     };
     ReliableMessage.Factory = ReliableMessageFactory;
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
     ReliableMessage.getFactory = function () {
         var gf = general_factory();
         return gf.getReliableMessageFactory();
@@ -427,7 +427,7 @@ if (typeof DaoKeDao !== "object") {
         this.__secureMessageFactory = null;
         this.__reliableMessageFactory = null;
     };
-    Class(GeneralFactory, null, null);
+    Class(GeneralFactory, null, null, null);
     var EnumToUint = function (type) {
         if (typeof type === "number") {
             return type;

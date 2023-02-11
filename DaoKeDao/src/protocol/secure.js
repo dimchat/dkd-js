@@ -57,11 +57,6 @@
     var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
 
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
-
     var SecureMessage = Interface(null, [Message]);
 
     /**
@@ -282,6 +277,11 @@
     };
 
     SecureMessage.Factory = SecureMessageFactory;
+
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
 
     SecureMessage.getFactory = function () {
         var gf = general_factory();

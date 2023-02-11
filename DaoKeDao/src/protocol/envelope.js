@@ -51,11 +51,6 @@
     var Interface = ns.type.Interface;
     var Mapper    = ns.type.Mapper;
 
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
-
     var Envelope = Interface(null, [Mapper]);
 
     /**
@@ -129,6 +124,11 @@
     };
 
     Envelope.Factory = EnvelopeFactory;
+
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
 
     Envelope.getFactory = function () {
         var gf = general_factory();

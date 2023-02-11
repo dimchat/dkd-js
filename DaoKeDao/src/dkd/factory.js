@@ -55,7 +55,7 @@
         this.__secureMessageFactory = null;
         this.__reliableMessageFactory = null;
     };
-    Class(GeneralFactory, null, null);
+    Class(GeneralFactory, null, null, null);
 
     //
     //  Content

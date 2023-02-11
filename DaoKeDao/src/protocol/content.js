@@ -56,11 +56,6 @@
     var Interface = ns.type.Interface;
     var Mapper    = ns.type.Mapper;
 
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
-    };
-
     var Content = Interface(null, [Mapper]);
 
     /**
@@ -110,6 +105,11 @@
     };
 
     Content.Factory = ContentFactory;
+
+    var general_factory = function () {
+        var man = ns.dkd.FactoryManager;
+        return man.generalFactory;
+    };
 
     /**
      *  Register content factory with type
