@@ -30,42 +30,7 @@
 // =============================================================================
 //
 
-//! require <crypto.js>
-//! require <mkm.js>
-
-if (typeof DaoKeDao !== 'object') {
-    DaoKeDao = {};
-}
-
-(function (ns) {
-    'use strict';
-
-    //-------- namespaces --------
-    if (typeof ns.type !== 'object') {
-        ns.type = MONKEY.type;
-    }
-    if (typeof ns.format !== 'object') {
-        ns.format = MONKEY.format;
-    }
-    if (typeof ns.digest !== 'object') {
-        ns.digest = MONKEY.digest;
-    }
-    if (typeof ns.crypto !== 'object') {
-        ns.crypto = MONKEY.crypto;
-    }
-
-    if (typeof ns.protocol !== 'object') {
-        ns.protocol = MingKeMing.protocol;
-    }
-    if (typeof ns.mkm !== 'object') {
-        ns.mkm = MingKeMing.mkm;
-    }
-
-    if (typeof ns.dkd !== 'object') {
-        ns.dkd = {};
-    }
-
-})(DaoKeDao);
+//! require 'namespace.js'
 
 (function (ns) {
     'use strict';
@@ -129,6 +94,9 @@ if (typeof DaoKeDao !== 'object') {
         // Web Page
         PAGE:       (0x20), // 0010 0000
 
+        // Name Card
+        NAME_CARD:       (0x33), // 0011 0011
+
         // Quote a message before and reply it with text
         QUOTE:      (0x37), // 0011 0111
 
@@ -144,16 +112,16 @@ if (typeof DaoKeDao !== 'object') {
         // Application Customized
         APPLICATION:      (0xA0), // 1010 0000 (Application 0nly, Reserved)
         //APPLICATION_1:  (0xA1), // 1010 0001 (Reserved)
-                                  // 1010 ???? (Reserved)
+        // ...                    // 1010 ???? (Reserved)
         //APPLICATION_15: (0xAF), // 1010 1111 (Reserved)
 
         //CUSTOMIZED_0:   (0xC0), // 1100 0000 (Reserved)
         //CUSTOMIZED_1:   (0xC1), // 1100 0001 (Reserved)
-                                  // 1100 ???? (Reserved)
+        // ...                    // 1100 ???? (Reserved)
         ARRAY:            (0xCA), // 1100 1010 (Content Array)
-                                  // 1100 ???? (Reserved)
+        // ...                    // 1100 ???? (Reserved)
         CUSTOMIZED:       (0xCC), // 1100 1100 (Customized Content)
-                                  // 1100 ???? (Reserved)
+        // ...                    // 1100 ???? (Reserved)
         //CUSTOMIZED_15:  (0xCF), // 1100 1111 (Reserved)
 
         // Top-Secret message forward by proxy (MTA)

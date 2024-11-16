@@ -50,23 +50,6 @@
  *         signature = sender.private_key.sign(data)
  */
 
-/**
- *  Message with Envelope
- *  ~~~~~~~~~~~~~~~~~~~~~
- *  Base classes for messages
- *  This class is used to create a message
- *  with the envelope fields, such as 'sender', 'receiver', and 'time'
- *
- *  data format: {
- *      //-- envelope
- *      sender   : "moki@xxx",
- *      receiver : "hulk@yyy",
- *      time     : 123,
- *      //-- body
- *      ...
- *  }
- */
-
 //! require 'envelope.js'
 
 (function (ns) {
@@ -75,47 +58,35 @@
     var Interface = ns.type.Interface;
     var Mapper    = ns.type.Mapper;
 
+    /**
+     *  Message with Envelope
+     *  ~~~~~~~~~~~~~~~~~~~~~
+     *  Base classes for messages
+     *  This class is used to create a message
+     *  with the envelope fields, such as 'sender', 'receiver', and 'time'
+     *
+     *  data format: {
+     *      //-- envelope
+     *      sender   : "moki@xxx",
+     *      receiver : "hulk@yyy",
+     *      time     : 123,
+     *      //-- body
+     *      ...
+     *  }
+     */
     var Message = Interface(null, [Mapper]);
 
-    // message delegate
-    Message.prototype.getDelegate = function () {
-        throw new Error('NotImplemented');
-    };
-    Message.prototype.setDelegate = function (delegate) {
-        throw new Error('NotImplemented');
-    };
-
     // message envelope
-    Message.prototype.getEnvelope = function () {
-        throw new Error('NotImplemented');
-    };
+    Message.prototype.getEnvelope = function () {};
 
     //--------
 
-    Message.prototype.getSender = function () {
-        throw new Error('NotImplemented');
-    };
-    Message.prototype.getReceiver = function () {
-        throw new Error('NotImplemented');
-    };
-    Message.prototype.getTime = function () {
-        throw new Error('NotImplemented');
-    };
+    Message.prototype.getSender = function () {};
+    Message.prototype.getReceiver = function () {};
+    Message.prototype.getTime = function () {};
 
-    Message.prototype.getGroup = function () {
-        throw new Error('NotImplemented');
-    };
-    Message.prototype.getType = function () {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  Message Delegate
-     *  ~~~~~~~~~~~~~~~~
-     */
-    var MessageDelegate = Interface(null, null);
-
-    Message.Delegate = MessageDelegate;
+    Message.prototype.getGroup = function () {};
+    Message.prototype.getType = function () {};
 
     //-------- namespace --------
     ns.protocol.Message = Message;

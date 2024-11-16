@@ -30,24 +30,6 @@
 // =============================================================================
 //
 
-/**
- *  Message Content
- *  ~~~~~~~~~~~~~~~
- *  This class is for creating message content
- *
- *  data format: {
- *      'type'    : 0x00,            // message type
- *      'sn'      : 0,               // serial number
- *
- *      'group'   : 'Group ID',      // for group message
- *
- *      //-- message info
- *      'text'    : 'text',          // for text message
- *      'cmd'     : 'Command Name',  // for system command
- *      //...
- *  }
- */
-
 //! require 'types.js'
 
 (function (ns) {
@@ -56,6 +38,24 @@
     var Interface = ns.type.Interface;
     var Mapper    = ns.type.Mapper;
 
+    /**
+     *  Message Content
+     *  ~~~~~~~~~~~~~~~
+     *  This class is for creating message content
+     *
+     *  data format: {
+     *      'type'    : 0x00,            // message type
+     *      'sn'      : 0,               // serial number
+     *
+     *      'time'    : 123,             // message time
+     *      'group'   : 'Group ID',      // for group message
+     *
+     *      //-- message info
+     *      'text'    : 'text',          // for text message
+     *      'command' : 'Command Name'   // for system command
+     *      //...
+     *  }
+     */
     var Content = Interface(null, [Mapper]);
 
     /**
@@ -63,52 +63,49 @@
      *
      * @return {uint}
      */
-    Content.prototype.getType = function () {
-        throw new Error('NotImplemented');
-    };
+    Content.prototype.getType = function () {};
 
     /**
      *  Get serial number (message id)
      *
      * @return {uint}
      */
-    Content.prototype.getSerialNumber = function () {
-        throw new Error('NotImplemented');
-    };
+    Content.prototype.getSerialNumber = function () {};
 
     /**
      *  Get message time
      *
      * @return {Date}
      */
-    Content.prototype.getTime = function () {
-        throw new Error('NotImplemented');
-    };
+    Content.prototype.getTime = function () {};
 
-    // Group ID/string for group message
-    //    if field 'group' exists, it means this is a group message
-    Content.prototype.getGroup = function () {
-        throw new Error('NotImplemented');
-    };
-    Content.prototype.setGroup = function (identifier) {
-        throw new Error('NotImplemented');
+    /**
+     *  Group ID/string for group message
+     *  if field 'group' exists, it means this is a group message
+     *
+     * @param {ID} identifier
+     */
+    Content.prototype.setGroup = function (identifier) {};
+    Content.prototype.getGroup = function () {};
+
+    //
+    //  Factory method
+    //
+
+    var general_factory = function () {
+        var man = ns.dkd.MessageFactoryManager;
+        return man.generalFactory;
     };
 
     /**
-     *  Content Factory
-     *  ~~~~~~~~~~~~~~~
+     *  Parse map object to content
+     *
+     * @param {*} content - content info
+     * @return {Content}
      */
-    var ContentFactory = Interface(null, null);
-
-    ContentFactory.prototype.parseContent = function (content) {
-        throw new Error('NotImplemented');
-    };
-
-    Content.Factory = ContentFactory;
-
-    var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
-        return man.generalFactory;
+    Content.parse = function (content) {
+        var gf = general_factory();
+        return gf.parseContent(content);
     };
 
     /**
@@ -127,17 +124,23 @@
     };
 
     /**
+     *  Content Factory
+     *  ~~~~~~~~~~~~~~~
+     */
+    var ContentFactory = Interface(null, null);
+
+    /**
      *  Parse map object to content
      *
      * @param {*} content - content info
      * @return {Content}
      */
-    Content.parse = function (content) {
-        var gf = general_factory();
-        return gf.parseContent(content);
-    };
+    ContentFactory.prototype.parseContent = function (content) {};
+
+    Content.Factory = ContentFactory;
 
     //-------- namespace --------
     ns.protocol.Content = Content;
+    // ns.protocol.ContentFactory = ContentFactory;
 
 })(DaoKeDao);

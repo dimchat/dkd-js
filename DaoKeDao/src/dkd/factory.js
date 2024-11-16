@@ -41,6 +41,7 @@
     var Interface = ns.type.Interface;
     var Class     = ns.type.Class;
     var Wrapper   = ns.type.Wrapper;
+    var Converter = ns.type.Converter;
 
     var Content         = ns.protocol.Content;
     var Envelope        = ns.protocol.Envelope;
@@ -77,8 +78,8 @@
         type = EnumToUint(type);
         return this.__contentFactories[type];
     };
-    GeneralFactory.prototype.getContentType = function (content) {
-        return content['type'];
+    GeneralFactory.prototype.getContentType = function (content, defaultType) {
+        return Converter.getInt(content['type'], defaultType);
     };
     GeneralFactory.prototype.parseContent = function (content) {
         if (!content) {
@@ -86,13 +87,16 @@
         } else if (Interface.conforms(content, Content)) {
             return content;
         }
-        content = Wrapper.fetchMap(content);
-        var type = this.getContentType(content);
+        var info = Wrapper.fetchMap(content);
+        if (!info) {
+            return null;
+        }
+        var type = this.getContentType(info, 0);
         var factory = this.getContentFactory(type);
         if (!factory) {
             factory = this.getContentFactory(0);  // unknown
         }
-        return factory.parseContent(content);
+        return factory.parseContent(info);
     };
 
     //
@@ -116,9 +120,12 @@
         } else if (Interface.conforms(env, Envelope)) {
             return env;
         }
-        env = Wrapper.fetchMap(env);
+        var info = Wrapper.fetchMap(env);
+        if (!info) {
+            return null;
+        }
         var factory = this.getEnvelopeFactory();
-        return factory.parseEnvelope(env);
+        return factory.parseEnvelope(info);
     };
 
     //
@@ -142,9 +149,12 @@
         } else if (Interface.conforms(msg, InstantMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        var info = Wrapper.fetchMap(msg);
+        if (!info) {
+            return null;
+        }
         var factory = this.getInstantMessageFactory();
-        return factory.parseInstantMessage(msg);
+        return factory.parseInstantMessage(info);
     };
     GeneralFactory.prototype.generateSerialNumber = function (type, now) {
         var factory = this.getInstantMessageFactory();
@@ -168,9 +178,12 @@
         } else if (Interface.conforms(msg, SecureMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        var info = Wrapper.fetchMap(msg);
+        if (!info) {
+            return null;
+        }
         var factory = this.getSecureMessageFactory();
-        return factory.parseSecureMessage(msg);
+        return factory.parseSecureMessage(info);
     };
 
     //
@@ -190,9 +203,12 @@
         } else if (Interface.conforms(msg, ReliableMessage)) {
             return msg;
         }
-        msg = Wrapper.fetchMap(msg);
+        var info = Wrapper.fetchMap(msg);
+        if (!info) {
+            return null;
+        }
         var factory = this.getReliableMessageFactory();
-        return factory.parseReliableMessage(msg);
+        return factory.parseReliableMessage(info);
     };
 
     var FactoryManager = {
@@ -200,7 +216,7 @@
     };
 
     //-------- namespace --------
-    ns.dkd.GeneralFactory = GeneralFactory;
-    ns.dkd.FactoryManager = FactoryManager;
+    ns.dkd.MessageGeneralFactory = GeneralFactory;
+    ns.dkd.MessageFactoryManager = FactoryManager;
 
 })(DaoKeDao);

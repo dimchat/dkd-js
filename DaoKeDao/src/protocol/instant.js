@@ -30,21 +30,8 @@
 // =============================================================================
 //
 
-/**
- *  Instant Message
- *  ~~~~~~~~~~~~~~~
- *
- *  data format: {
- *      //-- envelope
- *      sender   : "moki@xxx",
- *      receiver : "hulk@yyy",
- *      time     : 123,
- *      //-- content
- *      content  : {...}
- *  }
- */
-
 //! require 'message.js'
+//! require 'content.js'
 
 (function (ns) {
     'use strict';
@@ -52,161 +39,45 @@
     var Interface = ns.type.Interface;
     var Message = ns.protocol.Message;
 
+    /**
+     *  Instant Message
+     *  ~~~~~~~~~~~~~~~
+     *
+     *  data format: {
+     *      //-- envelope
+     *      sender   : "moki@xxx",
+     *      receiver : "hulk@yyy",
+     *      time     : 123,
+     *      //-- content
+     *      content  : {...}
+     *  }
+     */
     var InstantMessage = Interface(null, [Message]);
 
-    InstantMessage.prototype.getContent = function () {
-        throw new Error('NotImplemented');
-    };
-
-    /*
-     *  Encrypt the Instant Message to Secure Message
-     *
-     *    +----------+      +----------+
-     *    | sender   |      | sender   |
-     *    | receiver |      | receiver |
-     *    | time     |  ->  | time     |
-     *    |          |      |          |
-     *    | content  |      | data     |  1. data = encrypt(content, PW)
-     *    +----------+      | key/keys |  2. key  = encrypt(PW, receiver.PK)
-     *                      +----------+
-     */
+    InstantMessage.prototype.getContent = function () {};
 
     /**
-     *  Encrypt message, replace 'content' field with encrypted 'data'
+     *  Only for rebuild content
      *
-     * @param {SymmetricKey} password - symmetric key
-     * @param {ID[]} members - members for group message
-     * @return SecureMessage object
+     * @param {Content} body
      */
-    InstantMessage.prototype.encrypt = function (password, members) {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  Message Delegate
-     *  ~~~~~~~~~~~~~~~~
-     */
-    var InstantMessageDelegate = Interface(null, [Message.Delegate]);
+    InstantMessage.prototype.setContent = function (body) {};
 
     //
-    //  Encrypt Content
+    //  Factory methods
     //
-
-    /**
-     *  1. Serialize 'message.content' to data (JsON / ProtoBuf / ...)
-     *
-     * @param {Content} content - message.content
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} serialized content data
-     */
-    InstantMessageDelegate.prototype.serializeContent = function (content, pwd, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  2. Encrypt content data to 'message.data' with symmetric key
-     *
-     * @param {Uint8Array} data - serialized data of message.content
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} encrypted message content data
-     */
-    InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  3. Encode 'message.data' to String (Base64)
-     *
-     * @param {Uint8Array} data - encrypted content data
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {String} Base64 string
-     */
-    InstantMessageDelegate.prototype.encodeData = function (data, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    //
-    //  Encrypt Key
-    //
-
-    /**
-     *  4. Serialize message key to data (JsON / ProtoBuf / ...)
-     *
-     * @param {SymmetricKey} pwd - symmetric key
-     * @param {InstantMessage} iMsg - instant message object
-     * @return {Uint8Array} serialized key data
-     */
-    InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  5. Encrypt key data to 'message.key' with receiver's public key
-     *
-     * @param {Uint8Array} data - symmetric key to be encrypted
-     * @param {String} receiver - receiver ID/string
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {Uint8Array} encrypted symmetric key data
-     */
-    InstantMessageDelegate.prototype.encryptKey = function (data, receiver, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    /**
-     *  6. Encode 'message.key' to String (Base64)
-     *
-     * @param {Uint8Array} data - encrypted key data
-     * @param {InstantMessage} iMsg - instant message object
-     * @returns {String} Base64 string
-     */
-    InstantMessageDelegate.prototype.encodeKey = function (data, iMsg) {
-        throw new Error('NotImplemented');
-    };
-
-    InstantMessage.Delegate = InstantMessageDelegate;
-
-    /**
-     *  Message Factory
-     *  ~~~~~~~~~~~~~~~
-     */
-    var InstantMessageFactory = Interface(null, null);
-
-    InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
-        throw new Error('NotImplemented');
-    };
-
-    InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
-        throw new Error('NotImplemented');
-    };
-
-    InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
-        throw new Error('NotImplemented');
-    };
-
-    InstantMessage.Factory = InstantMessageFactory;
 
     var general_factory = function () {
-        var man = ns.dkd.FactoryManager;
+        var man = ns.dkd.MessageFactoryManager;
         return man.generalFactory;
-    };
-
-    InstantMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getInstantMessageFactory();
-    };
-    InstantMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setInstantMessageFactory(factory);
     };
 
     /**
      *  Generate SN (Message ID) with msg type & time
      *
-     * @param {ContentType|uint} type
-     * @param {float} now
-     * @return {uint}
+     * @param {ContentType|uint} type - message type
+     * @param {Date} now              - message time
+     * @return {uint} SN (uint64, serial number as msg id)
      */
     InstantMessage.generateSerialNumber = function (type, now) {
         var gf = general_factory();
@@ -236,7 +107,51 @@
         return gf.parseInstantMessage(msg);
     };
 
+    InstantMessage.getFactory = function () {
+        var gf = general_factory();
+        return gf.getInstantMessageFactory();
+    };
+    InstantMessage.setFactory = function (factory) {
+        var gf = general_factory();
+        gf.setInstantMessageFactory(factory);
+    };
+
+    /**
+     *  Message Factory
+     *  ~~~~~~~~~~~~~~~
+     */
+    var InstantMessageFactory = Interface(null, null);
+
+    /**
+     *  Generate SN for message content
+     *
+     * @param {uint} msgType - content type
+     * @param {Date} now     - message time
+     * @return {uint} SN (uint64, serial number as msg id)
+     */
+    InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {};
+
+    /**
+     *  Create instant message with envelope & content
+     *
+     * @param {Envelope} head - message envelope
+     * @param {Content} body  - message content
+     * @return {InstantMessage}
+     */
+    InstantMessageFactory.prototype.createInstantMessage = function (head, body) {};
+
+    /**
+     *  Parse map object to message
+     *
+     * @param {*} msg - message info
+     * @return {InstantMessage}
+     */
+    InstantMessageFactory.prototype.parseInstantMessage = function (msg) {};
+
+    InstantMessage.Factory = InstantMessageFactory;
+
     //-------- namespace --------
     ns.protocol.InstantMessage = InstantMessage;
+    // ns.protocol.InstantMessageFactory = InstantMessageFactory;
 
 })(DaoKeDao);
