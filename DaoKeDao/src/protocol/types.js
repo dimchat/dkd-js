@@ -82,7 +82,7 @@
      *
      *      (All above are just some advices to help choosing numbers :P)
      */
-    var ContentType = ns.type.Enum(null, {
+    var ContentType = ns.type.Enum('ContentType', {
 
         TEXT:       (0x01), // 0000 0001
 
