@@ -55,13 +55,10 @@
     var InstantMessage = Interface(null, [Message]);
 
     InstantMessage.prototype.getContent = function () {};
-
-    /**
-     *  Only for rebuild content
-     *
-     * @param {Content} body
-     */
+    /*/
+    // only for rebuild content
     InstantMessage.prototype.setContent = function (body) {};
+    /*/
 
     //
     //  Factory methods

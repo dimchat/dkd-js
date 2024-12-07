@@ -72,7 +72,8 @@
         return this.__contentFactories[type];
     };
     GeneralFactory.prototype.getContentType = function (content, defaultType) {
-        return Converter.getInt(content['type'], defaultType);
+        var type = content['type'];
+        return Converter.getInt(type, defaultType);
     };
     GeneralFactory.prototype.parseContent = function (content) {
         if (!content) {

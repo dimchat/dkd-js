@@ -81,12 +81,12 @@
 
     //--------
 
-    Message.prototype.getSender = function () {};
-    Message.prototype.getReceiver = function () {};
-    Message.prototype.getTime = function () {};
+    Message.prototype.getSender   = function () {};  // envelope.sender
+    Message.prototype.getReceiver = function () {};  // envelope.receiver
+    Message.prototype.getTime     = function () {};  // content.time or envelope.time
 
-    Message.prototype.getGroup = function () {};
-    Message.prototype.getType = function () {};
+    Message.prototype.getGroup    = function () {};  // content.group or envelope.group
+    Message.prototype.getType     = function () {};  // content.type or envelope.type
 
     //-------- namespace --------
     ns.protocol.Message = Message;

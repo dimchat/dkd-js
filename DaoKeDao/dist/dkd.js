@@ -36,6 +36,7 @@ if (typeof DaoKeDao !== 'object') {
 (function (ns) {
     'use strict';
     var ContentType = ns.type.Enum('ContentType', {
+        ANY: (0x00),
         TEXT: (0x01),
         FILE: (0x10),
         IMAGE: (0x12),
@@ -167,8 +168,6 @@ if (typeof DaoKeDao !== 'object') {
     var Message = ns.protocol.Message;
     var InstantMessage = Interface(null, [Message]);
     InstantMessage.prototype.getContent = function () {
-    };
-    InstantMessage.prototype.setContent = function (body) {
     };
     var general_factory = function () {
         var man = ns.dkd.MessageFactoryManager;
@@ -336,7 +335,8 @@ if (typeof DaoKeDao !== 'object') {
         return this.__contentFactories[type]
     };
     GeneralFactory.prototype.getContentType = function (content, defaultType) {
-        return Converter.getInt(content['type'], defaultType)
+        var type = content['type'];
+        return Converter.getInt(type, defaultType)
     };
     GeneralFactory.prototype.parseContent = function (content) {
         if (!content) {

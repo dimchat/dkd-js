@@ -84,6 +84,8 @@
      */
     var ContentType = ns.type.Enum('ContentType', {
 
+        ANY:        (0x00), // 0000 0000 (Undefined)
+
         TEXT:       (0x01), // 0000 0001
 
         FILE:       (0x10), // 0001 0000
