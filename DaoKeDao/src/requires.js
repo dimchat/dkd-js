@@ -33,21 +33,6 @@
 //! require <crypto.js>
 //! require <mkm.js>
 
-var mk = MONKEY;
-var mkm = MingKeMing;
+var Interface = mk.type.Interface;
 
-if (typeof DaoKeDao !== 'object') {
-    var DaoKeDao = {};
-}
-var dkd = DaoKeDao;
-
-//-------- namespaces --------
-if (typeof dkd.protocol !== 'object') {
-    dkd.protocol = {};
-}
-if (typeof dkd.dkd !== 'object') {
-    dkd.dkd = {};
-}
-if (typeof dkd.plugins !== 'object') {
-    dkd.plugins = {};
-}
+var Mapper = mk.type.Mapper;

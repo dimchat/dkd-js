@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -33,12 +33,6 @@
 //! require 'message.js'
 //! require 'content.js'
 
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var Message = ns.protocol.Message;
-
     /**
      *  Instant Message
      *  ~~~~~~~~~~~~~~~
@@ -52,7 +46,8 @@
      *      content  : {...}
      *  }
      */
-    var InstantMessage = Interface(null, [Message]);
+    dkd.protocol.InstantMessage = Interface(null, [Message]);
+    var InstantMessage = dkd.protocol.InstantMessage;
 
     InstantMessage.prototype.getContent = function () {};
     /*/
@@ -61,24 +56,60 @@
     /*/
 
     //
-    //  Factory methods
+    //  Conveniences
     //
 
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory;
+    /**
+     *  Convert Maps to Messages
+     *
+     * @param {*[]} array
+     * @return {InstantMessage[]}
+     */
+    InstantMessage.convert = function (array) {
+        var messages = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = InstantMessage.parse(array[i]);
+            if (msg) {
+                messages.push(msg);
+            }
+        }
+        return messages;
     };
+
+    /**
+     *  Convert InstantMessage to Maps
+     * @param {InstantMessage[]} messages
+     * @return {*[]}
+     */
+    InstantMessage.revert = function (messages) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < messages.length; ++i) {
+            msg = messages[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap());
+            } else {
+                array.push(msg);
+            }
+        }
+        return array;
+    };
+
+    //
+    //  Factory methods
+    //
 
     /**
      *  Generate SN (Message ID) with msg type & time
      *
-     * @param {ContentType|uint} type - message type
-     * @param {Date} now              - message time
+     * @param {String} type - message type
+     * @param {Date} now    - message time
      * @return {uint} SN (uint64, serial number as msg id)
      */
     InstantMessage.generateSerialNumber = function (type, now) {
-        var gf = general_factory();
-        return gf.generateSerialNumber(type, now);
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.generateSerialNumber(type, now);
     };
 
     /**
@@ -89,8 +120,8 @@
      * @return {InstantMessage}
      */
     InstantMessage.create = function (head, body) {
-        var gf = general_factory();
-        return gf.createInstantMessage(head, body);
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.createInstantMessage(head, body);
     };
 
     /**
@@ -100,30 +131,31 @@
      * @return {InstantMessage}
      */
     InstantMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseInstantMessage(msg);
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.parseInstantMessage(msg);
     };
 
     InstantMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getInstantMessageFactory();
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.getInstantMessageFactory();
     };
     InstantMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setInstantMessageFactory(factory);
+        var helper = MessageExtensions.getInstantHelper();
+        helper.setInstantMessageFactory(factory);
     };
 
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var InstantMessageFactory = Interface(null, null);
+    InstantMessage.Factory = Interface(null, null);
+    var InstantMessageFactory = InstantMessage.Factory;
 
     /**
      *  Generate SN for message content
      *
-     * @param {uint} msgType - content type
-     * @param {Date} now     - message time
+     * @param {String} msgType - content type
+     * @param {Date} now       - message time
      * @return {uint} SN (uint64, serial number as msg id)
      */
     InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {};
@@ -144,11 +176,3 @@
      * @return {InstantMessage}
      */
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {};
-
-    InstantMessage.Factory = InstantMessageFactory;
-
-    //-------- namespace --------
-    ns.protocol.InstantMessage = InstantMessage;
-    // ns.protocol.InstantMessageFactory = InstantMessageFactory;
-
-})(DaoKeDao);

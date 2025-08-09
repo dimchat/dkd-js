@@ -5,11 +5,11 @@
 //
 dkd_tests = [];
 
-!function (ns) {
+!function (ns, mkm, mk) {
     'use strict';
 
-    var Class          = ns.type.Class;
-    var Dictionary     = ns.type.Dictionary;
+    var Class          = mk.type.Class;
+    var Dictionary     = mk.type.Dictionary;
 
     var Content = ns.protocol.Content;
 
@@ -19,8 +19,7 @@ dkd_tests = [];
     Class(BaseContent, Dictionary, [Content], null);
 
     BaseContent.prototype.getType = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return  man.generalFactory.getContentType(this.toMap(), 0);
+        return  this.getString('type', '');
     };
 
     BaseContent.fromType = function (type) {
@@ -33,7 +32,7 @@ dkd_tests = [];
     //-------- namespace --------
     ns.dkd.BaseContent = BaseContent;
 
-}(DaoKeDao);
+}(DaoKeDao, MingKeMing, MONKEY);
 
 !function (ns) {
     'use strict';
@@ -57,7 +56,7 @@ dkd_tests = [];
         content = BaseContent.fromType(ContentType.TEXT);
         content.setValue('text', 'Hello world!');
         log('content: ', content);
-        assert(ContentType.TEXT.equals(content.getType()) === true, 'failed to create content');
+        assert(ContentType.TEXT === content.getType(), 'failed to create content');
     };
     dkd_tests.push(test_content);
 

@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -30,13 +30,7 @@
 // =============================================================================
 //
 
-//! require 'types.js'
-
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var Mapper    = ns.type.Mapper;
+//! require 'namespace.js'
 
     /**
      *  Envelope for message
@@ -50,7 +44,8 @@
      *      time     : 123
      *  }
      */
-    var Envelope = Interface(null, [Mapper]);
+    dkd.protocol.Envelope = Interface(null, [Mapper]);
+    var Envelope = dkd.protocol.Envelope;
 
     /**
      *  message from
@@ -93,7 +88,7 @@
      *  we pick out the content type and set it in envelope
      *  to let the station do its job.
      *
-     * @param {uint} type - content type
+     * @param {String} type - content type
      */
     Envelope.prototype.setType = function (type) {};
     Envelope.prototype.getType = function () {};
@@ -102,22 +97,17 @@
     //  Factory methods
     //
 
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory;
-    };
-
     /**
      *  Create envelope
      *
-     * @param {ID} from        - sender ID
-     * @param {ID} to          - receiver ID
-     * @param {Date/uint} when - message time
+     * @param {ID} from   - sender ID
+     * @param {ID} to     - receiver ID
+     * @param {Date} when - message time
      * @return {Envelope}
      */
     Envelope.create = function (from, to, when) {
-        var gf = general_factory();
-        return gf.createEnvelope(from, to, when);
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.createEnvelope(from, to, when);
     };
 
     /**
@@ -127,31 +117,32 @@
      * @return {Envelope}
      */
     Envelope.parse = function (env) {
-        var gf = general_factory();
-        return gf.parseEnvelope(env);
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.parseEnvelope(env);
     };
 
     Envelope.getFactory = function () {
-        var gf = general_factory();
-        return gf.getEnvelopeFactory();
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.getEnvelopeFactory();
     }
     Envelope.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setEnvelopeFactory(factory);
+        var helper = MessageExtensions.getEnvelopeHelper();
+        helper.setEnvelopeFactory(factory);
     };
 
     /**
      *  Envelope Factory
      *  ~~~~~~~~~~~~~~~~
      */
-    var EnvelopeFactory = Interface(null, null);
+    Envelope.Factory = Interface(null, null);
+    var EnvelopeFactory = Envelope.Factory;
 
     /**
      *  Create envelope
      *
-     * @param {ID} from        - sender ID
-     * @param {ID} to          - receiver ID
-     * @param {Date/uint} when - message time
+     * @param {ID} from   - sender ID
+     * @param {ID} to     - receiver ID
+     * @param {Date} when - message time
      * @return {Envelope}
      */
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {};
@@ -163,11 +154,3 @@
      * @return {Envelope}
      */
     EnvelopeFactory.prototype.parseEnvelope = function (env) {};
-
-    Envelope.Factory = EnvelopeFactory;
-
-    //-------- namespace --------
-    ns.protocol.Envelope = Envelope;
-    // ns.protocol.EnvelopeFactory = EnvelopeFactory;
-
-})(DaoKeDao);

@@ -1,0 +1,28 @@
+/**
+ * DaoKeDao - Message Module (v2.0.0)
+ *
+ * @author    moKy <albert.moky at gmail.com>
+ * @date      Aug. 10, 2025
+ * @copyright (c) 2020-2025 Albert Moky
+ * @license   {@link https://mit-license.org | MIT License}
+ */;
+
+if (typeof DaoKeDao !== 'object') {
+    DaoKeDao = {};
+}
+
+(function (dkd, mkm, mk) {
+
+    if (typeof dkd.protocol !== 'object') {
+        dkd.protocol = {};
+    }
+    if (typeof dkd.dkd !== 'object') {
+        dkd.dkd = {};
+    }
+    if (typeof dkd.plugins !== 'object') {
+        dkd.plugins = {};
+    }
+
+    // ...
+
+// })(DaoKeDao, MingKeMing, MONKEY);

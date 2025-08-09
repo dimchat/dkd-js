@@ -1,69 +1,30 @@
 /**
- * DaoKeDao - Message Module (v1.0.0)
+ * DaoKeDao - Message Module (v2.0.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Nov. 16, 2024
- * @copyright (c) 2024 Albert Moky
+ * @date      Aug. 10, 2025
+ * @copyright (c) 2020-2025 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */;
 if (typeof DaoKeDao !== 'object') {
     DaoKeDao = {}
 }
-(function (ns) {
+(function (dkd, mkm, mk) {
+    if (typeof dkd.protocol !== 'object') {
+        dkd.protocol = {}
+    }
+    if (typeof dkd.dkd !== 'object') {
+        dkd.dkd = {}
+    }
+    if (typeof dkd.plugins !== 'object') {
+        dkd.plugins = {}
+    }
     'use strict';
-    if (typeof ns.type !== 'object') {
-        ns.type = MONKEY.type
-    }
-    if (typeof ns.format !== 'object') {
-        ns.format = MONKEY.format
-    }
-    if (typeof ns.digest !== 'object') {
-        ns.digest = MONKEY.digest
-    }
-    if (typeof ns.crypto !== 'object') {
-        ns.crypto = MONKEY.crypto
-    }
-    if (typeof ns.protocol !== 'object') {
-        ns.protocol = MingKeMing.protocol
-    }
-    if (typeof ns.mkm !== 'object') {
-        ns.mkm = MingKeMing.mkm
-    }
-    if (typeof ns.dkd !== 'object') {
-        ns.dkd = {}
-    }
-})(DaoKeDao);
-(function (ns) {
+    var Interface = mk.type.Interface;
+    var Mapper = mk.type.Mapper;
     'use strict';
-    var ContentType = ns.type.Enum('ContentType', {
-        ANY: (0x00),
-        TEXT: (0x01),
-        FILE: (0x10),
-        IMAGE: (0x12),
-        AUDIO: (0x14),
-        VIDEO: (0x16),
-        PAGE: (0x20),
-        NAME_CARD: (0x33),
-        QUOTE: (0x37),
-        MONEY: (0x40),
-        TRANSFER: (0x41),
-        LUCKY_MONEY: (0x42),
-        CLAIM_PAYMENT: (0x48),
-        SPLIT_BILL: (0x49),
-        COMMAND: (0x88),
-        HISTORY: (0x89),
-        APPLICATION: (0xA0),
-        ARRAY: (0xCA),
-        CUSTOMIZED: (0xCC),
-        FORWARD: (0xFF)
-    });
-    ns.protocol.ContentType = ContentType
-})(DaoKeDao);
-(function (ns) {
-    'use strict';
-    var Interface = ns.type.Interface;
-    var Mapper = ns.type.Mapper;
-    var Content = Interface(null, [Mapper]);
+    dkd.protocol.Content = Interface(null, [Mapper]);
+    var Content = dkd.protocol.Content;
     Content.prototype.getType = function () {
     };
     Content.prototype.getSerialNumber = function () {
@@ -74,33 +35,49 @@ if (typeof DaoKeDao !== 'object') {
     };
     Content.prototype.getGroup = function () {
     };
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory
+    Content.convert = function (array) {
+        var contents = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = Content.parse(array[i]);
+            if (msg) {
+                contents.push(msg)
+            }
+        }
+        return contents
+    };
+    Content.revert = function (contents) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < contents.length; ++i) {
+            msg = contents[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap())
+            } else {
+                array.push(msg)
+            }
+        }
+        return array
     };
     Content.parse = function (content) {
-        var gf = general_factory();
-        return gf.parseContent(content)
+        var helper = MessageExtensions.getContentHelper();
+        return helper.parseContent(content)
     };
     Content.setFactory = function (type, factory) {
-        var gf = general_factory();
-        gf.setContentFactory(type, factory)
+        var helper = MessageExtensions.getContentHelper();
+        helper.setContentFactory(type, factory)
     };
     Content.getFactory = function (type) {
-        var gf = general_factory();
-        return gf.getContentFactory(type)
+        var helper = MessageExtensions.getContentHelper();
+        return helper.getContentFactory(type)
     };
-    var ContentFactory = Interface(null, null);
+    Content.Factory = Interface(null, null);
+    var ContentFactory = Content.Factory;
     ContentFactory.prototype.parseContent = function (content) {
     };
-    Content.Factory = ContentFactory;
-    ns.protocol.Content = Content
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var Mapper = ns.type.Mapper;
-    var Envelope = Interface(null, [Mapper]);
+    dkd.protocol.Envelope = Interface(null, [Mapper]);
+    var Envelope = dkd.protocol.Envelope;
     Envelope.prototype.getSender = function () {
     };
     Envelope.prototype.getReceiver = function () {
@@ -115,39 +92,31 @@ if (typeof DaoKeDao !== 'object') {
     };
     Envelope.prototype.getType = function () {
     };
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory
-    };
     Envelope.create = function (from, to, when) {
-        var gf = general_factory();
-        return gf.createEnvelope(from, to, when)
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.createEnvelope(from, to, when)
     };
     Envelope.parse = function (env) {
-        var gf = general_factory();
-        return gf.parseEnvelope(env)
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.parseEnvelope(env)
     };
     Envelope.getFactory = function () {
-        var gf = general_factory();
-        return gf.getEnvelopeFactory()
+        var helper = MessageExtensions.getEnvelopeHelper();
+        return helper.getEnvelopeFactory()
     }
     Envelope.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setEnvelopeFactory(factory)
+        var helper = MessageExtensions.getEnvelopeHelper();
+        helper.setEnvelopeFactory(factory)
     };
-    var EnvelopeFactory = Interface(null, null);
+    Envelope.Factory = Interface(null, null);
+    var EnvelopeFactory = Envelope.Factory;
     EnvelopeFactory.prototype.createEnvelope = function (from, to, when) {
     };
     EnvelopeFactory.prototype.parseEnvelope = function (env) {
     };
-    Envelope.Factory = EnvelopeFactory;
-    ns.protocol.Envelope = Envelope
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var Mapper = ns.type.Mapper;
-    var Message = Interface(null, [Mapper]);
+    dkd.protocol.Message = Interface(null, [Mapper]);
+    var Message = dkd.protocol.Message;
     Message.prototype.getEnvelope = function () {
     };
     Message.prototype.getSender = function () {
@@ -160,290 +129,240 @@ if (typeof DaoKeDao !== 'object') {
     };
     Message.prototype.getType = function () {
     };
-    ns.protocol.Message = Message
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var Message = ns.protocol.Message;
-    var InstantMessage = Interface(null, [Message]);
+    dkd.protocol.InstantMessage = Interface(null, [Message]);
+    var InstantMessage = dkd.protocol.InstantMessage;
     InstantMessage.prototype.getContent = function () {
     };
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory
+    InstantMessage.convert = function (array) {
+        var messages = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = InstantMessage.parse(array[i]);
+            if (msg) {
+                messages.push(msg)
+            }
+        }
+        return messages
+    };
+    InstantMessage.revert = function (messages) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < messages.length; ++i) {
+            msg = messages[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap())
+            } else {
+                array.push(msg)
+            }
+        }
+        return array
     };
     InstantMessage.generateSerialNumber = function (type, now) {
-        var gf = general_factory();
-        return gf.generateSerialNumber(type, now)
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.generateSerialNumber(type, now)
     };
     InstantMessage.create = function (head, body) {
-        var gf = general_factory();
-        return gf.createInstantMessage(head, body)
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.createInstantMessage(head, body)
     };
     InstantMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseInstantMessage(msg)
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.parseInstantMessage(msg)
     };
     InstantMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getInstantMessageFactory()
+        var helper = MessageExtensions.getInstantHelper();
+        return helper.getInstantMessageFactory()
     };
     InstantMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setInstantMessageFactory(factory)
+        var helper = MessageExtensions.getInstantHelper();
+        helper.setInstantMessageFactory(factory)
     };
-    var InstantMessageFactory = Interface(null, null);
+    InstantMessage.Factory = Interface(null, null);
+    var InstantMessageFactory = InstantMessage.Factory;
     InstantMessageFactory.prototype.generateSerialNumber = function (msgType, now) {
     };
     InstantMessageFactory.prototype.createInstantMessage = function (head, body) {
     };
     InstantMessageFactory.prototype.parseInstantMessage = function (msg) {
     };
-    InstantMessage.Factory = InstantMessageFactory;
-    ns.protocol.InstantMessage = InstantMessage
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var Message = ns.protocol.Message;
-    var SecureMessage = Interface(null, [Message]);
+    dkd.protocol.SecureMessage = Interface(null, [Message]);
+    var SecureMessage = dkd.protocol.SecureMessage;
     SecureMessage.prototype.getData = function () {
     };
     SecureMessage.prototype.getEncryptedKey = function () {
     };
     SecureMessage.prototype.getEncryptedKeys = function () {
     };
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory
-    };
     SecureMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseSecureMessage(msg)
+        var helper = MessageExtensions.getSecureHelper();
+        return helper.parseSecureMessage(msg)
     };
     SecureMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getSecureMessageFactory()
+        var helper = MessageExtensions.getSecureHelper();
+        return helper.getSecureMessageFactory()
     };
     SecureMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setSecureMessageFactory(factory)
+        var helper = MessageExtensions.getSecureHelper();
+        helper.setSecureMessageFactory(factory)
     };
-    var SecureMessageFactory = Interface(null, null);
+    SecureMessage.Factory = Interface(null, null);
+    var SecureMessageFactory = SecureMessage.Factory;
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {
     };
-    SecureMessage.Factory = SecureMessageFactory;
-    ns.protocol.SecureMessage = SecureMessage
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var SecureMessage = ns.protocol.SecureMessage;
-    var ReliableMessage = Interface(null, [SecureMessage]);
+    dkd.protocol.ReliableMessage = Interface(null, [SecureMessage]);
+    var ReliableMessage = dkd.protocol.ReliableMessage;
     ReliableMessage.prototype.getSignature = function () {
     };
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory
+    ReliableMessage.convert = function (array) {
+        var messages = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = ReliableMessage.parse(array[i]);
+            if (msg) {
+                messages.push(msg)
+            }
+        }
+        return messages
+    };
+    ReliableMessage.revert = function (messages) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < messages.length; ++i) {
+            msg = messages[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap())
+            } else {
+                array.push(msg)
+            }
+        }
+        return array
     };
     ReliableMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseReliableMessage(msg)
+        var helper = MessageExtensions.getReliableHelper();
+        return helper.parseReliableMessage(msg)
     };
     ReliableMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getReliableMessageFactory()
+        var helper = MessageExtensions.getReliableHelper();
+        return helper.getReliableMessageFactory()
     };
     ReliableMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setReliableMessageFactory(factory)
+        var helper = MessageExtensions.getReliableHelper();
+        helper.setReliableMessageFactory(factory)
     };
-    var ReliableMessageFactory = Interface(null, null);
+    ReliableMessage.Factory = Interface(null, null);
+    var ReliableMessageFactory = ReliableMessage.Factory;
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
     };
-    ReliableMessage.Factory = ReliableMessageFactory;
-    ns.protocol.ReliableMessage = ReliableMessage
-})(DaoKeDao);
-(function (ns) {
     'use strict';
-    var Interface = ns.type.Interface;
-    var InstantMessage = ns.protocol.InstantMessage;
-    var InstantMessageDelegate = Interface(null, null);
-    InstantMessageDelegate.prototype.serializeContent = function (content, pwd, iMsg) {
+    dkd.plugins.ContentHelper = Interface(null, null);
+    var ContentHelper = dkd.plugins.ContentHelper;
+    ContentHelper.prototype = {
+        setContentFactory: function (msg_type, factory) {
+        }, getContentFactory: function (msg_type) {
+        }, parseContent: function (content) {
+        }
     };
-    InstantMessageDelegate.prototype.encryptContent = function (data, pwd, iMsg) {
+    dkd.plugins.EnvelopeHelper = Interface(null, null);
+    var EnvelopeHelper = dkd.plugins.EnvelopeHelper;
+    EnvelopeHelper.prototype = {
+        setEnvelopeFactory: function (factory) {
+        }, getEnvelopeFactory: function () {
+        }, createEnvelope: function (sender, receiver, time) {
+        }, parseEnvelope: function (env) {
+        }
     };
-    InstantMessageDelegate.prototype.serializeKey = function (pwd, iMsg) {
+    dkd.plugins.InstantMessageHelper = Interface(null, null);
+    var InstantMessageHelper = dkd.plugins.InstantMessageHelper;
+    InstantMessageHelper.prototype = {
+        setInstantMessageFactory: function (factory) {
+        }, getInstantMessageFactory: function () {
+        }, createInstantMessage: function (head, body) {
+        }, parseInstantMessage: function (msg) {
+        }, generateSerialNumber: function (msg_type, when) {
+        }
     };
-    InstantMessageDelegate.prototype.encryptKey = function (data, receiver, iMsg) {
+    dkd.plugins.SecureMessageHelper = Interface(null, null);
+    var SecureMessageHelper = dkd.plugins.SecureMessageHelper;
+    SecureMessageHelper.prototype = {
+        setSecureMessageFactory: function (factory) {
+        }, getSecureMessageFactory: function () {
+        }, parseSecureMessage: function (msg) {
+        }
     };
-    InstantMessage.Delegate = InstantMessageDelegate
-})(DaoKeDao);
-(function (ns) {
+    dkd.plugins.ReliableMessageHelper = Interface(null, null);
+    var ReliableMessageHelper = dkd.plugins.ReliableMessageHelper;
+    ReliableMessageHelper.prototype = {
+        setReliableMessageFactory: function (factory) {
+        }, getReliableMessageFactory: function () {
+        }, parseReliableMessage: function (msg) {
+        }
+    };
+    dkd.plugins.MessageExtensions = {
+        setContentHelper: function (helper) {
+            contentHelper = helper
+        }, getContentHelper: function () {
+            return contentHelper
+        }, setEnvelopeHelper: function (helper) {
+            envelopeHelper = helper
+        }, getEnvelopeHelper: function () {
+            return envelopeHelper
+        }, setInstantHelper: function (helper) {
+            instantHelper = helper
+        }, getInstantHelper: function () {
+            return instantHelper
+        }, setSecureHelper: function (helper) {
+            secureHelper = helper
+        }, getSecureHelper: function () {
+            return secureHelper
+        }, setReliableHelper: function (helper) {
+            reliableHelper = helper
+        }, getReliableHelper: function () {
+            return reliableHelper
+        }
+    };
+    var MessageExtensions = dkd.plugins.MessageExtensions;
+    var contentHelper = null;
+    var envelopeHelper = null;
+    var instantHelper = null;
+    var secureHelper = null;
+    var reliableHelper = null;
     'use strict';
-    var Interface = ns.type.Interface;
-    var SecureMessage = ns.protocol.SecureMessage;
-    var SecureMessageDelegate = Interface(null, null);
-    SecureMessageDelegate.prototype.decryptKey = function (data, receiver, sMsg) {
-    };
-    SecureMessageDelegate.prototype.deserializeKey = function (data, sMsg) {
-    };
-    SecureMessageDelegate.prototype.decryptContent = function (data, pwd, sMsg) {
-    };
-    SecureMessageDelegate.prototype.deserializeContent = function (data, pwd, sMsg) {
-    };
-    SecureMessageDelegate.prototype.signData = function (data, sMsg) {
-    };
-    SecureMessage.Delegate = SecureMessageDelegate
-})(DaoKeDao);
-(function (ns) {
-    'use strict';
-    var Interface = ns.type.Interface;
-    var ReliableMessage = ns.protocol.ReliableMessage;
-    var ReliableMessageDelegate = Interface(null, null);
-    ReliableMessageDelegate.prototype.verifyDataSignature = function (data, signature, rMsg) {
-    };
-    ReliableMessage.Delegate = ReliableMessageDelegate
-})(DaoKeDao);
-(function (ns) {
-    'use strict';
-    var Interface = ns.type.Interface;
-    var Class = ns.type.Class;
-    var Enum = ns.type.Enum;
-    var Wrapper = ns.type.Wrapper;
-    var Converter = ns.type.Converter;
-    var Content = ns.protocol.Content;
-    var Envelope = ns.protocol.Envelope;
-    var InstantMessage = ns.protocol.InstantMessage;
-    var SecureMessage = ns.protocol.SecureMessage;
-    var ReliableMessage = ns.protocol.ReliableMessage;
-    var GeneralFactory = function () {
-        this.__contentFactories = {};
-        this.__envelopeFactory = null;
-        this.__instantMessageFactory = null;
-        this.__secureMessageFactory = null;
-        this.__reliableMessageFactory = null
-    };
-    Class(GeneralFactory, null, null, null);
-    GeneralFactory.prototype.setContentFactory = function (type, factory) {
-        type = Enum.getInt(type);
-        this.__contentFactories[type] = factory
-    };
-    GeneralFactory.prototype.getContentFactory = function (type) {
-        type = Enum.getInt(type);
-        return this.__contentFactories[type]
-    };
-    GeneralFactory.prototype.getContentType = function (content, defaultType) {
-        var type = content['type'];
-        return Converter.getInt(type, defaultType)
-    };
-    GeneralFactory.prototype.parseContent = function (content) {
-        if (!content) {
-            return null
-        } else if (Interface.conforms(content, Content)) {
-            return content
+    dkd.plugins.GeneralMessageHelper = Interface(null, null);
+    var GeneralMessageHelper = dkd.plugins.GeneralMessageHelper;
+    GeneralMessageHelper.prototype = {
+        getContentType: function (content, defaultValue) {
         }
-        var info = Wrapper.fetchMap(content);
-        if (!info) {
-            return null
+    };
+    dkd.plugins.SharedMessageExtensions = {
+        setContentHelper: function (helper) {
+            MessageExtensions.setContentHelper(helper)
+        }, getContentHelper: function () {
+            return MessageExtensions.getContentHelper()
+        }, setEnvelopeHelper: function (helper) {
+            MessageExtensions.setEnvelopeHelper(helper)
+        }, getEnvelopeHelper: function () {
+            return MessageExtensions.getEnvelopeHelper()
+        }, setInstantHelper: function (helper) {
+            MessageExtensions.setInstantHelper(helper)
+        }, getInstantHelper: function () {
+            return MessageExtensions.getInstantHelper()
+        }, setSecureHelper: function (helper) {
+            MessageExtensions.setSecureHelper(helper)
+        }, getSecureHelper: function () {
+            return MessageExtensions.getSecureHelper()
+        }, setReliableHelper: function (helper) {
+            MessageExtensions.setReliableHelper(helper)
+        }, getReliableHelper: function () {
+            return MessageExtensions.getReliableHelper()
+        }, setHelper: function (helper) {
+            msgHelper = helper
+        }, getHelper: function () {
+            return msgHelper
         }
-        var type = this.getContentType(info, 0);
-        var factory = this.getContentFactory(type);
-        if (!factory) {
-            factory = this.getContentFactory(0)
-        }
-        return factory.parseContent(info)
     };
-    GeneralFactory.prototype.setEnvelopeFactory = function (factory) {
-        this.__envelopeFactory = factory
-    };
-    GeneralFactory.prototype.getEnvelopeFactory = function () {
-        return this.__envelopeFactory
-    };
-    GeneralFactory.prototype.createEnvelope = function (from, to, when) {
-        var factory = this.getEnvelopeFactory();
-        return factory.createEnvelope(from, to, when)
-    };
-    GeneralFactory.prototype.parseEnvelope = function (env) {
-        if (!env) {
-            return null
-        } else if (Interface.conforms(env, Envelope)) {
-            return env
-        }
-        var info = Wrapper.fetchMap(env);
-        if (!info) {
-            return null
-        }
-        var factory = this.getEnvelopeFactory();
-        return factory.parseEnvelope(info)
-    };
-    GeneralFactory.prototype.setInstantMessageFactory = function (factory) {
-        this.__instantMessageFactory = factory
-    };
-    GeneralFactory.prototype.getInstantMessageFactory = function () {
-        return this.__instantMessageFactory
-    };
-    GeneralFactory.prototype.createInstantMessage = function (head, body) {
-        var factory = this.getInstantMessageFactory();
-        return factory.createInstantMessage(head, body)
-    };
-    GeneralFactory.prototype.parseInstantMessage = function (msg) {
-        if (!msg) {
-            return null
-        } else if (Interface.conforms(msg, InstantMessage)) {
-            return msg
-        }
-        var info = Wrapper.fetchMap(msg);
-        if (!info) {
-            return null
-        }
-        var factory = this.getInstantMessageFactory();
-        return factory.parseInstantMessage(info)
-    };
-    GeneralFactory.prototype.generateSerialNumber = function (type, now) {
-        var factory = this.getInstantMessageFactory();
-        return factory.generateSerialNumber(type, now)
-    };
-    GeneralFactory.prototype.setSecureMessageFactory = function (factory) {
-        this.__secureMessageFactory = factory
-    };
-    GeneralFactory.prototype.getSecureMessageFactory = function () {
-        return this.__secureMessageFactory
-    };
-    GeneralFactory.prototype.parseSecureMessage = function (msg) {
-        if (!msg) {
-            return null
-        } else if (Interface.conforms(msg, SecureMessage)) {
-            return msg
-        }
-        var info = Wrapper.fetchMap(msg);
-        if (!info) {
-            return null
-        }
-        var factory = this.getSecureMessageFactory();
-        return factory.parseSecureMessage(info)
-    };
-    GeneralFactory.prototype.setReliableMessageFactory = function (factory) {
-        this.__reliableMessageFactory = factory
-    };
-    GeneralFactory.prototype.getReliableMessageFactory = function () {
-        return this.__reliableMessageFactory
-    };
-    GeneralFactory.prototype.parseReliableMessage = function (msg) {
-        if (!msg) {
-            return null
-        } else if (Interface.conforms(msg, ReliableMessage)) {
-            return msg
-        }
-        var info = Wrapper.fetchMap(msg);
-        if (!info) {
-            return null
-        }
-        var factory = this.getReliableMessageFactory();
-        return factory.parseReliableMessage(info)
-    };
-    var FactoryManager = {generalFactory: new GeneralFactory()};
-    ns.dkd.MessageGeneralFactory = GeneralFactory;
-    ns.dkd.MessageFactoryManager = FactoryManager
-})(DaoKeDao);
+    var SharedMessageExtensions = dkd.plugins.SharedMessageExtensions;
+    var msgHelper = null
+})(DaoKeDao, MingKeMing, MONKEY);

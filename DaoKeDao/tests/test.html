@@ -16,9 +16,9 @@
     <script>
         !function (ns) {
             var sources = [
-                'src/namespace.js',
+                'src/requires.js',
 
-                'src/protocol/types.js',
+                // protocol
                 'src/protocol/content.js',
                 'src/protocol/envelope.js',
                 'src/protocol/message.js',
@@ -26,18 +26,25 @@
                 'src/protocol/secure.js',
                 'src/protocol/reliable.js',
 
-                'src/dkd/instant.js',
-                'src/dkd/secure.js',
-                'src/dkd/reliable.js',
-                'src/dkd/factory.js',
+                // plugins
+                'src/plugins/msg_helpers.js',
+                'src/plugins/msg_plugins.js',
                 null
             ];
 
             var dist = 'dist/dkd.js';
 
             var tests = [
+                '../../Crypto/tests/format/utf8.js',
+                '../../Crypto/tests/format/json.js',
+                '../../Crypto/tests/format/hex.js',
+                '../../Crypto/tests/format/base58.js',
+                '../../Crypto/tests/format/base64.js',
                 '../../Crypto/tests/crypto_tests.js',
+                '../../Crypto/tests/crypto_tests.js',
+
                 '../../MingKeMing/tests/mkm_tests.js',
+
                 'tests/dkd_tests.js',
                 null
             ];
@@ -45,6 +52,7 @@
             var base = window.location.href;
             base = base.substring(0, base.indexOf('tests/test.html'));
             var loader = new Loader(base);
+            loader.importJS('src/namespace.js');
 
             for (var i = 0; i < sources.length; ++i) {
                 loader.importJS(sources[i]);
@@ -91,7 +99,7 @@
     <p class="console">
         <script>
             !(function () {
-                var text = 'cat';
+                var text = 'cat src/ns_begin.closure';
                 var file;
                 for (var i = 0; i < sources.length; ++i) {
                     file = sources[i];
@@ -100,7 +108,7 @@
                     }
                     text += ' ' + file;
                 }
-                text += ' >> ' + dist;
+                text += ' src/ns_end.closure > ' + dist;
                 document.writeln(text);
             }());
         </script>

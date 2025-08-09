@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -32,12 +32,6 @@
 
 //! require 'secure.js'
 
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var SecureMessage = ns.protocol.SecureMessage;
-
     /**
      *  Reliable Message signed by an asymmetric key
      *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,7 +53,8 @@
      *      signature: "..."   // base64_encode(asymmetric_sign(data))
      *  }
      */
-    var ReliableMessage = Interface(null, [SecureMessage]);
+    dkd.protocol.ReliableMessage = Interface(null, [SecureMessage]);
+    var ReliableMessage = dkd.protocol.ReliableMessage;
 
     /**
      *  Message Data Signature
@@ -69,13 +64,49 @@
     ReliableMessage.prototype.getSignature = function () {};
 
     //
-    //  Factory methods
+    //  Conveniences
     //
 
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory;
+    /**
+     *  Convert Maps to Messages
+     *
+     * @param {*[]} array
+     * @return {ReliableMessage[]}
+     */
+    ReliableMessage.convert = function (array) {
+        var messages = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = ReliableMessage.parse(array[i]);
+            if (msg) {
+                messages.push(msg);
+            }
+        }
+        return messages;
     };
+
+    /**
+     *  Convert InstantMessage to Maps
+     * @param {ReliableMessage[]} messages
+     * @return {*[]}
+     */
+    ReliableMessage.revert = function (messages) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < messages.length; ++i) {
+            msg = messages[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap());
+            } else {
+                array.push(msg);
+            }
+        }
+        return array;
+    };
+
+    //
+    //  Factory methods
+    //
 
     /**
      *  Parse map object to message
@@ -84,24 +115,25 @@
      * @return {ReliableMessage}
      */
     ReliableMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseReliableMessage(msg);
+        var helper = MessageExtensions.getReliableHelper();
+        return helper.parseReliableMessage(msg);
     };
 
     ReliableMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getReliableMessageFactory();
+        var helper = MessageExtensions.getReliableHelper();
+        return helper.getReliableMessageFactory();
     };
     ReliableMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setReliableMessageFactory(factory);
+        var helper = MessageExtensions.getReliableHelper();
+        helper.setReliableMessageFactory(factory);
     };
 
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var ReliableMessageFactory = Interface(null, null);
+    ReliableMessage.Factory = Interface(null, null);
+    var ReliableMessageFactory = ReliableMessage.Factory;
 
     /**
      *  Parse map object to message
@@ -110,11 +142,3 @@
      * @return {ReliableMessage}
      */
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {};
-
-    ReliableMessage.Factory = ReliableMessageFactory;
-
-    //-------- namespace --------
-    ns.protocol.ReliableMessage = ReliableMessage;
-    // ns.protocol.ReliableMessageFactory = ReliableMessageFactory;
-
-})(DaoKeDao);

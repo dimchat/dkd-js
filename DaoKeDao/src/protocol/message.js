@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -52,12 +52,6 @@
 
 //! require 'envelope.js'
 
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var Mapper    = ns.type.Mapper;
-
     /**
      *  Message with Envelope
      *  ~~~~~~~~~~~~~~~~~~~~~
@@ -74,7 +68,8 @@
      *      ...
      *  }
      */
-    var Message = Interface(null, [Mapper]);
+    dkd.protocol.Message = Interface(null, [Mapper]);
+    var Message = dkd.protocol.Message;
 
     // message envelope
     Message.prototype.getEnvelope = function () {};
@@ -87,8 +82,3 @@
 
     Message.prototype.getGroup    = function () {};  // content.group or envelope.group
     Message.prototype.getType     = function () {};  // content.type or envelope.type
-
-    //-------- namespace --------
-    ns.protocol.Message = Message;
-
-})(DaoKeDao);

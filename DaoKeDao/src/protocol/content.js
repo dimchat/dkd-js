@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -30,13 +30,7 @@
 // =============================================================================
 //
 
-//! require 'types.js'
-
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var Mapper    = ns.type.Mapper;
+//! require 'namespace.js'
 
     /**
      *  Message Content
@@ -44,11 +38,11 @@
      *  This class is for creating message content
      *
      *  data format: {
-     *      'type'    : 0x00,            // message type
+     *      'type'    : i2s(0x00),       // message type
      *      'sn'      : 0,               // serial number
      *
      *      'time'    : 123,             // message time
-     *      'group'   : 'Group ID',      // for group message
+     *      'group'   : '{Group ID}',    // for group message
      *
      *      //-- message info
      *      'text'    : 'text',          // for text message
@@ -56,12 +50,13 @@
      *      //...
      *  }
      */
-    var Content = Interface(null, [Mapper]);
+    dkd.protocol.Content = Interface(null, [Mapper]);
+    var Content = dkd.protocol.Content;
 
     /**
      *  Get content type
      *
-     * @return {uint}
+     * @return {String}
      */
     Content.prototype.getType = function () {};
 
@@ -89,13 +84,49 @@
     Content.prototype.getGroup = function () {};
 
     //
-    //  Factory method
+    //  Conveniences
     //
 
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory;
+    /**
+     *  Convert Maps to Contents
+     *
+     * @param {*[]} array
+     * @return {Content[]}
+     */
+    Content.convert = function (array) {
+        var contents = [];
+        var msg;
+        for (var i = 0; i < array.length; ++i) {
+            msg = Content.parse(array[i]);
+            if (msg) {
+                contents.push(msg);
+            }
+        }
+        return contents;
     };
+
+    /**
+     *  Convert Contents to Maps
+     * @param {Content[]} contents
+     * @return {*[]}
+     */
+    Content.revert = function (contents) {
+        var array = [];
+        var msg;
+        for (var i = 0; i < contents.length; ++i) {
+            msg = contents[i];
+            if (Interface.conforms(msg, Mapper)) {
+                array.push(msg.toMap());
+            } else {
+                array.push(msg);
+            }
+        }
+        return array;
+    };
+
+    //
+    //  Factory methods
+    //
 
     /**
      *  Parse map object to content
@@ -104,30 +135,32 @@
      * @return {Content}
      */
     Content.parse = function (content) {
-        var gf = general_factory();
-        return gf.parseContent(content);
+        var helper = MessageExtensions.getContentHelper();
+        return helper.parseContent(content);
     };
 
     /**
      *  Register content factory with type
      *
-     * @param {ContentType|uint} type
+     * @param {String} type
      * @param {ContentFactory} factory
      */
     Content.setFactory = function (type, factory) {
-        var gf = general_factory();
-        gf.setContentFactory(type, factory);
+        var helper = MessageExtensions.getContentHelper();
+        helper.setContentFactory(type, factory);
     };
     Content.getFactory = function (type) {
-        var gf = general_factory();
-        return gf.getContentFactory(type);
+        var helper = MessageExtensions.getContentHelper();
+        return helper.getContentFactory(type);
     };
+
 
     /**
      *  Content Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var ContentFactory = Interface(null, null);
+    Content.Factory = Interface(null, null);
+    var ContentFactory = Content.Factory;
 
     /**
      *  Parse map object to content
@@ -136,11 +169,3 @@
      * @return {Content}
      */
     ContentFactory.prototype.parseContent = function (content) {};
-
-    Content.Factory = ContentFactory;
-
-    //-------- namespace --------
-    ns.protocol.Content = Content;
-    // ns.protocol.ContentFactory = ContentFactory;
-
-})(DaoKeDao);

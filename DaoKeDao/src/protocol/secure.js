@@ -1,4 +1,4 @@
-;
+'use strict';
 // license: https://mit-license.org
 //
 //  Dao-Ke-Dao: Universal Message Module
@@ -32,12 +32,6 @@
 
 //! require 'message.js'
 
-(function (ns) {
-    'use strict';
-
-    var Interface = ns.type.Interface;
-    var Message = ns.protocol.Message;
-
     /**
      *  Secure Message
      *  ~~~~~~~~~~~~~~
@@ -56,7 +50,8 @@
      *      }
      *  }
      */
-    var SecureMessage = Interface(null, [Message]);
+    dkd.protocol.SecureMessage = Interface(null, [Message]);
+    var SecureMessage = dkd.protocol.SecureMessage;
 
     /**
      *  Get encrypted content data
@@ -78,11 +73,6 @@
     //  Factory methods
     //
 
-    var general_factory = function () {
-        var man = ns.dkd.MessageFactoryManager;
-        return man.generalFactory;
-    };
-
     /**
      *  Parse map object to message
      *
@@ -90,24 +80,25 @@
      * @return {SecureMessage}
      */
     SecureMessage.parse = function (msg) {
-        var gf = general_factory();
-        return gf.parseSecureMessage(msg);
+        var helper = MessageExtensions.getSecureHelper();
+        return helper.parseSecureMessage(msg);
     };
 
     SecureMessage.getFactory = function () {
-        var gf = general_factory();
-        return gf.getSecureMessageFactory();
+        var helper = MessageExtensions.getSecureHelper();
+        return helper.getSecureMessageFactory();
     };
     SecureMessage.setFactory = function (factory) {
-        var gf = general_factory();
-        gf.setSecureMessageFactory(factory);
+        var helper = MessageExtensions.getSecureHelper();
+        helper.setSecureMessageFactory(factory);
     };
 
     /**
      *  Message Factory
      *  ~~~~~~~~~~~~~~~
      */
-    var SecureMessageFactory = Interface(null, null);
+    SecureMessage.Factory = Interface(null, null);
+    var SecureMessageFactory = SecureMessage.Factory;
 
     /**
      *  Parse map object to message
@@ -116,11 +107,3 @@
      * @return {SecureMessage}
      */
     SecureMessageFactory.prototype.parseSecureMessage = function (msg) {};
-
-    SecureMessage.Factory = SecureMessageFactory;
-
-    //-------- namespace --------
-    ns.protocol.SecureMessage = SecureMessage;
-    // ns.protocol.SecureMessageFactory = SecureMessageFactory;
-
-})(DaoKeDao);
