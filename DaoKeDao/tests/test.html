@@ -5,33 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DaoKeDao Test Cases</title>
-    <link href="/Crypto/tests/test.css" type="text/css" rel="stylesheet" />
-    <script src="/Crypto/libs/loader.js"></script>
-    <script src="/Crypto/libs/runner.js"></script>
-    <script src="/Crypto/libs/utils.js"></script>
+    <link href="../../Crypto/tests/test.css" type="text/css" rel="stylesheet" />
+    <script src="../../Crypto/libs/loader.js"></script>
+    <script src="../../Crypto/libs/runner.js"></script>
+    <script src="../../Crypto/libs/utils.js"></script>
 
-    <script src="/Crypto/dist/crypto.js"></script>
-    <script src="/MingKeMing/dist/mkm.js"></script>
+    <script src="../../Crypto/dist/crypto.js"></script>
+    <script src="../../MingKeMing/dist/mkm.js"></script>
 
+    <script src="../src/sources.js"></script>
     <script>
         !function (ns) {
             var sources = [
-                'src/requires.js',
-
-                // protocol
-                'src/protocol/content.js',
-                'src/protocol/envelope.js',
-                'src/protocol/message.js',
-                'src/protocol/instant.js',
-                'src/protocol/secure.js',
-                'src/protocol/reliable.js',
-
-                // plugins
-                'src/plugins/msg_helpers.js',
-                'src/plugins/msg_plugins.js',
-                null
-            ];
-
+                'src/requires.js'
+            ].concat(dkd_sources);
             var dist = 'dist/dkd.js';
 
             var tests = [
@@ -40,7 +27,6 @@
                 '../../Crypto/tests/format/hex.js',
                 '../../Crypto/tests/format/base58.js',
                 '../../Crypto/tests/format/base64.js',
-                '../../Crypto/tests/crypto_tests.js',
                 '../../Crypto/tests/crypto_tests.js',
 
                 '../../MingKeMing/tests/mkm_tests.js',
@@ -99,16 +85,19 @@
     <p class="console">
         <script>
             !(function () {
-                var text = 'cat src/ns_begin.closure';
-                var file;
+                var targets = [
+                    'src/ns_begin.closure'
+                ];
                 for (var i = 0; i < sources.length; ++i) {
-                    file = sources[i];
-                    if (!file) {
-                        continue;
+                    var file = sources[i];
+                    if (file) {
+                        targets.push(file);
                     }
-                    text += ' ' + file;
                 }
-                text += ' src/ns_end.closure > ' + dist;
+                targets.push('src/ns_end.closure');
+
+                var text = targets.join(' ');
+                text = 'cat ' + text + ' > ' + dist;
                 document.writeln(text);
             }());
         </script>

@@ -1,6 +1,6 @@
 
-//(function (dkd, mkm, mk) {
+// (function (dkd, mk) {
 
     // ...
 
-})(DaoKeDao, MingKeMing, MONKEY);
+})(DaoKeDao, MONKEY);

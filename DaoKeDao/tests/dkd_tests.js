@@ -5,7 +5,18 @@
 //
 dkd_tests = [];
 
-!function (ns, mkm, mk) {
+!function (ns) {
+    'use strict';
+
+    if (typeof ns.protocol.ContentType != 'object') {
+        ns.protocol.ContentType = {
+            TEXT: '' + 0x01
+        };
+    }
+
+}(DaoKeDao);
+
+!function (ns, mk) {
     'use strict';
 
     var Class          = mk.type.Class;
@@ -19,20 +30,23 @@ dkd_tests = [];
     Class(BaseContent, Dictionary, [Content], null);
 
     BaseContent.prototype.getType = function () {
-        return  this.getString('type', '');
+        return this.getString('type', '');
     };
 
     BaseContent.fromType = function (type) {
         var info = {
-            'type': type.valueOf()
+            'type': type
         };
         return new BaseContent(info);
     };
 
     //-------- namespace --------
+    if (typeof ns.dkd !== 'object') {
+        ns.dkd = {};
+    }
     ns.dkd.BaseContent = BaseContent;
 
-}(DaoKeDao, MingKeMing, MONKEY);
+}(DaoKeDao, MONKEY);
 
 !function (ns) {
     'use strict';
