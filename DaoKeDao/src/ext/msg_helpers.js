@@ -37,8 +37,8 @@
 //! require 'protocol/reliable.js'
 
 
-dkd.plugins.ContentHelper = Interface(null, null);
-var ContentHelper = dkd.plugins.ContentHelper;
+dkd.ext.ContentHelper = Interface(null, null);
+var ContentHelper = dkd.ext.ContentHelper;
 
 ContentHelper.prototype = {
 
@@ -50,8 +50,8 @@ ContentHelper.prototype = {
 };
 
 
-dkd.plugins.EnvelopeHelper = Interface(null, null);
-var EnvelopeHelper = dkd.plugins.EnvelopeHelper;
+dkd.ext.EnvelopeHelper = Interface(null, null);
+var EnvelopeHelper = dkd.ext.EnvelopeHelper;
 
 EnvelopeHelper.prototype = {
 
@@ -65,8 +65,8 @@ EnvelopeHelper.prototype = {
 };
 
 
-dkd.plugins.InstantMessageHelper = Interface(null, null);
-var InstantMessageHelper = dkd.plugins.InstantMessageHelper;
+dkd.ext.InstantMessageHelper = Interface(null, null);
+var InstantMessageHelper = dkd.ext.InstantMessageHelper;
 
 InstantMessageHelper.prototype = {
 
@@ -82,8 +82,8 @@ InstantMessageHelper.prototype = {
 };
 
 
-dkd.plugins.SecureMessageHelper = Interface(null, null);
-var SecureMessageHelper = dkd.plugins.SecureMessageHelper;
+dkd.ext.SecureMessageHelper = Interface(null, null);
+var SecureMessageHelper = dkd.ext.SecureMessageHelper;
 
 SecureMessageHelper.prototype = {
 
@@ -95,8 +95,8 @@ SecureMessageHelper.prototype = {
 };
 
 
-dkd.plugins.ReliableMessageHelper = Interface(null, null);
-var ReliableMessageHelper = dkd.plugins.ReliableMessageHelper;
+dkd.ext.ReliableMessageHelper = Interface(null, null);
+var ReliableMessageHelper = dkd.ext.ReliableMessageHelper;
 
 ReliableMessageHelper.prototype = {
 
@@ -112,7 +112,7 @@ ReliableMessageHelper.prototype = {
  *  Message FactoryManager
  *  ~~~~~~~~~~~~~~~~~~~~~~
  */
-dkd.plugins.MessageExtensions = {
+dkd.ext.MessageExtensions = {
 
     /**
      *  Init content helper
@@ -175,7 +175,7 @@ dkd.plugins.MessageExtensions = {
     }
 
 };
-var MessageExtensions = dkd.plugins.MessageExtensions;
+var MessageExtensions = dkd.ext.MessageExtensions;
 
 var contentHelper = null;
 var envelopeHelper = null;

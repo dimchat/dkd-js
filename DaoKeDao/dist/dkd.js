@@ -2,24 +2,21 @@
  * DaoKeDao - Message Module (v2.0.0)
  *
  * @author    moKy <albert.moky at gmail.com>
- * @date      Aug. 10, 2025
+ * @date      Aug. 17, 2025
  * @copyright (c) 2020-2025 Albert Moky
  * @license   {@link https://mit-license.org | MIT License}
  */;
 if (typeof DaoKeDao !== 'object') {
     DaoKeDao = {}
 }
-(function (dkd, mkm, mk) {
+(function (dkd, mk) {
+    'use strict';
     if (typeof dkd.protocol !== 'object') {
         dkd.protocol = {}
     }
-    if (typeof dkd.dkd !== 'object') {
-        dkd.dkd = {}
+    if (typeof dkd.ext !== 'object') {
+        dkd.ext = {}
     }
-    if (typeof dkd.plugins !== 'object') {
-        dkd.plugins = {}
-    }
-    'use strict';
     var Interface = mk.type.Interface;
     var Mapper = mk.type.Mapper;
     'use strict';
@@ -103,7 +100,7 @@ if (typeof DaoKeDao !== 'object') {
     Envelope.getFactory = function () {
         var helper = MessageExtensions.getEnvelopeHelper();
         return helper.getEnvelopeFactory()
-    }
+    };
     Envelope.setFactory = function (factory) {
         var helper = MessageExtensions.getEnvelopeHelper();
         helper.setEnvelopeFactory(factory)
@@ -257,16 +254,16 @@ if (typeof DaoKeDao !== 'object') {
     ReliableMessageFactory.prototype.parseReliableMessage = function (msg) {
     };
     'use strict';
-    dkd.plugins.ContentHelper = Interface(null, null);
-    var ContentHelper = dkd.plugins.ContentHelper;
+    dkd.ext.ContentHelper = Interface(null, null);
+    var ContentHelper = dkd.ext.ContentHelper;
     ContentHelper.prototype = {
         setContentFactory: function (msg_type, factory) {
         }, getContentFactory: function (msg_type) {
         }, parseContent: function (content) {
         }
     };
-    dkd.plugins.EnvelopeHelper = Interface(null, null);
-    var EnvelopeHelper = dkd.plugins.EnvelopeHelper;
+    dkd.ext.EnvelopeHelper = Interface(null, null);
+    var EnvelopeHelper = dkd.ext.EnvelopeHelper;
     EnvelopeHelper.prototype = {
         setEnvelopeFactory: function (factory) {
         }, getEnvelopeFactory: function () {
@@ -274,8 +271,8 @@ if (typeof DaoKeDao !== 'object') {
         }, parseEnvelope: function (env) {
         }
     };
-    dkd.plugins.InstantMessageHelper = Interface(null, null);
-    var InstantMessageHelper = dkd.plugins.InstantMessageHelper;
+    dkd.ext.InstantMessageHelper = Interface(null, null);
+    var InstantMessageHelper = dkd.ext.InstantMessageHelper;
     InstantMessageHelper.prototype = {
         setInstantMessageFactory: function (factory) {
         }, getInstantMessageFactory: function () {
@@ -284,23 +281,23 @@ if (typeof DaoKeDao !== 'object') {
         }, generateSerialNumber: function (msg_type, when) {
         }
     };
-    dkd.plugins.SecureMessageHelper = Interface(null, null);
-    var SecureMessageHelper = dkd.plugins.SecureMessageHelper;
+    dkd.ext.SecureMessageHelper = Interface(null, null);
+    var SecureMessageHelper = dkd.ext.SecureMessageHelper;
     SecureMessageHelper.prototype = {
         setSecureMessageFactory: function (factory) {
         }, getSecureMessageFactory: function () {
         }, parseSecureMessage: function (msg) {
         }
     };
-    dkd.plugins.ReliableMessageHelper = Interface(null, null);
-    var ReliableMessageHelper = dkd.plugins.ReliableMessageHelper;
+    dkd.ext.ReliableMessageHelper = Interface(null, null);
+    var ReliableMessageHelper = dkd.ext.ReliableMessageHelper;
     ReliableMessageHelper.prototype = {
         setReliableMessageFactory: function (factory) {
         }, getReliableMessageFactory: function () {
         }, parseReliableMessage: function (msg) {
         }
     };
-    dkd.plugins.MessageExtensions = {
+    dkd.ext.MessageExtensions = {
         setContentHelper: function (helper) {
             contentHelper = helper
         }, getContentHelper: function () {
@@ -323,20 +320,20 @@ if (typeof DaoKeDao !== 'object') {
             return reliableHelper
         }
     };
-    var MessageExtensions = dkd.plugins.MessageExtensions;
+    var MessageExtensions = dkd.ext.MessageExtensions;
     var contentHelper = null;
     var envelopeHelper = null;
     var instantHelper = null;
     var secureHelper = null;
     var reliableHelper = null;
     'use strict';
-    dkd.plugins.GeneralMessageHelper = Interface(null, null);
-    var GeneralMessageHelper = dkd.plugins.GeneralMessageHelper;
+    dkd.ext.GeneralMessageHelper = Interface(null, null);
+    var GeneralMessageHelper = dkd.ext.GeneralMessageHelper;
     GeneralMessageHelper.prototype = {
         getContentType: function (content, defaultValue) {
         }
     };
-    dkd.plugins.SharedMessageExtensions = {
+    dkd.ext.SharedMessageExtensions = {
         setContentHelper: function (helper) {
             MessageExtensions.setContentHelper(helper)
         }, getContentHelper: function () {
@@ -358,11 +355,11 @@ if (typeof DaoKeDao !== 'object') {
         }, getReliableHelper: function () {
             return MessageExtensions.getReliableHelper()
         }, setHelper: function (helper) {
-            msgHelper = helper
+            generalMessageHelper = helper
         }, getHelper: function () {
-            return msgHelper
+            return generalMessageHelper
         }
     };
-    var SharedMessageExtensions = dkd.plugins.SharedMessageExtensions;
-    var msgHelper = null
-})(DaoKeDao, MingKeMing, MONKEY);
+    var SharedMessageExtensions = dkd.ext.SharedMessageExtensions;
+    var generalMessageHelper = null
+})(DaoKeDao, MONKEY);

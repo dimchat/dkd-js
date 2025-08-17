@@ -9,8 +9,8 @@ var dkd_sources = [
     'src/protocol/secure.js',
     'src/protocol/reliable.js',
 
-    // plugins
-    'src/plugins/msg_helpers.js',
-    'src/plugins/msg_plugins.js',
+    // extensions
+    'src/ext/msg_helpers.js',
+    'src/ext/msg_plugins.js',
     null
 ];

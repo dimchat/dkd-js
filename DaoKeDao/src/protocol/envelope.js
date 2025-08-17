@@ -124,7 +124,7 @@
     Envelope.getFactory = function () {
         var helper = MessageExtensions.getEnvelopeHelper();
         return helper.getEnvelopeFactory();
-    }
+    };
     Envelope.setFactory = function (factory) {
         var helper = MessageExtensions.getEnvelopeHelper();
         helper.setEnvelopeFactory(factory);

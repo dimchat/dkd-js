@@ -35,8 +35,8 @@
  *  Message GeneralFactory
  *  ~~~~~~~~~~~~~~~~~~~~~~
  */
-dkd.plugins.GeneralMessageHelper = Interface(null, null);
-var GeneralMessageHelper = dkd.plugins.GeneralMessageHelper;
+dkd.ext.GeneralMessageHelper = Interface(null, null);
+var GeneralMessageHelper = dkd.ext.GeneralMessageHelper;
 
 GeneralMessageHelper.prototype = {
 
@@ -44,6 +44,11 @@ GeneralMessageHelper.prototype = {
     //  Message Type
     //
 
+    /**
+     *  Get message type
+     *
+     * @return {String}
+     */
     getContentType: function (content, defaultValue) {}
 
 };
@@ -53,7 +58,7 @@ GeneralMessageHelper.prototype = {
  *  Message FactoryManager
  *  ~~~~~~~~~~~~~~~~~~~~~~
  */
-dkd.plugins.SharedMessageExtensions = {
+dkd.ext.SharedMessageExtensions = {
 
     //
     //  Content
@@ -109,13 +114,13 @@ dkd.plugins.SharedMessageExtensions = {
     //  General Helper
     //
     setHelper: function (helper) {
-        msgHelper = helper;
+        generalMessageHelper = helper;
     },
     getHelper: function () {
-        return msgHelper;
+        return generalMessageHelper;
     }
 
 };
-var SharedMessageExtensions = dkd.plugins.SharedMessageExtensions;
+var SharedMessageExtensions = dkd.ext.SharedMessageExtensions;
 
-var msgHelper = null;
+var generalMessageHelper = null;

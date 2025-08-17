@@ -7,8 +7,8 @@ if (typeof dkd.protocol !== 'object') {
 // if (typeof dkd.dkd !== 'object') {
 //     dkd.dkd = {};
 // }
-if (typeof dkd.plugins !== 'object') {
-    dkd.plugins = {};
+if (typeof dkd.ext !== 'object') {
+    dkd.ext = {};
 }
 
 //-------- requires --------
